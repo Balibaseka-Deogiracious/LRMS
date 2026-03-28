@@ -134,13 +134,91 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <footer className="landing-footer py-4 mt-4">
-        <div className="container d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2">
-          <p className="mb-0">Library Retrieval System</p>
-          <div className="text-md-end">
-            <p className="mb-0">Contact: support@libraryretrieval.com</p>
-            <small>Phone: +(256) 742685864</small>
+      <section className="py-5 how-it-works">
+        <div className="container">
+          <div className="text-center mb-4">
+            <h2 className="fw-bold mb-2">How It Works</h2>
+            <p className="text-muted m-0">Get started in minutes with a simple 4-step flow.</p>
           </div>
+
+          <div className="row g-4">
+            <div className="col-12 col-md-6 col-lg-3">
+              <div className="card h-100 border-0 shadow-sm how-card">
+                <div className="card-body p-4">
+                  <div className="how-step">1</div>
+                  <h6 className="fw-semibold mt-3">Register</h6>
+                  <p className="text-muted mb-0">Create your account and sign in securely.</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="col-12 col-md-6 col-lg-3">
+              <div className="card h-100 border-0 shadow-sm how-card">
+                <div className="card-body p-4">
+                  <div className="how-step">2</div>
+                  <h6 className="fw-semibold mt-3">Search Books</h6>
+                  <p className="text-muted mb-0">Find titles instantly by author, category, or status.</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="col-12 col-md-6 col-lg-3">
+              <div className="card h-100 border-0 shadow-sm how-card">
+                <div className="card-body p-4">
+                  <div className="how-step">3</div>
+                  <h6 className="fw-semibold mt-3">Borrow</h6>
+                  <p className="text-muted mb-0">Borrow available books with one click and track due dates.</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="col-12 col-md-6 col-lg-3">
+              <div className="card h-100 border-0 shadow-sm how-card">
+                <div className="card-body p-4">
+                  <div className="how-step">4</div>
+                  <h6 className="fw-semibold mt-3">Return</h6>
+                  <p className="text-muted mb-0">Return books from your dashboard when you are done.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer className="landing-footer py-4 mt-4">
+        <div className="container">
+          <div className="row g-4">
+            <div className="col-12 col-md-4">
+              <h6 className="fw-semibold">About</h6>
+              <p className="mb-0 small">
+                Library Retrieval System helps students and librarians discover, borrow, and manage books efficiently.
+              </p>
+            </div>
+
+            <div className="col-12 col-md-4">
+              <h6 className="fw-semibold">Quick Links</h6>
+              <ul className="list-unstyled mb-0 small">
+                <li><Link className="footer-link" to="/login">Login</Link></li>
+                <li><Link className="footer-link" to="/register">Register</Link></li>
+                <li><Link className="footer-link" to="/search">Search Books</Link></li>
+              </ul>
+            </div>
+
+            <div className="col-12 col-md-4">
+              <h6 className="fw-semibold">Contact</h6>
+              <p className="mb-1 small">Email: gratiuslee3@gmail.com</p>
+              <p className="mb-2 small">Phone: +(256) 742685864</p>
+              <div className="d-flex gap-3 fs-5">
+                <i className="bi bi-facebook" />
+                <i className="bi bi-twitter-x" />
+                <i className="bi bi-instagram" />
+                <i className="bi bi-linkedin" />
+              </div>
+            </div>
+          </div>
+
+          <hr className="border-light-subtle my-4" />
+          <p className="mb-0 small">© {new Date().getFullYear()} Library Retrieval System. All rights reserved.</p>
         </div>
       </footer>
     </div>

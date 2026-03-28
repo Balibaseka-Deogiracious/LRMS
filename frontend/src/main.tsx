@@ -8,6 +8,7 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { ThemeProvider } from './contexts/ThemeContext'
 import { AuthProvider } from './contexts/AuthContext'
+import { BorrowProvider } from './contexts/BorrowContext'
 import AppErrorBoundary from './components/AppErrorBoundary'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
@@ -15,8 +16,10 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <AppErrorBoundary>
       <ThemeProvider>
         <AuthProvider>
-          <App />
-          <ToastContainer position="bottom-right" autoClose={2500} newestOnTop />
+          <BorrowProvider>
+            <App />
+            <ToastContainer position="bottom-right" autoClose={2500} newestOnTop />
+          </BorrowProvider>
         </AuthProvider>
       </ThemeProvider>
     </AppErrorBoundary>

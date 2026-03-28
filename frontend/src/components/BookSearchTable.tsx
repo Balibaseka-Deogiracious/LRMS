@@ -4,17 +4,20 @@ import { toast } from 'react-toastify'
 import { Book } from '../types'
 import useDebounce from '../hooks/useDebounce'
 import { TableSkeleton } from './LoadingSkeletons'
+import { useBorrow } from '../contexts/BorrowContext'
 
 export default function BookSearchTable() {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [category, setCategory] = useState('')
+  const [availability, setAvailability] = useState('')
   const [books, setBooks] = useState<Book[]>([])
   const [loading, setLoading] = useState(false)
   const [hasSearched, setHasSearched] = useState(true)
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const pageSize = 5
+  const { isBorrowed } = useBorrow()
 
   const categoryOptions = useMemo(() => [
     '',
@@ -25,7 +28,7 @@ export default function BookSearchTable() {
     'Technology',
   ], [])
 
-  const debouncedFilters = useDebounce({ title, author, category }, 450)
+  const debouncedFilters = useDebounce({ title, author, category, availability }, 450)
 
   const fetchBooks = async () => {
     setLoading(true)
@@ -37,6 +40,7 @@ export default function BookSearchTable() {
           title: debouncedFilters.title.trim() || undefined,
           author: debouncedFilters.author.trim() || undefined,
           category: debouncedFilters.category || undefined,
+          availability: debouncedFilters.availability || undefined,
           page,
           pageSize,
         },
@@ -50,7 +54,11 @@ export default function BookSearchTable() {
         const byTitle = !debouncedFilters.title || book.title.toLowerCase().includes(debouncedFilters.title.toLowerCase())
         const byAuthor = !debouncedFilters.author || book.author.toLowerCase().includes(debouncedFilters.author.toLowerCase())
         const byCategory = !debouncedFilters.category || (book.category || '').toLowerCase() === debouncedFilters.category.toLowerCase()
-        return byTitle && byAuthor && byCategory
+        const effectiveStatus = isBorrowed(book.id)
+          ? 'borrowed'
+          : ((book.status || 'available').toLowerCase())
+        const byAvailability = !debouncedFilters.availability || effectiveStatus === debouncedFilters.availability.toLowerCase()
+        return byTitle && byAuthor && byCategory && byAvailability
       })
 
       const responseTotalPages = Number(payload?.meta?.totalPages || payload?.totalPages || 0)
@@ -125,9 +133,23 @@ export default function BookSearchTable() {
             </select>
           </div>
 
-          <div className="col-12 col-md-1 d-grid">
+          <div className="col-12 col-md-3">
+            <label htmlFor="availability" className="form-label">Availability</label>
+            <select
+              id="availability"
+              className="form-select"
+              value={availability}
+              onChange={(e) => onFilterChange(setAvailability, e.target.value)}
+            >
+              <option value="">All</option>
+              <option value="available">Available</option>
+              <option value="borrowed">Borrowed</option>
+            </select>
+          </div>
+
+          <div className="col-12 col-md-2 d-grid">
             <label className="form-label d-none d-md-block">&nbsp;</label>
-            <button className="btn btn-outline-secondary" type="button" onClick={() => { setTitle(''); setAuthor(''); setCategory(''); setPage(1) }}>
+            <button className="btn btn-outline-secondary" type="button" onClick={() => { setTitle(''); setAuthor(''); setCategory(''); setAvailability(''); setPage(1) }}>
               Clear
             </button>
           </div>
@@ -159,7 +181,7 @@ export default function BookSearchTable() {
                       <td>{book.author}</td>
                       <td>{book.category || '-'}</td>
                       <td>{book.publishedYear || '-'}</td>
-                      <td>{book.status || '-'}</td>
+                      <td>{isBorrowed(book.id) ? 'Borrowed' : (book.status || 'Available')}</td>
                     </tr>
                   ))}
                 </tbody>

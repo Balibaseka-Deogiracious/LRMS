@@ -8,7 +8,6 @@ interface AuthContextType {
   isAuthenticated: boolean
   login: (token: string, role?: Role) => void
   logout: () => void
-  setRole: (role: Role) => void
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -34,11 +33,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setRoleState('user')
   }
 
-  const setRole = (role: Role) => {
-    localStorage.setItem('userRole', role)
-    setRoleState(role)
-  }
-
   const value = useMemo<AuthContextType>(
     () => ({
       token,
@@ -46,7 +40,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       isAuthenticated: !!token,
       login,
       logout,
-      setRole,
     }),
     [token, roleState]
   )

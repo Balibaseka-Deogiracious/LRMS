@@ -8,6 +8,7 @@ import Dashboard from './pages/Dashboard'
 import SearchPage from './pages/SearchPage'
 import BookDetails from './pages/BookDetails'
 import AddBook from './pages/InventoryPage'
+import MyBorrowedBooks from './pages/MyBorrowedBooks'
 import { useAuth } from './contexts/AuthContext'
 
 function ProtectedRoute({ children }: { children: ReactNode }) {
@@ -37,6 +38,7 @@ function App() {
             element={<ProtectedRoute><Dashboard /></ProtectedRoute>}
           />
           <Route path="/search" element={<ProtectedRoute><SearchPage /></ProtectedRoute>} />
+          <Route path="/my-books" element={<ProtectedRoute><MyBorrowedBooks /></ProtectedRoute>} />
           <Route path="/books/:id" element={<ProtectedRoute><BookDetails /></ProtectedRoute>} />
           <Route path="/add" element={<ProtectedRoute><AdminRoute><AddBook /></AdminRoute></ProtectedRoute>} />
           <Route path="*" element={<Navigate to={isAuthenticated ? '/dashboard' : '/'} replace />} />

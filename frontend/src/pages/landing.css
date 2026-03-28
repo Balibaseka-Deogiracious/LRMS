@@ -75,6 +75,36 @@
   color: #dbe8ff;
 }
 
+.footer-link {
+  color: #dbe8ff;
+  text-decoration: none;
+}
+
+.footer-link:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.how-it-works {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.how-card {
+  border-radius: 1rem;
+}
+
+.how-step {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: #1b5db5;
+  color: #fff;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 [data-bs-theme='dark'] .landing-root {
   background:
     linear-gradient(180deg, rgba(11, 20, 38, 0.94) 0%, rgba(10, 18, 34, 0.96) 40%, rgba(13, 22, 40, 0.96) 100%),
@@ -108,6 +138,18 @@
 [data-bs-theme='dark'] .landing-footer {
   background: #07142b;
   color: #bcd2f6;
+}
+
+[data-bs-theme='dark'] .how-it-works {
+  background: rgba(16, 29, 53, 0.72);
+}
+
+[data-bs-theme='dark'] .how-card {
+  background: #152848;
+}
+
+[data-bs-theme='dark'] .how-step {
+  background: #2f79d6;
 }
 
 @media (max-width: 991px) {
