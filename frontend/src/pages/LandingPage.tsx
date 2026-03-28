@@ -139,7 +139,7 @@ export default function LandingPage() {
           <p className="mb-0">Library Retrieval System</p>
           <div className="text-md-end">
             <p className="mb-0">Contact: support@libraryretrieval.com</p>
-            <small>Phone: +1 (555) 010-1234</small>
+            <small>Phone: +(256) 742685864</small>
           </div>
         </div>
       </footer>
