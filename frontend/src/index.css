@@ -1,6 +1,14 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+
+/* Minimal app styles. Bootstrap handles most styling. */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f8f9fa;
+}
+
+.app-container {
+  padding: 1rem;
+}
 
 * {
   @apply transition-colors duration-200;
