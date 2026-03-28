@@ -1,21 +1,36 @@
 import { useState, useEffect } from 'react'
-import MetricCard from '../components/MetricCard'
 import BookCard from '../components/BookCard'
-import { Book, Stats } from '../types'
+import { Book, DashboardStats } from '../types'
 import { searchBooks } from '../services/bookService'
+import { getDashboardStats } from '../services/dashboardService'
+import DashboardStatsCards from '../components/DashboardStatsCards'
+import NotificationDemo from '../components/NotificationDemo'
+import { toast } from 'react-toastify'
+import { BookGridSkeleton, StatsCardsSkeleton } from '../components/LoadingSkeletons'
 
 export default function Dashboard() {
-  const [metrics, setMetrics] = useState<Stats>({
+  const [metrics, setMetrics] = useState<DashboardStats>({
     totalBooks: 0,
-    activeLoans: 0,
-    overdueItems: 0,
-    activeReaders: 0,
+    borrowedBooks: 0,
+    availableBooks: 0,
   })
+  const [loadingStats, setLoadingStats] = useState(true)
+  const [loadingBooks, setLoadingBooks] = useState(true)
   const [books, setBooks] = useState<Book[]>([])
 
   useEffect(() => {
-    // Try fetching from API; fallback to mock data if empty
+    // Fetch dashboard stats and featured books in one effect on initial load.
     ;(async () => {
+      try {
+        const stats = await getDashboardStats()
+        setMetrics(stats)
+      } catch {
+        toast.error('Unable to load dashboard stats. Showing defaults.')
+        setMetrics({ totalBooks: 0, borrowedBooks: 0, availableBooks: 0 })
+      } finally {
+        setLoadingStats(false)
+      }
+
       const results = await searchBooks('')
       if (results.length) setBooks(results.slice(0, 8))
       else {
@@ -28,20 +43,13 @@ export default function Dashboard() {
         ]
         setBooks(mock)
       }
-
-      // placeholder metrics
-      setMetrics({ totalBooks: 2847, activeLoans: 342, overdueItems: 23, activeReaders: 1204 })
+      setLoadingBooks(false)
     })()
   }, [])
 
   return (
     <div>
-      <div className="row g-3 mb-4">
-        <div className="col-6 col-md-3"><MetricCard title="Total Books" value={metrics.totalBooks.toLocaleString()} /></div>
-        <div className="col-6 col-md-3"><MetricCard title="Active Loans" value={metrics.activeLoans} /></div>
-        <div className="col-6 col-md-3"><MetricCard title="Overdue" value={metrics.overdueItems} /></div>
-        <div className="col-6 col-md-3"><MetricCard title="Active Readers" value={metrics.activeReaders} /></div>
-      </div>
+      {loadingStats ? <StatsCardsSkeleton /> : <DashboardStatsCards stats={metrics} />}
 
       <section className="mb-4">
         <div className="d-flex justify-content-between align-items-center mb-3">
@@ -51,13 +59,17 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="row g-3">
-          {books.map(b => (
-            <div key={b.id} className="col-12 col-sm-6 col-lg-3">
-              <BookCard book={b} />
-            </div>
-          ))}
-        </div>
+        {loadingBooks ? (
+          <BookGridSkeleton />
+        ) : (
+          <div className="row g-3">
+            {books.map(b => (
+              <div key={b.id} className="col-12 col-sm-6 col-lg-3">
+                <BookCard book={b} />
+              </div>
+            ))}
+          </div>
+        )}
       </section>
 
       <div className="card">
@@ -66,6 +78,8 @@ export default function Dashboard() {
           <p className="card-text text-muted">Use the search to find books, or add new titles from the Add Book page.</p>
         </div>
       </div>
+
+      <NotificationDemo />
     </div>
   )
 }

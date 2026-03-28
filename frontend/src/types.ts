@@ -15,3 +15,9 @@ export interface Stats {
   overdueItems: number
   activeReaders: number
 }
+
+export interface DashboardStats {
+  totalBooks: number
+  borrowedBooks: number
+  availableBooks: number
+}

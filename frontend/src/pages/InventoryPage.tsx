@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Book } from '../types'
 import { toast } from 'react-toastify'
 import Swal from 'sweetalert2'
+import AddBookForm from '../components/AddBookForm'
+import { deleteBook } from '../services/bookService'
 
 export default function InventoryPage() {
   const [books, setBooks] = useState<Book[]>([
@@ -10,24 +12,29 @@ export default function InventoryPage() {
   ])
 
   const handleDelete = async (b: Book) => {
-    const res = await Swal.fire({ title: 'Delete Book', text: `Delete ${b.title}?`, icon: 'warning', showCancelButton: true })
-    if (res.isConfirmed) {
+    const res = await Swal.fire({
+      title: 'Delete Book',
+      text: `Delete "${b.title}"? This action cannot be undone.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it',
+      cancelButtonText: 'Cancel',
+    })
+
+    if (!res.isConfirmed) return
+
+    const deleted = await deleteBook(b.id)
+    if (deleted) {
+      // Update list in memory to keep UI in sync without page refresh.
       setBooks(prev => prev.filter(x => x.id !== b.id))
-      toast.success('Book deleted')
+      toast.success('Book deleted successfully.')
+    } else {
+      toast.error('Failed to delete book. Please try again.')
     }
   }
 
-  const handleAdd = async (e: React.FormEvent) => {
-    e.preventDefault()
-    const form = e.target as HTMLFormElement
-    const data = new FormData(form)
-    const title = data.get('title') as string
-    const author = data.get('author') as string
-    if (!title || !author) { toast.error('Title and author required'); return }
-    const newBook: Book = { id: Date.now().toString(), title, author }
-    setBooks(prev => [newBook, ...prev])
-    form.reset()
-    toast.success('Book added')
+  const handleBookAdded = (book: Book) => {
+    setBooks(prev => [book, ...prev])
   }
 
   return (
@@ -39,23 +46,7 @@ export default function InventoryPage() {
         </div>
       </div>
 
-      <div className="card mb-3">
-        <div className="card-body">
-          <form onSubmit={handleAdd} className="row g-2 align-items-end">
-            <div className="col-md-5">
-              <label className="form-label">Title</label>
-              <input name="title" className="form-control" />
-            </div>
-            <div className="col-md-4">
-              <label className="form-label">Author</label>
-              <input name="author" className="form-control" />
-            </div>
-            <div className="col-md-3">
-              <button className="btn btn-primary w-100" type="submit">Add Book</button>
-            </div>
-          </form>
-        </div>
-      </div>
+      <AddBookForm onBookAdded={handleBookAdded} />
 
       <div className="card">
         <div className="table-responsive">
@@ -73,7 +64,7 @@ export default function InventoryPage() {
                 <tr key={b.id}>
                   <td>{b.title}</td>
                   <td>{b.author}</td>
-                  <td>{(b as any).isbn || '—'}</td>
+                  <td>{b.isbn || '—'}</td>
                   <td>
                     <div className="btn-group btn-group-sm">
                       <button className="btn btn-outline-secondary">Edit</button>

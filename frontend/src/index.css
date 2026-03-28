@@ -1,82 +1,19 @@
-
-/* Minimal app styles. Bootstrap handles most styling. */
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f8f9fa;
 }
 
 .app-container {
   padding: 1rem;
 }
 
-* {
-  @apply transition-colors duration-200;
-}
-
-body {
-  @apply bg-white dark:bg-slate-900 text-slate-900 dark:text-white;
-}
-
-/* Smooth scrollbar */
-::-webkit-scrollbar {
-  @apply w-2;
-}
-
-::-webkit-scrollbar-track {
-  @apply bg-slate-100 dark:bg-slate-800;
-}
-
-::-webkit-scrollbar-thumb {
-  @apply bg-slate-300 dark:bg-slate-600 rounded-full hover:bg-slate-400 dark:hover:bg-slate-500;
-}
-
-/* Glass morphism effect */
-.glass {
-  @apply backdrop-blur-md bg-white/30 dark:bg-slate-800/30 border border-white/20 dark:border-slate-700/20;
-}
-
-/* Gradient background */
-.gradient-bg {
-  @apply bg-gradient-to-br from-indigo-500/20 via-purple-500/20 to-pink-500/20 dark:from-indigo-900/20 dark:via-purple-900/20 dark:to-pink-900/20;
-}
-
-/* Animations */
-@keyframes fadeIn {
-  from {
-    @apply opacity-0 translate-y-2;
-  }
-  to {
-    @apply opacity-100 translate-y-0;
-  }
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.3s ease-in-out;
-}
-
-@keyframes slideIn {
-  from {
-    @apply opacity-0 -translate-x-4;
-  }
-  to {
-    @apply opacity-100 translate-x-0;
-  }
-}
-
-.animate-slide-in {
-  animation: slideIn 0.3s ease-in-out;
-}
-
-@keyframes pulse-soft {
-  0%, 100% {
-    @apply opacity-100;
-  }
-  50% {
-    @apply opacity-75;
-  }
-}
-
-.animate-pulse-soft {
-  animation: pulse-soft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+.theme-transition,
+body,
+.card,
+.navbar,
+.table,
+.btn,
+.form-control,
+.form-select {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }

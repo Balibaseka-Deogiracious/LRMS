@@ -24,3 +24,21 @@ export async function addBook(payload: Partial<Book>) {
   const res = await api.post('/books', payload)
   return res.data
 }
+
+export async function borrowBook(id: string): Promise<boolean> {
+  try {
+    await api.post(`/books/${id}/borrow`)
+    return true
+  } catch (err) {
+    return false
+  }
+}
+
+export async function deleteBook(id: string): Promise<boolean> {
+  try {
+    await api.delete(`/books/${id}`)
+    return true
+  } catch (err) {
+    return false
+  }
+}

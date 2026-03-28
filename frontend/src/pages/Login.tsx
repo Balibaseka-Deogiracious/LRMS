@@ -3,13 +3,16 @@ import { useNavigate } from 'react-router-dom'
 import { login, storeToken } from '../services/authService'
 import { toast } from 'react-toastify'
 import Swal from 'sweetalert2'
+import { useAuth } from '../contexts/AuthContext'
 
 export default function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [role, setRole] = useState<'admin' | 'user'>('user')
   const [validated, setValidated] = useState(false)
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
+  const auth = useAuth()
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -27,7 +30,9 @@ export default function Login() {
     try {
       const res = await login(email, password)
       if (res?.token) {
-        storeToken(res.token)
+        const effectiveRole = res?.role === 'admin' ? 'admin' : role
+        storeToken(res.token, effectiveRole)
+        auth.login(res.token, effectiveRole)
         toast.success('Login successful. Redirecting to dashboard...')
         navigate('/dashboard')
       } else {
@@ -88,6 +93,19 @@ export default function Login() {
                 required
               />
               <div className="invalid-feedback">Password must be at least 6 characters.</div>
+            </div>
+
+            <div className="mb-3">
+              <label htmlFor="role" className="form-label">Role</label>
+              <select
+                id="role"
+                className="form-select"
+                value={role}
+                onChange={(e) => setRole(e.target.value as 'admin' | 'user')}
+              >
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+              </select>
             </div>
 
             <div className="d-grid">
