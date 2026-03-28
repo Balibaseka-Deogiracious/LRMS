@@ -1,14 +1,23 @@
 import { Link } from 'react-router-dom'
-import { FiSearch, FiBookOpen, FiDatabase } from 'react-icons/fi'
+import { motion } from 'framer-motion'
+import { useTheme } from '../contexts/ThemeContext'
+import logo from '../assets/library-logo.svg'
 import './landing.css'
 
 export default function LandingPage() {
+  const { theme, toggleTheme } = useTheme()
+
+  const fadeUp = {
+    hidden: { opacity: 0, y: 24 },
+    show: { opacity: 1, y: 0 },
+  }
+
   return (
     <div className="landing-root">
       <nav className="navbar navbar-expand-lg landing-nav py-3">
         <div className="container">
           <Link className="navbar-brand fw-bold d-flex align-items-center gap-2" to="/">
-            <span className="brand-mark">LR</span>
+            <img src={logo} alt="Library Retrieval logo" className="brand-logo" />
             <span>Library Retrieval</span>
           </Link>
 
@@ -26,6 +35,10 @@ export default function LandingPage() {
 
           <div className="collapse navbar-collapse" id="landingNav">
             <div className="ms-auto d-flex gap-2">
+              <button type="button" className="btn btn-outline-light" onClick={toggleTheme}>
+                <i className={`bi ${theme === 'dark' ? 'bi-sun-fill' : 'bi-moon-stars-fill'} me-1`} />
+                {theme === 'dark' ? 'Light' : 'Dark'}
+              </button>
               <Link to="/login" className="btn btn-outline-light">Login</Link>
               <Link to="/register" className="btn btn-light fw-semibold">Register</Link>
             </div>
@@ -36,20 +49,38 @@ export default function LandingPage() {
       <header className="landing-hero py-5 py-lg-6">
         <div className="container py-4">
           <div className="row align-items-center g-4">
-            <div className="col-12 col-lg-7 text-white">
+            <motion.div
+              className="col-12 col-lg-7 text-white"
+              variants={fadeUp}
+              initial="hidden"
+              animate="show"
+              transition={{ duration: 0.55 }}
+            >
               <span className="hero-badge">Modern Library Platform</span>
               <h1 className="display-4 fw-bold mt-3 mb-3">Find, borrow, and manage books in one elegant system.</h1>
               <p className="lead text-white-75 mb-4">
                 Streamline your library workflows with fast discovery, intuitive borrowing, and powerful administration tools.
               </p>
               <div className="d-flex flex-wrap gap-3">
-                <Link to="/search" className="btn btn-warning btn-lg fw-semibold px-4">Explore Catalog</Link>
-                <Link to="/dashboard" className="btn btn-outline-light btn-lg px-4">Go to Dashboard</Link>
+                <Link to="/search" className="btn btn-warning btn-lg fw-semibold px-4">
+                  <i className="bi bi-search me-2" />
+                  Explore Catalog
+                </Link>
+                <Link to="/dashboard" className="btn btn-outline-light btn-lg px-4">
+                  <i className="bi bi-speedometer2 me-2" />
+                  Go to Dashboard
+                </Link>
               </div>
-            </div>
+            </motion.div>
 
-            <div className="col-12 col-lg-5">
-              <div className="hero-panel p-4 p-lg-5">
+            <motion.div
+              className="col-12 col-lg-5"
+              variants={fadeUp}
+              initial="hidden"
+              animate="show"
+              transition={{ duration: 0.6, delay: 0.1 }}
+            >
+              <div className="hero-panel p-4 p-lg-5 theme-transition">
                 <h5 className="fw-semibold mb-3">What you get</h5>
                 <ul className="list-unstyled m-0 d-grid gap-2">
                   <li>Fast search with rich filters</li>
@@ -57,7 +88,7 @@ export default function LandingPage() {
                   <li>Role-based controls for admins</li>
                 </ul>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </header>
@@ -70,35 +101,35 @@ export default function LandingPage() {
           </div>
 
           <div className="row g-4">
-            <div className="col-12 col-md-6 col-lg-4">
-              <div className="card feature-card h-100 border-0 shadow-sm">
+            <motion.div className="col-12 col-md-6 col-lg-4" variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} transition={{ duration: 0.45 }}>
+              <div className="card feature-card h-100 border-0 shadow-sm theme-transition">
                 <div className="card-body p-4">
-                  <div className="feature-icon mb-3"><FiSearch /></div>
+                  <div className="feature-icon mb-3"><i className="bi bi-search" /></div>
                   <h5 className="card-title">Search Books</h5>
                   <p className="card-text text-muted mb-0">Discover books instantly with title, author, and category filters.</p>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
-            <div className="col-12 col-md-6 col-lg-4">
-              <div className="card feature-card h-100 border-0 shadow-sm">
+            <motion.div className="col-12 col-md-6 col-lg-4" variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} transition={{ duration: 0.45, delay: 0.08 }}>
+              <div className="card feature-card h-100 border-0 shadow-sm theme-transition">
                 <div className="card-body p-4">
-                  <div className="feature-icon mb-3"><FiBookOpen /></div>
+                  <div className="feature-icon mb-3"><i className="bi bi-journal-check" /></div>
                   <h5 className="card-title">Borrow Books</h5>
                   <p className="card-text text-muted mb-0">Track availability, borrow with confidence, and manage returns smoothly.</p>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
-            <div className="col-12 col-md-6 col-lg-4">
-              <div className="card feature-card h-100 border-0 shadow-sm">
+            <motion.div className="col-12 col-md-6 col-lg-4" variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} transition={{ duration: 0.45, delay: 0.16 }}>
+              <div className="card feature-card h-100 border-0 shadow-sm theme-transition">
                 <div className="card-body p-4">
-                  <div className="feature-icon mb-3"><FiDatabase /></div>
+                  <div className="feature-icon mb-3"><i className="bi bi-building-gear" /></div>
                   <h5 className="card-title">Manage Library</h5>
                   <p className="card-text text-muted mb-0">Admins can organize inventory and monitor the full catalog lifecycle.</p>
                 </div>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
