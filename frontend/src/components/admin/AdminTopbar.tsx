@@ -26,7 +26,7 @@ function getAdminNameFromStorage() {
   if (directName && directName.trim()) return directName.trim()
 
   const rawCurrentUser = localStorage.getItem('currentUser')
-  if (!rawCurrentUser) return 'Admin'
+  if (!rawCurrentUser) return 'Librarian'
 
   try {
     const parsed = JSON.parse(rawCurrentUser) as { name?: string; username?: string; email?: string }
@@ -34,10 +34,10 @@ function getAdminNameFromStorage() {
     if (parsed?.username && parsed.username.trim()) return parsed.username.trim()
     if (parsed?.email && parsed.email.trim()) return parsed.email.trim()
   } catch {
-    return 'Admin'
+    return 'Librarian'
   }
 
-  return 'Admin'
+  return 'Librarian'
 }
 
 export default function AdminTopbar() {
@@ -49,7 +49,7 @@ export default function AdminTopbar() {
   const notificationsRef = useRef<HTMLDivElement | null>(null)
   const profileRef = useRef<HTMLDivElement | null>(null)
 
-  const [adminName, setAdminName] = useState('Admin')
+  const [adminName, setAdminName] = useState('Librarian')
   const [searchQuery, setSearchQuery] = useState('')
   const [showNotifications, setShowNotifications] = useState(false)
   const [showProfileMenu, setShowProfileMenu] = useState(false)
@@ -109,7 +109,7 @@ export default function AdminTopbar() {
     if (location.pathname.startsWith('/admin/borrowed')) return 'Borrowed Books'
     if (location.pathname.startsWith('/admin/reports')) return 'Reports'
     if (location.pathname.startsWith('/admin/settings')) return 'Settings'
-    return 'Admin Panel'
+    return 'Librarian Panel'
   }, [location.pathname])
 
   const unreadCount = useMemo(() => alerts.filter((alert) => !alert.read).length, [alerts])
@@ -137,7 +137,7 @@ export default function AdminTopbar() {
     const result = await Swal.fire({
       icon: 'question',
       title: 'Logout?',
-      text: 'Do you want to end your admin session?',
+      text: 'Do you want to end your librarian session?',
       showCancelButton: true,
       confirmButtonText: 'Logout',
       confirmButtonColor: '#dc3545',
@@ -220,7 +220,7 @@ export default function AdminTopbar() {
               <span className="admin-profile-avatar"><i className="bi bi-person-circle" /></span>
               <span className="admin-profile-meta">
                 <strong>{adminName}</strong>
-                <small>Administrator</small>
+                <small>Librarian</small>
               </span>
               <i className="bi bi-chevron-down" />
             </button>

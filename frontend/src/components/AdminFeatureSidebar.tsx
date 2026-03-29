@@ -50,14 +50,14 @@ export default function AdminFeatureSidebar({ onLogout }: AdminFeatureSidebarPro
           </div>
           <div>
             <strong className="d-block">LRMS</strong>
-            <small>Admin Dashboard</small>
+            <small>Librarian Dashboard</small>
           </div>
         </div>
 
         <div className="admin-profile mb-4">
           <div className="admin-profile-photo-wrap mb-2">
             {photoSrc ? (
-              <img src={photoSrc} alt="Admin profile" className="admin-profile-photo" />
+              <img src={photoSrc} alt="Librarian profile" className="admin-profile-photo" />
             ) : (
               <div className="admin-profile-photo admin-profile-photo-fallback" aria-hidden="true">
                 <i className="bi bi-person-circle" />
@@ -78,7 +78,7 @@ export default function AdminFeatureSidebar({ onLogout }: AdminFeatureSidebarPro
             onChange={handlePhotoChange}
           />
 
-          <p className="admin-role mt-2 mb-0">Role: {role === 'admin' ? 'Librarian Admin' : 'User'}</p>
+          <p className="admin-role mt-2 mb-0">Role: {role === 'admin' ? 'Librarian' : 'User'}</p>
         </div>
 
         <div className="admin-sidebar-header mb-2">

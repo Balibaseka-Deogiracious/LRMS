@@ -61,7 +61,7 @@ const seededBooks: Book[] = [
 const seededUsers: LocalUser[] = [
   {
     id: 'u-admin',
-    name: 'System Admin',
+    name: 'System Librarian',
     email: 'admin@lrms.local',
     password: 'admin123',
     role: 'admin',

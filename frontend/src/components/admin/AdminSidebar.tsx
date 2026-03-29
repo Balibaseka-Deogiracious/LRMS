@@ -32,7 +32,7 @@ export default function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps)
     const result = await Swal.fire({
       icon: 'question',
       title: 'Logout?',
-      text: 'Do you want to end the admin session?',
+      text: 'Do you want to end the librarian session?',
       showCancelButton: true,
       confirmButtonText: 'Logout',
       confirmButtonColor: '#dc3545',
@@ -53,7 +53,7 @@ export default function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps)
           {!collapsed && (
             <span>
               <strong className="d-block">LRMS</strong>
-              <small>Admin Dashboard</small>
+              <small>Librarian Dashboard</small>
             </span>
           )}
         </div>

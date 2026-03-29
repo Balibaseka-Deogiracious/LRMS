@@ -22,7 +22,7 @@ export default function AdminSettings() {
       <div className="card border-0 shadow-sm">
         <div className="card-body">
           <h4 className="mb-2">Settings</h4>
-          <p className="text-muted">Configure admin preferences and notifications.</p>
+          <p className="text-muted">Configure librarian preferences and notifications.</p>
 
           <div className="form-check form-switch mb-3">
             <input

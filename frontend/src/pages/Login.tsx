@@ -37,7 +37,7 @@ export default function Login() {
         const serverRole = res?.role ?? res?.user?.role
         const effectiveRole = normalizeRole(serverRole)
         storeToken(res.token, effectiveRole)
-        localStorage.setItem('currentUserName', res?.user?.name || 'Admin')
+        localStorage.setItem('currentUserName', res?.user?.name || 'Librarian')
         auth.login(res.token, effectiveRole)
         toast.success('Login successful. Redirecting...')
         navigate(effectiveRole === 'admin' ? '/admin' : '/resources')

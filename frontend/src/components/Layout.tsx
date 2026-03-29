@@ -56,7 +56,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
               <ul className="navbar-nav me-auto mb-2 mb-lg-0 app-nav-links">
                 {role === 'admin' ? (
                   <>
-                    <li className="nav-item"><NavLink className={({ isActive }) => `nav-link app-nav-link ${isActive ? 'active' : ''}`} to="/admin">Admin Dashboard</NavLink></li>
+                    <li className="nav-item"><NavLink className={({ isActive }) => `nav-link app-nav-link ${isActive ? 'active' : ''}`} to="/admin">Librarian Dashboard</NavLink></li>
                     <li className="nav-item"><NavLink className={({ isActive }) => `nav-link app-nav-link ${isActive ? 'active' : ''}`} to="/search">Search Books</NavLink></li>
                     <li className="nav-item"><NavLink className={({ isActive }) => `nav-link app-nav-link ${isActive ? 'active' : ''}`} to="/admin/books">Manage Books</NavLink></li>
                   </>

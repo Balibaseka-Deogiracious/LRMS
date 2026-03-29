@@ -31,7 +31,7 @@ export async function loadAdminDashboard(): Promise<AdminDashboardPayload> {
   ])
 
   return {
-    welcomeMessage: 'Welcome back, Admin. Here is what is happening in your library today.',
+    welcomeMessage: 'Welcome back, Librarian. Here is what is happening in your library today.',
     stats,
     trends,
     distribution,

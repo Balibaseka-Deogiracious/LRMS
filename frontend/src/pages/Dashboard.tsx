@@ -97,7 +97,7 @@ export default function Dashboard() {
   const handleQuickAlert = async () => {
     await Swal.fire({
       icon: 'info',
-      title: 'Admin Insight',
+      title: 'Librarian Insight',
       text: 'Use this dashboard to monitor activity, then open Users to control access and roles.',
       confirmButtonText: 'Got it',
     })

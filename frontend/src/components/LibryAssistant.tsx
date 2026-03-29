@@ -40,7 +40,7 @@ const quickActionsByContext: Record<AssistantContext, QuickAction[]> = {
   admin: [
     { label: 'Generate Weekly Report', reply: 'I can prepare a weekly snapshot of borrowing trends, active users, and overdue counts.' },
     { label: 'Check System Health', reply: 'System health is stable. Search, borrowing sync, and notifications are currently operational.' },
-    { label: 'Add New Member', reply: 'Open Users and create a member account, then assign role and access status from Admin controls.' },
+    { label: 'Add New Member', reply: 'Open Users and create a member account, then assign role and access status from Librarian controls.' },
   ],
 }
 
@@ -52,7 +52,7 @@ function getContext(pathname: string, role: 'admin' | 'user'): AssistantContext 
 
 function getGreeting(context: AssistantContext): string {
   if (context === 'admin') {
-    return "Hello Admin! I've noticed 33 books are currently out. Would you like me to send return reminders?"
+    return "Hello Librarian! I've noticed 33 books are currently out. Would you like me to send return reminders?"
   }
   if (context === 'user') {
     return 'Hello! I can help you find books, manage renewals, and navigate library services quickly.'
@@ -198,7 +198,7 @@ export default function LibryAssistant() {
     if (low.includes('hours')) return 'Library service hours are Monday to Friday 8 AM to 8 PM, and Saturday 9 AM to 5 PM.'
     if (low.includes('health')) return 'System health looks stable. Search latency and borrowing sync are both running normally.'
 
-    return 'Understood. I can help with catalog search, user support, and admin actions. Tell me what you want to do next.'
+    return 'Understood. I can help with catalog search, user support, and librarian actions. Tell me what you want to do next.'
   }
 
   const stopRecognition = () => {

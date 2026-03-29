@@ -75,7 +75,7 @@ export default function AdminUsers() {
         <div className="d-flex justify-content-between align-items-center mb-3">
           <div>
             <h4 className="mb-0">System Users</h4>
-            <small className="text-muted">Admin controls who can access the system.</small>
+            <small className="text-muted">Librarian controls who can access the system.</small>
           </div>
           <span className="badge text-bg-primary">{users.length} users</span>
         </div>
@@ -109,7 +109,7 @@ export default function AdminUsers() {
                         onChange={(e) => handleRoleChange(user.id, e.target.value as 'admin' | 'user')}
                       >
                         <option value="user">User</option>
-                        <option value="admin">Admin</option>
+                        <option value="admin">Librarian</option>
                       </select>
                     </td>
                     <td>

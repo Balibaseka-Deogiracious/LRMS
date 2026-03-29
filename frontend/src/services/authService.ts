@@ -11,7 +11,7 @@ export async function login(email: string, password: string) {
   }
 
   if (!user.active) {
-    throw new Error('This account is disabled by the administrator.')
+    throw new Error('This account is disabled by the librarian.')
   }
 
   const nextUsers = users.map((entry) => (
