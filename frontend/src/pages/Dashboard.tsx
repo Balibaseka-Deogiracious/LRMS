@@ -2,8 +2,11 @@ import { useState, useEffect } from 'react'
 import BookCard from '../components/BookCard'
 import { Book, DashboardStats } from '../types'
 import { searchBooks } from '../services/bookService'
-import { getDashboardStats } from '../services/dashboardService'
+import { getDashboardStats, getBorrowingTrends, getBookDistribution, getAvailabilityStats } from '../services/dashboardService'
 import DashboardStatsCards from '../components/DashboardStatsCards'
+import BorrowingTrendsChart from '../components/BorrowingTrendsChart'
+import BooksDistributionChart from '../components/BooksDistributionChart'
+import AvailabilityStatsChart from '../components/AvailabilityStatsChart'
 import NotificationDemo from '../components/NotificationDemo'
 import { toast } from 'react-toastify'
 import { BookGridSkeleton, StatsCardsSkeleton } from '../components/LoadingSkeletons'
@@ -16,7 +19,11 @@ export default function Dashboard() {
   })
   const [loadingStats, setLoadingStats] = useState(true)
   const [loadingBooks, setLoadingBooks] = useState(true)
+  const [loadingCharts, setLoadingCharts] = useState(true)
   const [books, setBooks] = useState<Book[]>([])
+  const [borrowingTrends, setBorrowingTrends] = useState<any[]>([])
+  const [booksDistribution, setBooksDistribution] = useState<any[]>([])
+  const [availabilityStats, setAvailabilityStats] = useState<any[]>([])
 
   useEffect(() => {
     // Fetch dashboard stats and featured books in one effect on initial load.
@@ -44,6 +51,22 @@ export default function Dashboard() {
         setBooks(mock)
       }
       setLoadingBooks(false)
+
+      // Fetch chart data
+      try {
+        const [trends, distribution, availability] = await Promise.all([
+          getBorrowingTrends(),
+          getBookDistribution(),
+          getAvailabilityStats(),
+        ])
+        setBorrowingTrends(trends)
+        setBooksDistribution(distribution)
+        setAvailabilityStats(availability)
+      } catch {
+        toast.error('Unable to load analytics charts.')
+      } finally {
+        setLoadingCharts(false)
+      }
     })()
   }, [])
 
@@ -70,6 +93,21 @@ export default function Dashboard() {
             ))}
           </div>
         )}
+      </section>
+
+      <section className="mb-4">
+        <h3 className="mb-3">Analytics</h3>
+        <div className="row g-3">
+          <div className="col-12 col-lg-6">
+            <BorrowingTrendsChart data={borrowingTrends} loading={loadingCharts} />
+          </div>
+          <div className="col-12 col-lg-6">
+            <BooksDistributionChart data={booksDistribution} loading={loadingCharts} />
+          </div>
+          <div className="col-12">
+            <AvailabilityStatsChart data={availabilityStats} loading={loadingCharts} />
+          </div>
+        </div>
       </section>
 
       <div className="card">

@@ -5,6 +5,11 @@ import { toast } from 'react-toastify'
 import Swal from 'sweetalert2'
 import { useAuth } from '../contexts/AuthContext'
 
+function normalizeRole(input: unknown): 'admin' | 'user' {
+  if (input === 'admin' || input === 'librarian') return 'admin'
+  return 'user'
+}
+
 export default function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -29,11 +34,12 @@ export default function Login() {
     try {
       const res = await login(email, password)
       if (res?.token) {
-        const effectiveRole = res?.role === 'admin' ? 'admin' : 'user'
+        const serverRole = res?.role ?? res?.user?.role
+        const effectiveRole = normalizeRole(serverRole)
         storeToken(res.token, effectiveRole)
         auth.login(res.token, effectiveRole)
-        toast.success('Login successful. Redirecting to dashboard...')
-        navigate('/dashboard')
+        toast.success('Login successful. Redirecting...')
+        navigate(effectiveRole === 'admin' ? '/dashboard' : '/resources')
       } else {
         toast.error('Invalid login response from server.')
         await Swal.fire({

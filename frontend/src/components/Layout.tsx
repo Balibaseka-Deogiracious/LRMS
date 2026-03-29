@@ -6,10 +6,11 @@ import logo from '../assets/library-logo.svg'
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { theme, toggleTheme } = useTheme()
-  const { logout, role } = useAuth()
+  const { logout, role, isAuthenticated } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
   const isPublicRoute = location.pathname === '/' || location.pathname === '/login' || location.pathname === '/register'
+  const homePath = role === 'admin' ? '/dashboard' : '/resources'
 
   const handleLogout = () => {
     logout()
@@ -29,7 +30,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     <div>
       <nav className={`navbar navbar-expand-lg ${theme === 'dark' ? 'navbar-dark bg-dark' : 'navbar-light bg-light border-bottom'}`}>
         <div className="container-fluid">
-          <Link className="navbar-brand d-flex align-items-center gap-2" to="/dashboard">
+          <Link className="navbar-brand d-flex align-items-center gap-2" to={isAuthenticated ? homePath : '/'}>
             <img src={logo} alt="LRMS logo" width="28" height="28" style={{ borderRadius: 8 }} />
             <span>LRMS</span>
           </Link>
@@ -38,14 +39,17 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           </button>
           <div className="collapse navbar-collapse" id="nav">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              <li className="nav-item"><Link className="nav-link" to="/dashboard">Dashboard</Link></li>
-              <li className="nav-item"><Link className="nav-link" to="/search">Search Books</Link></li>
-              <li className="nav-item"><Link className="nav-link" to="/my-books">My Borrowed Books</Link></li>
-              {role === 'admin' && (
-                <li className="nav-item"><Link className="nav-link" to="/add">Add Book</Link></li>
-              )}
-              {role === 'admin' && (
-                <li className="nav-item"><Link className="nav-link" to="#">Manage Users</Link></li>
+              {role === 'admin' ? (
+                <>
+                  <li className="nav-item"><Link className="nav-link" to="/dashboard">Librarian Dashboard</Link></li>
+                  <li className="nav-item"><Link className="nav-link" to="/search">Search Books</Link></li>
+                  <li className="nav-item"><Link className="nav-link" to="/add">Inventory</Link></li>
+                </>
+              ) : (
+                <>
+                  <li className="nav-item"><Link className="nav-link" to="/resources">Resources</Link></li>
+                  <li className="nav-item"><Link className="nav-link" to="/search">Search Books</Link></li>
+                </>
               )}
             </ul>
             <div className="d-flex align-items-center gap-2">

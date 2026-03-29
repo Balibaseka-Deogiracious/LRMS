@@ -8,7 +8,6 @@ import Dashboard from './pages/Dashboard'
 import SearchPage from './pages/SearchPage'
 import BookDetails from './pages/BookDetails'
 import AddBook from './pages/InventoryPage'
-import MyBorrowedBooks from './pages/MyBorrowedBooks'
 import { useAuth } from './contexts/AuthContext'
 
 function ProtectedRoute({ children }: { children: ReactNode }) {
@@ -19,12 +18,20 @@ function ProtectedRoute({ children }: { children: ReactNode }) {
 
 function AdminRoute({ children }: { children: ReactNode }) {
   const { role } = useAuth()
-  if (role !== 'admin') return <Navigate to="/dashboard" replace />
+  if (role !== 'admin') return <Navigate to="/resources" replace />
+  return children
+}
+
+function UserResourcesRoute({ children }: { children: ReactNode }) {
+  const { role } = useAuth()
+  if (role === 'admin') return <Navigate to="/dashboard" replace />
   return children
 }
 
 function App() {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, role } = useAuth()
+
+  const authenticatedHome = role === 'admin' ? '/dashboard' : '/resources'
 
   return (
     <Router>
@@ -33,15 +40,15 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/resources" element={<ProtectedRoute><UserResourcesRoute><SearchPage /></UserResourcesRoute></ProtectedRoute>} />
           <Route
             path="/dashboard"
-            element={<ProtectedRoute><Dashboard /></ProtectedRoute>}
+            element={<ProtectedRoute><AdminRoute><Dashboard /></AdminRoute></ProtectedRoute>}
           />
           <Route path="/search" element={<ProtectedRoute><SearchPage /></ProtectedRoute>} />
-          <Route path="/my-books" element={<ProtectedRoute><MyBorrowedBooks /></ProtectedRoute>} />
           <Route path="/books/:id" element={<ProtectedRoute><BookDetails /></ProtectedRoute>} />
           <Route path="/add" element={<ProtectedRoute><AdminRoute><AddBook /></AdminRoute></ProtectedRoute>} />
-          <Route path="*" element={<Navigate to={isAuthenticated ? '/dashboard' : '/'} replace />} />
+          <Route path="*" element={<Navigate to={isAuthenticated ? authenticatedHome : '/'} replace />} />
         </Routes>
       </Layout>
     </Router>
