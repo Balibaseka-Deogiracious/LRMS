@@ -1,0 +1,49 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bgGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(96 70) rotate(53) scale(190)">
+      <stop stop-color="#3B5AB8"/>
+      <stop offset="1" stop-color="#254194"/>
+    </radialGradient>
+    <linearGradient id="bookGlow" x1="98" y1="176" x2="166" y2="130" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#67E8F9"/>
+      <stop offset="1" stop-color="#A5F3FC"/>
+    </linearGradient>
+    <linearGradient id="visor" x1="92" y1="94" x2="168" y2="112" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0EA5E9"/>
+      <stop offset="1" stop-color="#38BDF8"/>
+    </linearGradient>
+    <filter id="shadow" x="48" y="44" width="162" height="178" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#0F1D4A" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+
+  <circle cx="128" cy="128" r="120" fill="url(#bgGlow)"/>
+  <circle cx="128" cy="128" r="113" stroke="rgba(255,255,255,0.32)" stroke-width="2"/>
+
+  <g filter="url(#shadow)">
+    <rect x="76" y="66" width="104" height="88" rx="30" fill="#E8F0FF"/>
+    <rect x="88" y="92" width="80" height="28" rx="14" fill="url(#visor)"/>
+    <circle cx="108" cy="106" r="6" fill="#EAF8FF"/>
+    <circle cx="148" cy="106" r="6" fill="#EAF8FF"/>
+
+    <rect x="72" y="88" width="14" height="34" rx="7" fill="#D1DEF8"/>
+    <rect x="170" y="88" width="14" height="34" rx="7" fill="#D1DEF8"/>
+
+    <path d="M78 84C86 69 98 58 128 58C158 58 170 69 178 84" stroke="#C6D7F8" stroke-width="9" stroke-linecap="round"/>
+    <rect x="123" y="53" width="10" height="16" rx="5" fill="#C6D7F8"/>
+
+    <rect x="92" y="148" width="72" height="28" rx="14" fill="#D6E4FF"/>
+    <circle cx="118" cy="162" r="4" fill="#8AA4E8"/>
+    <circle cx="138" cy="162" r="4" fill="#8AA4E8"/>
+
+    <path d="M84 168C95 176 106 181 128 181C150 181 162 176 172 168" stroke="#BFD2F6" stroke-width="8" stroke-linecap="round"/>
+
+    <g>
+      <path d="M100 162L130 151L160 162L130 174L100 162Z" fill="url(#bookGlow)"/>
+      <path d="M130 151V174" stroke="#67E8F9" stroke-width="2.6"/>
+      <path d="M100 162C110 157 120 155 130 154" stroke="#B9F6FF" stroke-width="2"/>
+      <path d="M160 162C150 157 140 155 130 154" stroke="#B9F6FF" stroke-width="2"/>
+      <ellipse cx="130" cy="176" rx="25" ry="6" fill="#67E8F9" fill-opacity="0.35"/>
+    </g>
+  </g>
+</svg>

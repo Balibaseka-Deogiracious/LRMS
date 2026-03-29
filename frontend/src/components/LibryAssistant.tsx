@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState, type ChangeEvent } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useLocation } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import Avatar from './Avatar'
 
 type Sender = 'assistant' | 'user'
 
@@ -56,20 +57,44 @@ export default function LibryAssistant() {
   const location = useLocation()
   const { role } = useAuth()
   const fileInputRef = useRef<HTMLInputElement | null>(null)
+  const replyTimerRef = useRef<number | null>(null)
 
   const [isOpen, setIsOpen] = useState(false)
   const [input, setInput] = useState('')
   const [messages, setMessages] = useState<ChatMessage[]>([])
+  const [isTyping, setIsTyping] = useState(false)
 
   const context = useMemo(() => getContext(location.pathname, role), [location.pathname, role])
   const quickActions = quickActionsByContext[context]
 
   useEffect(() => {
+    if (replyTimerRef.current) {
+      window.clearTimeout(replyTimerRef.current)
+      replyTimerRef.current = null
+    }
+    setIsTyping(false)
     setMessages([{ id: 'greeting', sender: 'assistant', text: getGreeting(context) }])
   }, [context])
 
+  useEffect(() => {
+    return () => {
+      if (replyTimerRef.current) window.clearTimeout(replyTimerRef.current)
+    }
+  }, [])
+
   const addMessage = (sender: Sender, text: string) => {
     setMessages((prev) => [...prev, { id: `${Date.now()}-${Math.random()}`, sender, text }])
+  }
+
+  const queueAssistantReply = (reply: string, delay = 320) => {
+    setIsTyping(true)
+    if (replyTimerRef.current) window.clearTimeout(replyTimerRef.current)
+
+    replyTimerRef.current = window.setTimeout(() => {
+      addMessage('assistant', reply)
+      setIsTyping(false)
+      replyTimerRef.current = null
+    }, delay)
   }
 
   const sendUserMessage = (text: string) => {
@@ -79,19 +104,15 @@ export default function LibryAssistant() {
     addMessage('user', clean)
     setInput('')
 
-    window.setTimeout(() => {
-      addMessage(
-        'assistant',
-        'Thanks for your message. I am checking LRMS context and will guide you with the best next step.'
-      )
-    }, 280)
+    queueAssistantReply(
+      'Thanks for your message. I am checking LRMS context and will guide you with the best next step.',
+      420
+    )
   }
 
   const handleQuickAction = (action: QuickAction) => {
     addMessage('user', action.label)
-    window.setTimeout(() => {
-      addMessage('assistant', action.reply)
-    }, 220)
+    queueAssistantReply(action.reply, 360)
   }
 
   const handleFilePicked = (event: ChangeEvent<HTMLInputElement>) => {
@@ -99,9 +120,7 @@ export default function LibryAssistant() {
     if (!file) return
 
     addMessage('user', `Uploaded file: ${file.name}`)
-    window.setTimeout(() => {
-      addMessage('assistant', 'File received. I can scan this cover or ID and help you locate the matching library record.')
-    }, 250)
+    queueAssistantReply('File received. I can scan this cover or ID and help you locate the matching library record.', 420)
 
     event.target.value = ''
   }
@@ -118,8 +137,11 @@ export default function LibryAssistant() {
             className="fixed bottom-20 right-0 w-[360px] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl sm:w-[390px] max-sm:left-3 max-sm:right-3 max-sm:bottom-3 max-sm:h-[56vh]"
           >
             <div className="flex items-center justify-between bg-[#254194] px-4 py-3 text-white">
-              <div>
-                <p className="mb-0 text-sm font-semibold">Libry Assistant</p>
+              <div className="flex items-center gap-2.5">
+                <Avatar size="md" className="ring-1 ring-white/45" />
+                <div>
+                  <p className="mb-0 text-sm font-semibold">Libry Assistant</p>
+                </div>
                 <div className="mt-1 flex items-center gap-2 text-[11px] text-blue-100">
                   <span className="inline-flex h-2 w-2 rounded-full bg-emerald-400" />
                   Online
@@ -136,17 +158,44 @@ export default function LibryAssistant() {
 
             <div className="h-[330px] space-y-2 overflow-y-auto bg-slate-50 px-3 py-3 max-sm:h-[calc(56vh-146px)]">
               {messages.map((message) => (
-                <div
-                  key={message.id}
-                  className={`max-w-[85%] rounded-2xl px-3 py-2 text-sm leading-relaxed shadow-sm ${
-                    message.sender === 'user'
-                      ? 'ml-auto bg-blue-100 text-slate-800'
-                      : 'bg-[#f1f5f9] text-slate-800'
-                  }`}
-                >
-                  {message.text}
+                <div key={message.id} className={`flex items-end gap-2 ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  {message.sender === 'assistant' && <Avatar size="sm" className="shrink-0" />}
+                  <div
+                    className={`max-w-[82%] rounded-2xl px-3 py-2 text-sm leading-relaxed shadow-sm ${
+                      message.sender === 'user'
+                        ? 'ml-auto bg-blue-100 text-slate-800'
+                        : 'bg-[#f1f5f9] text-slate-800'
+                    }`}
+                  >
+                    {message.text}
+                  </div>
                 </div>
               ))}
+
+              {isTyping && (
+                <div className="flex items-end gap-2">
+                  <Avatar size="sm" className="shrink-0" />
+                  <div className="rounded-2xl bg-[#f1f5f9] px-3 py-2 text-slate-700 shadow-sm">
+                    <div className="flex items-center gap-1.5">
+                      <motion.span
+                        className="h-1.5 w-1.5 rounded-full bg-slate-400"
+                        animate={{ y: [0, -3, 0] }}
+                        transition={{ duration: 0.8, repeat: Infinity, ease: 'easeInOut', delay: 0 }}
+                      />
+                      <motion.span
+                        className="h-1.5 w-1.5 rounded-full bg-slate-400"
+                        animate={{ y: [0, -3, 0] }}
+                        transition={{ duration: 0.8, repeat: Infinity, ease: 'easeInOut', delay: 0.12 }}
+                      />
+                      <motion.span
+                        className="h-1.5 w-1.5 rounded-full bg-slate-400"
+                        animate={{ y: [0, -3, 0] }}
+                        transition={{ duration: 0.8, repeat: Infinity, ease: 'easeInOut', delay: 0.24 }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="border-t border-slate-200 bg-white px-3 py-2">
@@ -207,11 +256,15 @@ export default function LibryAssistant() {
 
       <button
         type="button"
-        className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-[#254194] text-white shadow-xl transition hover:-translate-y-0.5 hover:bg-[#1f357a]"
+        className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-[#254194] p-1.5 text-white shadow-xl transition hover:-translate-y-0.5 hover:bg-[#1f357a]"
         onClick={() => setIsOpen((prev) => !prev)}
         aria-label="Open Libry assistant"
       >
-        <i className={`bi ${isOpen ? 'bi-x-lg' : 'bi-stars'} text-lg`} />
+        {isOpen ? (
+          <i className="bi bi-x-lg text-lg" />
+        ) : (
+          <Avatar size="lg" className="h-10 w-10 ring-2 ring-white/35" />
+        )}
       </button>
     </div>
   )
