@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react'
 import BookCard from '../components/BookCard'
 import { Book, DashboardStats } from '../types'
 import { searchBooks } from '../services/bookService'
-import { getDashboardStats, getBorrowingTrends, getBookDistribution, getAvailabilityStats } from '../services/dashboardService'
+import { loadAdminDashboard } from '../services/adminDashboardService'
+import { listUsers } from '../services/userService'
 import BorrowingTrendsChart from '../components/BorrowingTrendsChart'
 import BooksDistributionChart from '../components/BooksDistributionChart'
 import AvailabilityStatsChart from '../components/AvailabilityStatsChart'
 import { toast } from 'react-toastify'
+import Swal from 'sweetalert2'
 import { BookGridSkeleton, StatsCardsSkeleton } from '../components/LoadingSkeletons'
 import './dashboard.css'
 
@@ -19,10 +21,12 @@ export default function Dashboard() {
   const [loadingStats, setLoadingStats] = useState(true)
   const [loadingBooks, setLoadingBooks] = useState(true)
   const [loadingCharts, setLoadingCharts] = useState(true)
+  const [totalUsers, setTotalUsers] = useState(0)
   const [books, setBooks] = useState<Book[]>([])
   const [borrowingTrends, setBorrowingTrends] = useState<any[]>([])
   const [booksDistribution, setBooksDistribution] = useState<any[]>([])
   const [availabilityStats, setAvailabilityStats] = useState<any[]>([])
+  const [welcomeMessage, setWelcomeMessage] = useState('Welcome back. Here\'s what\'s happening today.')
 
   const todayLabel = new Date().toLocaleDateString(undefined, {
     weekday: 'long',
@@ -38,14 +42,14 @@ export default function Dashboard() {
       meta: 'Catalog size',
     },
     {
+      title: 'Total Users',
+      value: totalUsers,
+      meta: 'Registered members',
+    },
+    {
       title: 'Borrowed Books',
       value: metrics.borrowedBooks,
       meta: 'Currently checked out',
-    },
-    {
-      title: 'Categories',
-      value: booksDistribution.length,
-      meta: 'Distinct collections',
     },
     {
       title: 'Available Books',
@@ -58,13 +62,20 @@ export default function Dashboard() {
     // Fetch dashboard stats and featured books in one effect on initial load.
     ;(async () => {
       try {
-        const stats = await getDashboardStats()
-        setMetrics(stats)
+        const [dashboard, users] = await Promise.all([loadAdminDashboard(), listUsers()])
+        setMetrics(dashboard.stats)
+        setTotalUsers(users.length)
+        setBorrowingTrends(dashboard.trends)
+        setBooksDistribution(dashboard.distribution)
+        setAvailabilityStats(dashboard.availability)
+        setWelcomeMessage(dashboard.welcomeMessage)
       } catch {
         toast.error('Unable to load dashboard stats. Showing defaults.')
         setMetrics({ totalBooks: 0, borrowedBooks: 0, availableBooks: 0 })
+        setTotalUsers(0)
       } finally {
         setLoadingStats(false)
+        setLoadingCharts(false)
       }
 
       const results = await searchBooks('')
@@ -80,24 +91,17 @@ export default function Dashboard() {
         setBooks(mock)
       }
       setLoadingBooks(false)
-
-      // Fetch chart data
-      try {
-        const [trends, distribution, availability] = await Promise.all([
-          getBorrowingTrends(),
-          getBookDistribution(),
-          getAvailabilityStats(),
-        ])
-        setBorrowingTrends(trends)
-        setBooksDistribution(distribution)
-        setAvailabilityStats(availability)
-      } catch {
-        toast.error('Unable to load analytics charts.')
-      } finally {
-        setLoadingCharts(false)
-      }
     })()
   }, [])
+
+  const handleQuickAlert = async () => {
+    await Swal.fire({
+      icon: 'info',
+      title: 'Admin Insight',
+      text: 'Use this dashboard to monitor activity, then open Users to control access and roles.',
+      confirmButtonText: 'Got it',
+    })
+  }
 
   return (
     <div className="dashboard-modern">
@@ -105,7 +109,7 @@ export default function Dashboard() {
         <div className="d-flex flex-wrap justify-content-between align-items-start gap-3">
           <div>
             <h2 className="dashboard-title mb-1">Dashboard</h2>
-            <p className="dashboard-subtitle mb-0">Welcome back. Here's what's happening today.</p>
+            <p className="dashboard-subtitle mb-0">{welcomeMessage}</p>
           </div>
 
           <div className="dashboard-toolbar d-flex flex-wrap align-items-center gap-2">
@@ -116,6 +120,7 @@ export default function Dashboard() {
             <button className="btn btn-light btn-sm"><i className="bi bi-bell" /></button>
             <button className="btn btn-light btn-sm"><i className="bi bi-grid-3x3-gap" /></button>
             <button className="btn btn-light btn-sm"><i className="bi bi-gear" /></button>
+            <button className="btn btn-primary btn-sm" onClick={handleQuickAlert}>Quick Tip</button>
           </div>
         </div>
         <p className="dashboard-date mt-3 mb-0">{todayLabel}</p>

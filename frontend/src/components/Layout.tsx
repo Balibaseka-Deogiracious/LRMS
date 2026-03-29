@@ -2,7 +2,6 @@ import React from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useTheme } from '../contexts/ThemeContext'
 import { useAuth } from '../contexts/AuthContext'
-import AdminFeatureSidebar from './AdminFeatureSidebar'
 import logo from '../assets/library-logo.svg'
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -11,8 +10,8 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const navigate = useNavigate()
   const location = useLocation()
   const isPublicRoute = location.pathname === '/' || location.pathname === '/login' || location.pathname === '/register'
+  const isAdminArea = location.pathname.startsWith('/admin')
   const homePath = role === 'admin' ? '/dashboard' : '/resources'
-  const showAdminSidebar = role === 'admin' && isAuthenticated && !isPublicRoute
 
   const handleLogout = () => {
     logout()
@@ -43,9 +42,9 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               {role === 'admin' ? (
                 <>
-                  <li className="nav-item"><Link className="nav-link" to="/dashboard">Librarian Dashboard</Link></li>
+                  <li className="nav-item"><Link className="nav-link" to="/admin">Admin Dashboard</Link></li>
                   <li className="nav-item"><Link className="nav-link" to="/search">Search Books</Link></li>
-                  <li className="nav-item"><Link className="nav-link" to="/add">Inventory</Link></li>
+                  <li className="nav-item"><Link className="nav-link" to="/admin/books">Manage Books</Link></li>
                 </>
               ) : (
                 <>
@@ -64,20 +63,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           </div>
         </div>
       </nav>
-      {showAdminSidebar ? (
-        <div className="container-fluid mt-4 px-3 px-lg-4">
-          <div className="row g-4">
-            <div className="col-12 col-lg-4 col-xl-3">
-              <AdminFeatureSidebar />
-            </div>
-            <div className="col-12 col-lg-8 col-xl-9">
-              {children}
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className="container mt-4">{children}</div>
-      )}
+      <div className={isAdminArea ? 'mt-2' : 'container mt-4'}>{children}</div>
     </div>
   )
 }

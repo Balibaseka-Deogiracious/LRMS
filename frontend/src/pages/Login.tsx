@@ -37,9 +37,10 @@ export default function Login() {
         const serverRole = res?.role ?? res?.user?.role
         const effectiveRole = normalizeRole(serverRole)
         storeToken(res.token, effectiveRole)
+        localStorage.setItem('currentUserName', res?.user?.name || 'Admin')
         auth.login(res.token, effectiveRole)
         toast.success('Login successful. Redirecting...')
-        navigate(effectiveRole === 'admin' ? '/dashboard' : '/resources')
+        navigate(effectiveRole === 'admin' ? '/admin' : '/resources')
       } else {
         toast.error('Invalid login response from server.')
         await Swal.fire({

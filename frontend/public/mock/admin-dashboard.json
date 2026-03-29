@@ -1,0 +1,29 @@
+{
+  "welcomeMessage": "Welcome back, Admin. Here is what is happening in your library today.",
+  "stats": {
+    "totalBooks": 124,
+    "borrowedBooks": 33,
+    "availableBooks": 91
+  },
+  "trends": [
+    { "date": "Mon", "borrowed": 4, "returned": 3 },
+    { "date": "Tue", "borrowed": 6, "returned": 4 },
+    { "date": "Wed", "borrowed": 7, "returned": 5 },
+    { "date": "Thu", "borrowed": 5, "returned": 4 },
+    { "date": "Fri", "borrowed": 8, "returned": 6 },
+    { "date": "Sat", "borrowed": 3, "returned": 2 },
+    { "date": "Sun", "borrowed": 4, "returned": 3 }
+  ],
+  "distribution": [
+    { "name": "Fiction", "value": 42 },
+    { "name": "Science", "value": 24 },
+    { "name": "Technology", "value": 31 },
+    { "name": "History", "value": 17 },
+    { "name": "Biography", "value": 10 }
+  ],
+  "availability": [
+    { "status": "Available", "count": 91 },
+    { "status": "Borrowed", "count": 33 },
+    { "status": "Reserved", "count": 0 }
+  ]
+}

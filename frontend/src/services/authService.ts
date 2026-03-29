@@ -68,4 +68,5 @@ export function storeToken(token: string, role: Role = 'user') {
 export function logout() {
   localStorage.removeItem('token')
   localStorage.removeItem('userRole')
+  localStorage.removeItem('currentUserName')
 }

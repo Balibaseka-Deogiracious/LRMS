@@ -1,0 +1,33 @@
+.admin-shell {
+  min-height: calc(100vh - 88px);
+}
+
+.admin-shell-sidebar-col {
+  position: relative;
+}
+
+.admin-shell-content-col {
+  min-height: calc(100vh - 120px);
+}
+
+@media (min-width: 1200px) {
+  .admin-shell-sidebar-col {
+    max-width: 280px;
+    width: 280px;
+    flex: 0 0 280px;
+  }
+
+  .admin-shell-content-col {
+    flex: 1;
+    max-width: calc(100% - 280px);
+    margin-left: 280px;
+  }
+
+  .admin-shell-sidebar-col .admin-sidebar {
+    position: fixed;
+    top: 88px;
+    width: 248px;
+    height: calc(100vh - 108px);
+    overflow-y: auto;
+  }
+}

@@ -10,7 +10,11 @@ const links = [
   { to: '/search', icon: 'bi-search', label: 'Resources' },
 ]
 
-export default function AdminFeatureSidebar() {
+interface AdminFeatureSidebarProps {
+  onLogout?: () => void
+}
+
+export default function AdminFeatureSidebar({ onLogout }: AdminFeatureSidebarProps) {
   const { role } = useAuth()
   const [photoSrc, setPhotoSrc] = useState<string>('')
   const fileInputRef = useRef<HTMLInputElement | null>(null)
@@ -103,7 +107,7 @@ export default function AdminFeatureSidebar() {
           ))}
         </nav>
 
-        <button type="button" className="btn btn-sm admin-logout-btn mt-4 w-100">
+        <button type="button" className="btn btn-sm admin-logout-btn mt-4 w-100" onClick={onLogout}>
           <i className="bi bi-box-arrow-left me-1" />
           Log out
         </button>
