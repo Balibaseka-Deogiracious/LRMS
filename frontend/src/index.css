@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   --saas-bg: #f4f8ff;
   --saas-bg-alt: #eef3ff;

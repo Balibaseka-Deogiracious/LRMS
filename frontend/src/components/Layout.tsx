@@ -3,6 +3,7 @@ import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { useTheme } from '../contexts/ThemeContext'
 import { useAuth } from '../contexts/AuthContext'
 import logo from '../assets/library-logo.svg'
+import LibryAssistant from './LibryAssistant'
 import './Layout.css'
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -11,6 +12,8 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const navigate = useNavigate()
   const location = useLocation()
   const isPublicRoute = location.pathname === '/' || location.pathname === '/login' || location.pathname === '/register'
+  const shouldShowAssistant = location.pathname === '/' || location.pathname.startsWith('/admin') || location.pathname.startsWith('/resources')
+    || location.pathname.startsWith('/search') || location.pathname.startsWith('/books/')
   const isAdminArea = location.pathname.startsWith('/admin')
   const homePath = role === 'admin' ? '/dashboard' : '/resources'
 
@@ -20,7 +23,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   }
 
   if (isPublicRoute) {
-    if (location.pathname === '/') return <>{children}</>
+    if (location.pathname === '/') return <>{children}{shouldShowAssistant && <LibryAssistant />}</>
     return (
       <div className="auth-shell">
         <div className="container py-4 app-auth-content">{children}</div>
@@ -67,6 +70,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         </nav>
       )}
       <main className={isAdminArea ? 'app-content app-content-admin' : 'container app-content app-content-standard'}>{children}</main>
+      {shouldShowAssistant && <LibryAssistant />}
     </div>
   )
 }
