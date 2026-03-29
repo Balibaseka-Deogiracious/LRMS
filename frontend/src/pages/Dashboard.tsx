@@ -3,13 +3,12 @@ import BookCard from '../components/BookCard'
 import { Book, DashboardStats } from '../types'
 import { searchBooks } from '../services/bookService'
 import { getDashboardStats, getBorrowingTrends, getBookDistribution, getAvailabilityStats } from '../services/dashboardService'
-import DashboardStatsCards from '../components/DashboardStatsCards'
 import BorrowingTrendsChart from '../components/BorrowingTrendsChart'
 import BooksDistributionChart from '../components/BooksDistributionChart'
 import AvailabilityStatsChart from '../components/AvailabilityStatsChart'
-import NotificationDemo from '../components/NotificationDemo'
 import { toast } from 'react-toastify'
 import { BookGridSkeleton, StatsCardsSkeleton } from '../components/LoadingSkeletons'
+import './dashboard.css'
 
 export default function Dashboard() {
   const [metrics, setMetrics] = useState<DashboardStats>({
@@ -25,6 +24,36 @@ export default function Dashboard() {
   const [booksDistribution, setBooksDistribution] = useState<any[]>([])
   const [availabilityStats, setAvailabilityStats] = useState<any[]>([])
 
+  const todayLabel = new Date().toLocaleDateString(undefined, {
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  })
+
+  const quickStats = [
+    {
+      title: 'Total Books',
+      value: metrics.totalBooks,
+      meta: 'Catalog size',
+    },
+    {
+      title: 'Borrowed Books',
+      value: metrics.borrowedBooks,
+      meta: 'Currently checked out',
+    },
+    {
+      title: 'Categories',
+      value: booksDistribution.length,
+      meta: 'Distinct collections',
+    },
+    {
+      title: 'Available Books',
+      value: metrics.availableBooks,
+      meta: 'Ready to borrow',
+    },
+  ]
+
   useEffect(() => {
     // Fetch dashboard stats and featured books in one effect on initial load.
     ;(async () => {
@@ -39,7 +68,7 @@ export default function Dashboard() {
       }
 
       const results = await searchBooks('')
-      if (results.length) setBooks(results.slice(0, 8))
+      if (Array.isArray(results) && results.length) setBooks(results.slice(0, 8))
       else {
         // mock fallback
         const mock: Book[] = [
@@ -71,53 +100,90 @@ export default function Dashboard() {
   }, [])
 
   return (
-    <div>
-      {loadingStats ? <StatsCardsSkeleton /> : <DashboardStatsCards stats={metrics} />}
-
-      <section className="mb-4">
-        <div className="d-flex justify-content-between align-items-center mb-3">
+    <div className="dashboard-modern">
+      <section className="dashboard-hero mb-4">
+        <div className="d-flex flex-wrap justify-content-between align-items-start gap-3">
           <div>
-            <h3 className="mb-0">Featured Books</h3>
-            <small className="text-muted">Popular titles from the collection</small>
+            <h2 className="dashboard-title mb-1">Dashboard</h2>
+            <p className="dashboard-subtitle mb-0">Welcome back. Here's what's happening today.</p>
+          </div>
+
+          <div className="dashboard-toolbar d-flex flex-wrap align-items-center gap-2">
+            <div className="dashboard-search">
+              <i className="bi bi-search" />
+              <input type="text" placeholder="Search..." aria-label="Search dashboard" />
+            </div>
+            <button className="btn btn-light btn-sm"><i className="bi bi-bell" /></button>
+            <button className="btn btn-light btn-sm"><i className="bi bi-grid-3x3-gap" /></button>
+            <button className="btn btn-light btn-sm"><i className="bi bi-gear" /></button>
           </div>
         </div>
+        <p className="dashboard-date mt-3 mb-0">{todayLabel}</p>
+      </section>
 
-        {loadingBooks ? (
-          <BookGridSkeleton />
-        ) : (
-          <div className="row g-3">
-            {books.map(b => (
-              <div key={b.id} className="col-12 col-sm-6 col-lg-3">
-                <BookCard book={b} />
+      {loadingStats ? (
+        <StatsCardsSkeleton />
+      ) : (
+        <section className="row g-3 mb-4">
+          {quickStats.map((item) => (
+            <div key={item.title} className="col-12 col-sm-6 col-xl-3">
+              <article className="dashboard-kpi card border-0 shadow-sm h-100">
+                <div className="card-body">
+                  <p className="dashboard-kpi-title mb-2">{item.title}</p>
+                  <h3 className="dashboard-kpi-value mb-1">{item.value.toLocaleString()}</h3>
+                  <small className="dashboard-kpi-meta">{item.meta}</small>
+                </div>
+              </article>
+            </div>
+          ))}
+        </section>
+      )}
+
+      <section className="row g-3 mb-4">
+        <div className="col-12 col-xl-6">
+          <BorrowingTrendsChart data={borrowingTrends} loading={loadingCharts} />
+        </div>
+        <div className="col-12 col-xl-6">
+          <AvailabilityStatsChart data={availabilityStats} loading={loadingCharts} />
+        </div>
+      </section>
+
+      <section className="row g-3 mb-4">
+        <div className="col-12 col-xl-6">
+          <BooksDistributionChart data={booksDistribution} loading={loadingCharts} />
+        </div>
+        <div className="col-12 col-xl-6">
+          <div className="card border-0 shadow-sm h-100">
+            <div className="card-body">
+              <div className="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                  <h5 className="mb-0">Featured Books</h5>
+                  <small className="text-muted">Popular titles in the library</small>
+                </div>
               </div>
-            ))}
-          </div>
-        )}
-      </section>
 
-      <section className="mb-4">
-        <h3 className="mb-3">Analytics</h3>
-        <div className="row g-3">
-          <div className="col-12 col-lg-6">
-            <BorrowingTrendsChart data={borrowingTrends} loading={loadingCharts} />
-          </div>
-          <div className="col-12 col-lg-6">
-            <BooksDistributionChart data={booksDistribution} loading={loadingCharts} />
-          </div>
-          <div className="col-12">
-            <AvailabilityStatsChart data={availabilityStats} loading={loadingCharts} />
+              {loadingBooks ? (
+                <BookGridSkeleton />
+              ) : (
+                <div className="row g-3">
+                  {books.slice(0, 4).map((b) => (
+                    <div key={b.id} className="col-12 col-sm-6">
+                      <BookCard book={b} />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </section>
 
-      <div className="card">
+      <section className="card border-0 shadow-sm">
         <div className="card-body">
-          <h5 className="card-title">Welcome to LRMS</h5>
-          <p className="card-text text-muted">Use the search to find books, or add new titles from the Add Book page.</p>
+          <h5 className="mb-1">System Overview</h5>
+          <p className="text-muted mb-0">Track books, activity trends, and availability from one modern control center.</p>
         </div>
-      </div>
-
-      <NotificationDemo />
+      </section>
     </div>
   )
 }

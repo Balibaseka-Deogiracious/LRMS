@@ -40,7 +40,7 @@ export default function Register() {
       toast.success('Registration successful. Redirecting to login...')
       navigate('/login')
     } catch (error: any) {
-      const message = error?.response?.data?.message || 'Registration failed. Please try again.'
+      const message = error?.message || error?.response?.data?.message || 'Registration failed. Please try again.'
       await Swal.fire({
         icon: 'error',
         title: 'Registration Failed',

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { useTheme } from '../contexts/ThemeContext'
+import LibraryImage from './LibraryImage'
 
 interface HeroSectionProps {
   onExplore?: () => void
@@ -39,22 +39,16 @@ export default function HeroSection({ onExplore, onDashboard }: HeroSectionProps
             </div>
           </div>
 
-          {/* Modern library illustration placeholder */}
-          <div className="col-12 col-lg-5 text-center">
-            <div className="rounded-3 p-4" style={{
-              background: 'linear-gradient(135deg, rgba(13,110,253,0.1) 0%, rgba(108,117,125,0.1) 100%)',
-              minHeight: '350px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              backdropFilter: 'blur(10px)',
-              border: '1px solid rgba(255,255,255,0.1)'
-            }}>
-              <div className="text-white text-center">
-                <i className="bi bi-book-half" style={{ fontSize: '5rem', opacity: 0.8 }} />
-                <p className="mt-3 text-white-75">Modern Library System</p>
-              </div>
-            </div>
+          {/* Real library image */}
+          <div className="col-12 col-lg-5">
+            <LibraryImage
+              alt="Modern library with books"
+              searchQuery="modern library books shelves"
+              style={{
+                minHeight: '350px',
+                boxShadow: '0 20px 50px rgba(0,0,0,0.2)',
+              }}
+            />
           </div>
         </div>
       </div>

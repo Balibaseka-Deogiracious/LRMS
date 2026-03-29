@@ -1,0 +1,128 @@
+.dashboard-modern {
+  padding-bottom: 1rem;
+}
+
+.dashboard-hero {
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: #ffffff;
+  border-radius: 1rem;
+  padding: 1rem 1.2rem;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+}
+
+.dashboard-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #121826;
+}
+
+.dashboard-subtitle {
+  color: #5f6c82;
+}
+
+.dashboard-date {
+  color: #607088;
+  font-size: 0.88rem;
+  text-align: right;
+}
+
+.dashboard-toolbar .btn {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+}
+
+.dashboard-search {
+  min-width: 220px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: #f4f6fa;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 0.6rem;
+  padding: 0 0.6rem;
+  height: 36px;
+}
+
+.dashboard-search i {
+  color: #72819a;
+}
+
+.dashboard-search input {
+  border: none;
+  background: transparent;
+  outline: none;
+  width: 100%;
+  font-size: 0.9rem;
+}
+
+.dashboard-kpi {
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.dashboard-kpi-title {
+  color: #5f6c82;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.dashboard-kpi-value {
+  color: #121826;
+  font-size: 1.9rem;
+  line-height: 1.1;
+}
+
+.dashboard-kpi-meta {
+  color: #7686a0;
+}
+
+[data-bs-theme='dark'] .dashboard-hero {
+  background: #111b2d;
+  border-color: rgba(199, 219, 255, 0.14);
+  box-shadow: none;
+}
+
+[data-bs-theme='dark'] .dashboard-title {
+  color: #edf4ff;
+}
+
+[data-bs-theme='dark'] .dashboard-subtitle,
+[data-bs-theme='dark'] .dashboard-date {
+  color: #b7c8e4;
+}
+
+[data-bs-theme='dark'] .dashboard-search {
+  background: #1a2a45;
+  border-color: rgba(199, 219, 255, 0.2);
+}
+
+[data-bs-theme='dark'] .dashboard-search i {
+  color: #b7c8e4;
+}
+
+[data-bs-theme='dark'] .dashboard-search input {
+  color: #e8f1ff;
+}
+
+[data-bs-theme='dark'] .dashboard-toolbar .btn {
+  background: #1a2a45;
+  border-color: rgba(199, 219, 255, 0.2);
+  color: #e8f1ff;
+}
+
+[data-bs-theme='dark'] .dashboard-kpi {
+  background: #111b2d;
+  border-color: rgba(199, 219, 255, 0.14);
+}
+
+[data-bs-theme='dark'] .dashboard-kpi-title,
+[data-bs-theme='dark'] .dashboard-kpi-meta {
+  color: #b7c8e4;
+}
+
+[data-bs-theme='dark'] .dashboard-kpi-value {
+  color: #f3f8ff;
+}

@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import LibraryImage from './LibraryImage'
 
 interface Step {
   number: number
@@ -51,6 +52,17 @@ export default function HowItWorksSection() {
         <div className="text-center mb-5">
           <h2 className="fw-bold mb-2 display-6">How It Works</h2>
           <p className="text-muted">Get started in minutes with a simple 4-step flow</p>
+        </div>
+
+        {/* Library showcase image */}
+        <div className="row g-4 mb-5">
+          <div className="col-12">
+            <LibraryImage
+              alt="Library workflow showcase"
+              searchQuery="library reading books people"
+              style={{ maxHeight: '300px', width: '100%' }}
+            />
+          </div>
         </div>
 
         <div className="row g-4">

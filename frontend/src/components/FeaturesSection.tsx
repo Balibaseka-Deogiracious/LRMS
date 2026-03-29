@@ -1,10 +1,12 @@
 import { motion } from 'framer-motion'
+import LibraryImage from './LibraryImage'
 
 interface Feature {
   icon: string
   title: string
   description: string
   delay: number
+  imageQuery: string
 }
 
 const features: Feature[] = [
@@ -13,18 +15,21 @@ const features: Feature[] = [
     title: 'Smart Search',
     description: 'Discover books instantly with title, author, and category filters.',
     delay: 0,
+    imageQuery: 'library search books',
   },
   {
     icon: 'bi-journal-check',
     title: 'Easy Borrowing',
     description: 'Track availability, borrow with confidence, and manage returns smoothly.',
     delay: 0.08,
+    imageQuery: 'person borrowing books library',
   },
   {
     icon: 'bi-building-gear',
     title: 'Library Management',
     description: 'Organize inventory and monitor the full catalog lifecycle from one place.',
     delay: 0.16,
+    imageQuery: 'library management organize books',
   },
 ]
 
@@ -54,6 +59,13 @@ export default function FeaturesSection() {
               transition={{ duration: 0.45, delay: feature.delay }}
             >
               <div className="card h-100 border-0 shadow-sm feature-card">
+                <div style={{ height: '200px', overflow: 'hidden' }}>
+                  <LibraryImage
+                    alt={feature.title}
+                    searchQuery={feature.imageQuery}
+                    style={{ minHeight: '100%' }}
+                  />
+                </div>
                 <div className="card-body p-4">
                   <div
                     className="feature-icon mb-3 p-3 rounded-circle d-inline-block"

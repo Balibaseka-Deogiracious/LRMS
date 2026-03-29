@@ -1,0 +1,181 @@
+.admin-sidebar {
+  position: sticky;
+  top: 74px;
+  background: linear-gradient(180deg, #5c6ad8 0%, #4352b9 26%, #2a338f 100%);
+  border-radius: 0.85rem;
+  min-height: calc(100vh - 96px);
+  color: #dfe4ff;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 24px 48px rgba(30, 40, 110, 0.45);
+}
+
+.admin-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.admin-brand-icon {
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 0.45rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.admin-brand strong {
+  color: #ffffff;
+  font-size: 0.92rem;
+}
+
+.admin-brand small {
+  color: rgba(223, 228, 255, 0.82);
+  font-size: 0.74rem;
+}
+
+.admin-sidebar-kicker {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(223, 228, 255, 0.75);
+}
+
+.admin-profile {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 0.9rem;
+  padding: 0.85rem;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.admin-profile-photo-wrap {
+  display: flex;
+  justify-content: center;
+}
+
+.admin-profile-photo {
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.admin-profile-photo-fallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 2.1rem;
+}
+
+.admin-role {
+  text-align: center;
+  font-size: 0.85rem;
+  color: rgba(223, 228, 255, 0.95);
+  font-weight: 600;
+}
+
+.admin-sidebar-link {
+  display: block;
+  padding: 0.68rem 0.75rem;
+  border-radius: 0.65rem;
+  text-decoration: none;
+  color: rgba(223, 228, 255, 0.92);
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.admin-sidebar-link strong {
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.admin-sidebar-link:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.26);
+  color: #ffffff;
+}
+
+.admin-sidebar-link.active {
+  background: linear-gradient(90deg, rgba(119, 188, 255, 0.34) 0%, rgba(151, 95, 255, 0.28) 100%);
+  border-color: rgba(194, 222, 255, 0.4);
+  color: #ffffff;
+  box-shadow: inset 0 0 0 1px rgba(210, 232, 255, 0.18);
+}
+
+.admin-sidebar-icon {
+  width: 2rem;
+  height: 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.6rem;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.admin-sidebar-arrow {
+  margin-left: auto;
+  opacity: 0.8;
+}
+
+.admin-logout-btn {
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  background: rgba(255, 255, 255, 0.1);
+  color: #eef2ff;
+}
+
+.admin-logout-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+[data-bs-theme='dark'] .admin-sidebar {
+  background: linear-gradient(180deg, #4252c5 0%, #313f9f 30%, #20296d 100%);
+}
+
+[data-bs-theme='dark'] .admin-sidebar-kicker {
+  color: rgba(223, 228, 255, 0.75);
+}
+
+[data-bs-theme='dark'] .admin-profile {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+[data-bs-theme='dark'] .admin-profile-photo {
+  border-color: rgba(255, 255, 255, 0.32);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+[data-bs-theme='dark'] .admin-profile-photo-fallback {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+[data-bs-theme='dark'] .admin-role {
+  color: rgba(223, 228, 255, 0.95);
+}
+
+[data-bs-theme='dark'] .admin-sidebar-link {
+  color: rgba(223, 228, 255, 0.92);
+}
+
+[data-bs-theme='dark'] .admin-sidebar-link:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.26);
+  color: #ffffff;
+}
+
+[data-bs-theme='dark'] .admin-sidebar-link.active {
+  background: linear-gradient(90deg, rgba(119, 188, 255, 0.34) 0%, rgba(151, 95, 255, 0.28) 100%);
+  border-color: rgba(194, 222, 255, 0.4);
+  color: #ffffff;
+}
+
+[data-bs-theme='dark'] .admin-sidebar-icon {
+  background: rgba(255, 255, 255, 0.18);
+}

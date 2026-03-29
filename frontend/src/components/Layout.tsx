@@ -2,6 +2,7 @@ import React from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useTheme } from '../contexts/ThemeContext'
 import { useAuth } from '../contexts/AuthContext'
+import AdminFeatureSidebar from './AdminFeatureSidebar'
 import logo from '../assets/library-logo.svg'
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -11,6 +12,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const location = useLocation()
   const isPublicRoute = location.pathname === '/' || location.pathname === '/login' || location.pathname === '/register'
   const homePath = role === 'admin' ? '/dashboard' : '/resources'
+  const showAdminSidebar = role === 'admin' && isAuthenticated && !isPublicRoute
 
   const handleLogout = () => {
     logout()
@@ -62,7 +64,20 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           </div>
         </div>
       </nav>
-      <div className="container mt-4">{children}</div>
+      {showAdminSidebar ? (
+        <div className="container-fluid mt-4 px-3 px-lg-4">
+          <div className="row g-4">
+            <div className="col-12 col-lg-4 col-xl-3">
+              <AdminFeatureSidebar />
+            </div>
+            <div className="col-12 col-lg-8 col-xl-9">
+              {children}
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="container mt-4">{children}</div>
+      )}
     </div>
   )
 }

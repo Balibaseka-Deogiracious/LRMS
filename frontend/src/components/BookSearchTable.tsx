@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
-import api from '../services/api'
 import { toast } from 'react-toastify'
 import { Book } from '../types'
 import useDebounce from '../hooks/useDebounce'
 import { TableSkeleton } from './LoadingSkeletons'
 import { useBorrow } from '../contexts/BorrowContext'
+import { searchBooks } from '../services/bookService'
 
 export default function BookSearchTable() {
   const [title, setTitle] = useState('')
@@ -34,20 +34,7 @@ export default function BookSearchTable() {
     setLoading(true)
 
     try {
-      // Send all filter values; backend can ignore empty params.
-      const response = await api.get('/books', {
-        params: {
-          title: debouncedFilters.title.trim() || undefined,
-          author: debouncedFilters.author.trim() || undefined,
-          category: debouncedFilters.category || undefined,
-          availability: debouncedFilters.availability || undefined,
-          page,
-          pageSize,
-        },
-      })
-
-      const payload = response.data
-      const data: Book[] = Array.isArray(payload) ? payload : payload?.data || []
+      const data: Book[] = await searchBooks('')
 
       // Fallback client-side filtering/pagination if backend returns simple array.
       const filtered = data.filter((book) => {
@@ -61,15 +48,13 @@ export default function BookSearchTable() {
         return byTitle && byAuthor && byCategory && byAvailability
       })
 
-      const responseTotalPages = Number(payload?.meta?.totalPages || payload?.totalPages || 0)
-      const calculatedPages = Math.max(1, Math.ceil(filtered.length / pageSize))
-      const nextTotalPages = responseTotalPages || calculatedPages
+      const nextTotalPages = Math.max(1, Math.ceil(filtered.length / pageSize))
       const start = (page - 1) * pageSize
 
       setTotalPages(nextTotalPages)
-      setBooks(responseTotalPages ? data : filtered.slice(start, start + pageSize))
+      setBooks(filtered.slice(start, start + pageSize))
     } catch (error: any) {
-      const message = error?.response?.data?.message || 'Failed to fetch books. Please try again.'
+      const message = error?.message || 'Failed to fetch books. Please try again.'
       toast.error(message)
       setBooks([])
       setTotalPages(1)

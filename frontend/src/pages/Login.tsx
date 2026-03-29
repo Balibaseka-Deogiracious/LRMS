@@ -50,7 +50,7 @@ export default function Login() {
         })
       }
     } catch (err: any) {
-      const apiMessage = err?.response?.data?.message || 'Invalid email or password. Please try again.'
+      const apiMessage = err?.message || err?.response?.data?.message || 'Invalid email or password. Please try again.'
       toast.error(apiMessage)
       await Swal.fire({
         icon: 'error',
