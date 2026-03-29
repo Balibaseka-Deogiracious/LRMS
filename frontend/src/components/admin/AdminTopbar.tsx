@@ -152,7 +152,7 @@ export default function AdminTopbar() {
   }
 
   return (
-    <header className="admin-navbar card border-0 shadow-sm mb-3">
+    <header className="admin-navbar card border-0 shadow-sm">
       <div className="admin-navbar-body">
         <section className="admin-navbar-left">
           <p className="admin-navbar-caption mb-1">Library Information Retrieval System</p>

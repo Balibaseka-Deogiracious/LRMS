@@ -64,7 +64,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           </div>
         </div>
       </nav>
-      <div className={isAdminArea ? 'app-content app-content-admin' : 'container app-content app-content-standard'}>{children}</div>
+      <main className={isAdminArea ? 'app-content app-content-admin' : 'container app-content app-content-standard'}>{children}</main>
     </div>
   )
 }

@@ -1,10 +1,17 @@
+:root {
+  --app-topbar-height: 64px;
+}
+
 .app-shell {
   min-height: 100vh;
 }
 
 .app-topbar {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
+  min-height: var(--app-topbar-height);
   z-index: 1030;
   border-bottom: 1px solid rgba(15, 23, 42, 0.08);
   backdrop-filter: blur(10px);
@@ -46,15 +53,16 @@
 }
 
 .app-content {
+  padding-top: calc(var(--app-topbar-height) + 0.6rem);
   padding-bottom: 1.25rem;
 }
 
 .app-content-standard {
-  margin-top: 1.15rem;
+  margin-top: 0;
 }
 
 .app-content-admin {
-  margin-top: 0.4rem;
+  margin-top: 0;
 }
 
 .app-auth-content {
@@ -77,11 +85,15 @@
 }
 
 @media (max-width: 991px) {
+  :root {
+    --app-topbar-height: 58px;
+  }
+
   .app-topbar-actions {
     margin-top: 0.65rem;
   }
 
   .app-content-standard {
-    margin-top: 0.8rem;
+    margin-top: 0;
   }
 }
