@@ -1,7 +1,7 @@
 .admin-layout-shell {
   --sidebar-width: 260px;
   --sidebar-collapsed-width: 84px;
-  --admin-topbar-height: 92px;
+  --admin-topbar-height: 90px;
   --admin-main-x-padding: 1.4rem;
   --admin-surface: #ffffff;
   --admin-border: rgba(15, 23, 42, 0.08);
@@ -17,10 +17,10 @@
 
 .admin-sidebar-fixed {
   position: fixed;
-  top: var(--app-topbar-height, 64px);
+  top: var(--admin-topbar-height);
   left: 0;
   width: var(--sidebar-width);
-  height: calc(100vh - var(--app-topbar-height, 64px));
+  height: calc(100vh - var(--admin-topbar-height));
   padding: 1rem 0.8rem;
   background: linear-gradient(180deg, #1f3b7a 0%, #2e4ea1 40%, #2d3f87 100%);
   color: #f0f4ff;
@@ -115,7 +115,7 @@
 .admin-main {
   position: relative;
   margin-left: var(--sidebar-width);
-  padding: 0.4rem var(--admin-main-x-padding) 1.5rem;
+  padding: 0 var(--admin-main-x-padding) 1.5rem;
 }
 
 .admin-layout-shell.sidebar-collapsed .admin-main {
@@ -124,14 +124,14 @@
 
 .admin-fixed-topbar {
   position: fixed;
-  top: calc(var(--app-topbar-height, 64px) + 0.35rem);
-  left: calc(var(--sidebar-width) + var(--admin-main-x-padding));
-  right: var(--admin-main-x-padding);
-  z-index: 1015;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1040;
 }
 
 .admin-layout-shell.sidebar-collapsed .admin-fixed-topbar {
-  left: calc(var(--sidebar-collapsed-width) + var(--admin-main-x-padding));
+  left: 0;
 }
 
 .admin-navbar {
@@ -139,18 +139,24 @@
   z-index: 1;
   background: color-mix(in srgb, var(--admin-surface) 90%, transparent);
   border: 1px solid var(--admin-border);
-  border-radius: 1rem;
+  border-radius: 0;
+  border-left: 0;
+  border-right: 0;
   box-shadow: var(--admin-shadow-soft);
   backdrop-filter: blur(10px);
 }
 
 .admin-navbar-body {
   min-height: var(--admin-topbar-height);
-  padding: 0.9rem 1rem;
+  padding: 0.9rem 1.2rem 0.9rem calc(var(--sidebar-width) + var(--admin-main-x-padding));
   display: grid;
   grid-template-columns: minmax(200px, 1fr) minmax(260px, 1.3fr) minmax(300px, 1fr);
   align-items: center;
   gap: 0.8rem;
+}
+
+.admin-layout-shell.sidebar-collapsed .admin-navbar-body {
+  padding-left: calc(var(--sidebar-collapsed-width) + var(--admin-main-x-padding));
 }
 
 .admin-navbar-caption {
@@ -356,7 +362,7 @@
 }
 
 .admin-page-content {
-  padding-top: calc(var(--admin-topbar-height) + 1rem);
+  padding-top: calc(var(--admin-topbar-height) + 0.9rem);
   padding-bottom: 1.4rem;
   display: grid;
   gap: 1rem;
@@ -438,7 +444,7 @@
 
 @media (max-width: 991px) {
   .admin-layout-shell {
-    --admin-topbar-height: 130px;
+    --admin-topbar-height: 148px;
     --admin-main-x-padding: 1rem;
   }
 
@@ -459,12 +465,13 @@
 
   .admin-fixed-topbar,
   .admin-layout-shell.sidebar-collapsed .admin-fixed-topbar {
-    left: var(--admin-main-x-padding);
-    right: var(--admin-main-x-padding);
-    top: calc(var(--app-topbar-height, 58px) + 0.25rem);
+    left: 0;
+    right: 0;
+    top: 0;
   }
 
   .admin-navbar-body {
+    padding: 0.85rem 1rem;
     grid-template-columns: 1fr;
     gap: 0.65rem;
   }
@@ -479,7 +486,7 @@
   }
 
   .admin-main {
-    padding: 0.35rem 1rem 1rem;
+    padding: 0 1rem 1rem;
   }
 
   .admin-profile-meta {
