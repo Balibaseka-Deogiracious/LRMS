@@ -2,6 +2,8 @@ import BookSearchTable from '../components/BookSearchTable'
 
 export default function SearchPage() {
   return (
-    <BookSearchTable />
+    <div className="saas-page">
+      <BookSearchTable />
+    </div>
   )
 }

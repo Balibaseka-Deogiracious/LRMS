@@ -16,11 +16,13 @@ export default function AdminReports() {
   }
 
   return (
-    <div className="card border-0 shadow-sm">
-      <div className="card-body">
-        <h4 className="mb-2">Reports</h4>
-        <p className="text-muted">Generate and review activity reports for administration.</p>
-        <button className="btn btn-primary" onClick={handleGenerate}>Generate Report</button>
+    <div className="saas-page">
+      <div className="card border-0 shadow-sm">
+        <div className="card-body">
+          <h4 className="mb-2">Reports</h4>
+          <p className="text-muted">Generate and review activity reports for administration.</p>
+          <button className="btn btn-primary" onClick={handleGenerate}>Generate Report</button>
+        </div>
       </div>
     </div>
   )

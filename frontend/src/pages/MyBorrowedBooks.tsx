@@ -27,8 +27,8 @@ export default function MyBorrowedBooks() {
   }
 
   return (
-    <div>
-      <div className="d-flex justify-content-between align-items-center mb-3">
+    <div className="saas-page">
+      <div className="saas-page-header">
         <div>
           <h3 className="mb-0">My Borrowed Books</h3>
           <small className="text-muted">Track due dates and return books quickly.</small>

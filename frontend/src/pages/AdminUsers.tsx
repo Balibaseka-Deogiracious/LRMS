@@ -69,7 +69,8 @@ export default function AdminUsers() {
   }
 
   return (
-    <div className="card border-0 shadow-sm">
+    <div className="saas-page">
+      <div className="card border-0 shadow-sm">
       <div className="card-body">
         <div className="d-flex justify-content-between align-items-center mb-3">
           <div>
@@ -134,6 +135,7 @@ export default function AdminUsers() {
           </div>
         )}
       </div>
+    </div>
     </div>
   )
 }

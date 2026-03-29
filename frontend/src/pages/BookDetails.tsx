@@ -3,9 +3,11 @@ import BookDetailsCard from '../components/BookDetailsCard'
 
 export default function BookDetails() {
   const { id } = useParams()
-  if (!id) return <div className="alert alert-warning mb-0">Invalid book ID.</div>
+  if (!id) return <div className="saas-page"><div className="alert alert-warning mb-0">Invalid book ID.</div></div>
 
   return (
-    <BookDetailsCard bookId={id} />
+    <div className="saas-page">
+      <BookDetailsCard bookId={id} />
+    </div>
   )
 }

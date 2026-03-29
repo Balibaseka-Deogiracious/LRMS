@@ -1,8 +1,9 @@
 import React from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { useTheme } from '../contexts/ThemeContext'
 import { useAuth } from '../contexts/AuthContext'
 import logo from '../assets/library-logo.svg'
+import './Layout.css'
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { theme, toggleTheme } = useTheme()
@@ -22,48 +23,48 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     if (location.pathname === '/') return <>{children}</>
     return (
       <div className="auth-shell">
-        <div className="container py-4">{children}</div>
+        <div className="container py-4 app-auth-content">{children}</div>
       </div>
     )
   }
 
   return (
-    <div>
-      <nav className={`navbar navbar-expand-lg ${theme === 'dark' ? 'navbar-dark bg-dark' : 'navbar-light bg-light border-bottom'}`}>
+    <div className="app-shell">
+      <nav className={`navbar navbar-expand-lg app-topbar ${theme === 'dark' ? 'navbar-dark app-topbar-dark' : 'navbar-light app-topbar-light'}`}>
         <div className="container-fluid">
           <Link className="navbar-brand d-flex align-items-center gap-2" to={isAuthenticated ? homePath : '/'}>
             <img src={logo} alt="LRMS logo" width="28" height="28" style={{ borderRadius: 8 }} />
-            <span>LRMS</span>
+            <span className="fw-semibold">LRMS</span>
           </Link>
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-controls="nav" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon" />
           </button>
           <div className="collapse navbar-collapse" id="nav">
-            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+            <ul className="navbar-nav me-auto mb-2 mb-lg-0 app-nav-links">
               {role === 'admin' ? (
                 <>
-                  <li className="nav-item"><Link className="nav-link" to="/admin">Admin Dashboard</Link></li>
-                  <li className="nav-item"><Link className="nav-link" to="/search">Search Books</Link></li>
-                  <li className="nav-item"><Link className="nav-link" to="/admin/books">Manage Books</Link></li>
+                  <li className="nav-item"><NavLink className={({ isActive }) => `nav-link app-nav-link ${isActive ? 'active' : ''}`} to="/admin">Admin Dashboard</NavLink></li>
+                  <li className="nav-item"><NavLink className={({ isActive }) => `nav-link app-nav-link ${isActive ? 'active' : ''}`} to="/search">Search Books</NavLink></li>
+                  <li className="nav-item"><NavLink className={({ isActive }) => `nav-link app-nav-link ${isActive ? 'active' : ''}`} to="/admin/books">Manage Books</NavLink></li>
                 </>
               ) : (
                 <>
-                  <li className="nav-item"><Link className="nav-link" to="/resources">Resources</Link></li>
-                  <li className="nav-item"><Link className="nav-link" to="/search">Search Books</Link></li>
+                  <li className="nav-item"><NavLink className={({ isActive }) => `nav-link app-nav-link ${isActive ? 'active' : ''}`} to="/resources">Resources</NavLink></li>
+                  <li className="nav-item"><NavLink className={({ isActive }) => `nav-link app-nav-link ${isActive ? 'active' : ''}`} to="/search">Search Books</NavLink></li>
                 </>
               )}
             </ul>
-            <div className="d-flex align-items-center gap-2">
-              <button className="btn btn-outline-secondary btn-sm" onClick={toggleTheme}>
+            <div className="d-flex align-items-center gap-2 app-topbar-actions">
+              <button className="btn btn-outline-secondary btn-sm app-pill-btn" onClick={toggleTheme}>
                 <i className={`bi ${theme === 'dark' ? 'bi-sun-fill' : 'bi-moon-stars-fill'} me-1`} />
                 {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
               </button>
-              <button className="btn btn-outline-danger btn-sm" onClick={handleLogout}>Logout</button>
+              <button className="btn btn-outline-danger btn-sm app-pill-btn" onClick={handleLogout}>Logout</button>
             </div>
           </div>
         </div>
       </nav>
-      <div className={isAdminArea ? 'mt-2' : 'container mt-4'}>{children}</div>
+      <div className={isAdminArea ? 'app-content app-content-admin' : 'container app-content app-content-standard'}>{children}</div>
     </div>
   )
 }
