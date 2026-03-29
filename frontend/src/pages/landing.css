@@ -32,6 +32,11 @@
   filter: none;
 }
 
+.landing-auth-actions {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
 .landing-nav .navbar-brand,
 .landing-nav .nav-link {
   color: #ffffff;

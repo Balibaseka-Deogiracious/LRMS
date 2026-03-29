@@ -380,23 +380,23 @@ export default function LibryAssistant() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 14, scale: 0.96 }}
             transition={{ type: 'spring', stiffness: 320, damping: 24 }}
-            className="fixed bottom-20 right-0 w-[360px] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl sm:w-[390px] max-sm:left-3 max-sm:right-3 max-sm:bottom-3 max-sm:h-[56vh]"
+            className="fixed bottom-20 right-0 flex h-[620px] max-h-[82vh] w-[360px] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl sm:w-[390px] max-sm:left-3 max-sm:right-3 max-sm:bottom-3 max-sm:h-[70vh]"
           >
-            <div className="flex items-center justify-between bg-[#254194] px-4 py-3 text-white">
-              <div className="flex items-center gap-2.5">
+            <div className="flex shrink-0 items-center justify-between gap-2 bg-[#254194] px-4 py-3 text-white">
+              <div className="flex min-w-0 items-center gap-2.5">
                 <Avatar size="md" className="ring-1 ring-white/45" />
-                <div>
+                <div className="min-w-0">
                   <p className="mb-0 text-sm font-semibold">Libry Assistant</p>
-                </div>
-                <div className="mt-1 flex items-center gap-2 text-[11px] text-blue-100">
-                  <span className="inline-flex h-2 w-2 rounded-full bg-emerald-400" />
-                  Online
+                  <div className="mt-1 flex items-center gap-2 text-[11px] text-blue-100">
+                    <span className="inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+                    Online
+                  </div>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex shrink-0 items-center gap-2">
                 <button
                   type="button"
-                  className="rounded-md border border-white/35 px-2 py-1 text-xs text-white transition hover:bg-white/15"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white bg-white text-[#254194] shadow-sm transition hover:bg-blue-50"
                   onClick={() => {
                     if (isVoiceMode) {
                       endVoiceCall()
@@ -406,11 +406,11 @@ export default function LibryAssistant() {
                   }}
                   title={isVoiceMode ? 'Return to chat' : 'Start voice mode'}
                 >
-                  <i className={`bi ${isVoiceMode ? 'bi-chat-left-text' : 'bi-mic'} text-xs`} />
+                  <i className={`bi ${isVoiceMode ? 'bi-chat-left-text' : 'bi-mic-fill'} text-sm`} />
                 </button>
                 <button
                   type="button"
-                  className="rounded-md border border-white/35 px-2 py-1 text-xs text-white transition hover:bg-white/15"
+                  className="rounded-lg border border-white bg-white px-3 py-1.5 text-xs font-semibold text-[#254194] shadow-sm transition hover:bg-blue-50"
                   onClick={() => {
                     if (isVoiceMode) endVoiceCall()
                     setIsOpen(false)
@@ -428,7 +428,7 @@ export default function LibryAssistant() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="relative h-[calc(100%-64px)] overflow-hidden bg-gradient-to-b from-[#254194] to-[#1d3276]"
+                  className="relative h-full flex-1 overflow-hidden bg-gradient-to-b from-[#254194] to-[#1d3276]"
                 >
                   <div className="relative flex h-full flex-col items-center justify-center px-4">
                     <motion.span
@@ -519,9 +519,9 @@ export default function LibryAssistant() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="flex h-[calc(100%-64px)] flex-col"
+                  className="flex h-full min-h-0 flex-1 flex-col"
                 >
-                  <div className="h-[330px] space-y-2 overflow-y-auto bg-slate-50 px-3 py-3 max-sm:h-[calc(56vh-146px)]">
+                  <div className="flex-1 min-h-0 space-y-2 overflow-y-auto bg-slate-50 px-3 py-3">
                     {messages.map((message) => (
                       <div key={message.id} className={`flex items-end gap-2 ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
                         {message.sender === 'assistant' && <Avatar size="sm" className="shrink-0" />}
@@ -586,11 +586,11 @@ export default function LibryAssistant() {
                     >
                       <button
                         type="button"
-                        className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-slate-500 transition hover:bg-slate-100"
+                        className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-700 transition hover:bg-slate-100"
                         onClick={() => fileInputRef.current?.click()}
                         aria-label="Upload file"
                       >
-                        <i className="bi bi-paperclip text-base" />
+                        <i className="bi bi-paperclip text-[17px]" />
                       </button>
                       <input
                         type="text"

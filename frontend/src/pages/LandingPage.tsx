@@ -1,4 +1,3 @@
-import LandingNavbar from '../components/LandingNavbar'
 import HeroSection from '../components/HeroSection'
 import FeaturesSection from '../components/FeaturesSection'
 import HowItWorksSection from '../components/HowItWorksSection'
@@ -14,7 +13,6 @@ import './landing.css'
 export default function LandingPage() {
   return (
     <div className="landing-root">
-      <LandingNavbar />
       <HeroSection />
       <FeaturesSection />
       <HowItWorksSection />

@@ -4,6 +4,7 @@ import { useTheme } from '../contexts/ThemeContext'
 import { useAuth } from '../contexts/AuthContext'
 import logo from '../assets/library-logo.svg'
 import LibryAssistant from './LibryAssistant'
+import LandingNavbar from './LandingNavbar'
 import './Layout.css'
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -23,7 +24,15 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   }
 
   if (isPublicRoute) {
-    if (location.pathname === '/') return <>{children}{shouldShowAssistant && <LibryAssistant />}</>
+    if (location.pathname === '/') {
+      return (
+        <>
+          <LandingNavbar />
+          {children}
+          {shouldShowAssistant && <LibryAssistant />}
+        </>
+      )
+    }
     return (
       <div className="auth-shell">
         <div className="container py-4 app-auth-content">{children}</div>
