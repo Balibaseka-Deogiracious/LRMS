@@ -11,7 +11,7 @@ const navLinks = [
 ]
 
 export default function LandingNavbar() {
-  const { theme } = useTheme()
+  const { theme, toggleTheme } = useTheme()
   const isDark = theme === 'dark'
   const [activeSection, setActiveSection] = useState('home')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -61,7 +61,7 @@ export default function LandingNavbar() {
                   onClick={(event) => handleSmoothScroll(event, link.id)}
                   className={`rounded-md px-3 py-2 text-sm font-medium transition ${
                     isActive
-                      ? 'font-semibold text-[#254194] underline decoration-2 underline-offset-8'
+                      ? 'font-semibold text-[#254194]'
                       : isDark
                         ? 'text-slate-300 hover:text-white'
                         : 'text-slate-700 hover:text-slate-900'
@@ -74,6 +74,16 @@ export default function LandingNavbar() {
           </div>
 
           <div className="flex items-center gap-2">
+            <button
+              type="button"
+              className={`hidden sm:inline-flex h-10 w-10 items-center justify-center rounded-md transition ${isDark ? 'text-slate-200 hover:bg-slate-800 hover:text-white' : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900'}`}
+              onClick={toggleTheme}
+              title="Toggle dark/light mode"
+              aria-label="Toggle dark/light mode"
+            >
+              <i className={`bi ${theme === 'dark' ? 'bi-sun-fill' : 'bi-moon-stars-fill'}`} />
+            </button>
+
             <Link
               to="/login"
               className={`hidden sm:inline-block rounded-md px-3 py-2 text-sm font-medium transition ${isDark ? 'text-slate-200 hover:text-white' : 'text-slate-700 hover:text-slate-900'}`}
