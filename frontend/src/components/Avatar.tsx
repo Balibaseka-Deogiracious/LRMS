@@ -1,4 +1,4 @@
-import libryAvatar from '../assets/libry-avatar.svg'
+import assistantAvatar from '../assets/aiden-avatar.jpg'
 
 type AvatarSize = 'sm' | 'md' | 'lg'
 type AvatarVariant = 'admin_blue'
@@ -22,8 +22,8 @@ const ringMap: Record<AvatarVariant, string> = {
 export default function Avatar({ size = 'md', variant = 'admin_blue', className = '' }: AvatarProps) {
   return (
     <img
-      src={libryAvatar}
-      alt="Libry avatar"
+      src={assistantAvatar}
+      alt="Aiden avatar"
       className={`${sizeMap[size]} rounded-full object-cover ${ringMap[variant]} ${className}`.trim()}
       loading="lazy"
       decoding="async"

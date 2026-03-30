@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useLocation } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import Avatar from './Avatar'
+import RobotMascot from './RobotMascot'
 
 type Sender = 'assistant' | 'user'
 
@@ -22,9 +23,11 @@ interface QuickAction {
 type VoiceStatus = 'idle' | 'listening' | 'speaking'
 
 interface VoiceTurn {
-  speaker: 'User' | 'Libry'
+  speaker: 'User' | 'Aiden'
   text: string
 }
+
+const ASSISTANT_NAME = 'Aiden'
 
 const quickActionsByContext: Record<AssistantContext, QuickAction[]> = {
   landing: [
@@ -188,7 +191,7 @@ export default function LibryAssistant() {
     setMessages((prev) => [...prev, { id: `${Date.now()}-${Math.random()}`, sender, text }])
   }
 
-  const addVoiceTurn = (speaker: 'User' | 'Libry', text: string) => {
+  const addVoiceTurn = (speaker: 'User' | 'Aiden', text: string) => {
     setVoiceTurns((prev) => [...prev, { speaker, text }])
   }
 
@@ -256,7 +259,7 @@ export default function LibryAssistant() {
         setVoiceStatus('speaking')
         stopRecognition()
         addMessage('assistant', reply)
-        addVoiceTurn('Libry', reply)
+        addVoiceTurn('Aiden', reply)
 
         if (!isSpeakerOn) {
           setVoiceStatus('listening')
@@ -394,7 +397,7 @@ export default function LibryAssistant() {
               <div className="flex min-w-0 items-center gap-2.5">
                 <Avatar size="md" className="ring-1 ring-white/45" />
                 <div className="min-w-0">
-                  <p className="mb-0 text-sm font-semibold">Libry Assistant</p>
+                  <p className="mb-0 text-sm font-semibold">{ASSISTANT_NAME} Assistant</p>
                   <div className="mt-1 flex items-center gap-2 text-[11px] text-blue-100">
                     <span className="inline-flex h-2 w-2 rounded-full bg-emerald-400" />
                     Online
@@ -453,7 +456,7 @@ export default function LibryAssistant() {
                     <div className="relative z-10 flex flex-col items-center">
                       <Avatar size="lg" className="h-24 w-24 ring-2 ring-white/35" />
                       <p className="mt-4 text-sm font-medium text-blue-100">
-                        {voiceStatus === 'speaking' ? 'Libry is speaking...' : voiceStatus === 'listening' ? 'Libry is listening...' : 'Voice mode is ready'}
+                        {voiceStatus === 'speaking' ? `${ASSISTANT_NAME} is speaking...` : voiceStatus === 'listening' ? `${ASSISTANT_NAME} is listening...` : 'Voice mode is ready'}
                       </p>
 
                       <canvas ref={canvasRef} className="mt-3 h-16 w-72 max-w-full" />
@@ -604,7 +607,7 @@ export default function LibryAssistant() {
                         type="text"
                         value={input}
                         onChange={(event) => setInput(event.target.value)}
-                        placeholder="Ask Libry anything..."
+                        placeholder={`Ask ${ASSISTANT_NAME} anything...`}
                         className="h-8 flex-1 border-none bg-transparent text-sm text-slate-700 outline-none placeholder:text-slate-400"
                       />
                       <button
@@ -632,14 +635,18 @@ export default function LibryAssistant() {
 
       <button
         type="button"
-        className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-[#254194] p-1.5 text-white shadow-xl transition hover:-translate-y-0.5 hover:bg-[#1f357a]"
+        className={`inline-flex items-center justify-center text-white transition ${
+          isOpen
+            ? 'h-14 w-14 rounded-full bg-[#254194] p-1.5 shadow-xl hover:-translate-y-0.5 hover:bg-[#1f357a]'
+            : 'h-[108px] w-[108px] rounded-none bg-transparent p-0 shadow-none ring-0 hover:-translate-y-1'
+        }`}
         onClick={() => setIsOpen((prev) => !prev)}
-        aria-label="Open Libry assistant"
+        aria-label={`Open ${ASSISTANT_NAME} assistant`}
       >
         {isOpen ? (
           <i className="bi bi-x-lg text-lg" />
         ) : (
-          <Avatar size="lg" className="h-10 w-10 ring-2 ring-white/35" />
+          <RobotMascot className="h-[102px] w-[102px]" />
         )}
       </button>
     </div>

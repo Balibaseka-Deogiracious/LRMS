@@ -53,7 +53,7 @@ export default function LandingFooter() {
 
           <hr className="my-4 landing-footer-divider" />
           <p className="text-center small landing-footer-text mb-0">
-            © {currentYear} Library Retrieval System. All rights reserved.
+            Â© {currentYear} Library Retrieval System. All rights reserved.
           </p>
         </div>
       </footer>
