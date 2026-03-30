@@ -14,6 +14,15 @@ export default function LandingNavbar() {
           <span>Library Retrieval</span>
         </Link>
 
+        <div className="d-flex gap-3 align-items-center">
+          <a href="/#features" className={`nav-link ${isDark ? 'text-light' : 'text-dark'}`}>
+            Features
+          </a>
+          <a href="/#how-it-works" className={`nav-link ${isDark ? 'text-light' : 'text-dark'}`}>
+            How It Works
+          </a>
+        </div>
+
         <div className="d-flex gap-2 align-items-center landing-auth-actions">
           <button
             type="button"

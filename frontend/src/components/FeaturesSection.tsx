@@ -40,7 +40,7 @@ export default function FeaturesSection() {
   }
 
   return (
-    <section className="py-5 bg-light">
+    <section id="features" className="bg-light py-5">
       <div className="container">
         <div className="text-center mb-5">
           <h2 className="fw-bold mb-2 display-6">Core Features</h2>

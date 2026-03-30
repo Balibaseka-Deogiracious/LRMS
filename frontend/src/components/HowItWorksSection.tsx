@@ -47,7 +47,7 @@ export default function HowItWorksSection() {
   }
 
   return (
-    <section className="py-5">
+    <section id="how-it-works" className="py-5">
       <div className="container">
         <div className="text-center mb-5">
           <h2 className="fw-bold mb-2 display-6">How It Works</h2>
