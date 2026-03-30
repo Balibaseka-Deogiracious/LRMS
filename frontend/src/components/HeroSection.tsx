@@ -32,7 +32,7 @@ export default function HeroSection({ onExplore, onDashboard }: HeroSectionProps
                 <i className="bi bi-search me-2" />
                 Explore Catalog
               </Link>
-              <Link to="/dashboard" className="btn btn-outline-light btn-lg px-4" onClick={onDashboard}>
+              <Link to="/login" className="btn btn-outline-light btn-lg px-4" onClick={onDashboard}>
                 <i className="bi bi-speedometer2 me-2" />
                 Go to Dashboard
               </Link>

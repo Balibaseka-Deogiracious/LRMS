@@ -21,7 +21,7 @@ export default function LandingFooter() {
             <ul className="list-unstyled small">
               <li><Link className="text-decoration-none landing-footer-link" to="/login">Login</Link></li>
               <li><Link className="text-decoration-none landing-footer-link" to="/register">Register</Link></li>
-              <li><Link className="text-decoration-none landing-footer-link" to="/search">Search Books</Link></li>
+              <li><Link className="text-decoration-none landing-footer-link" to="/login">Search Books</Link></li>
             </ul>
           </div>
 
