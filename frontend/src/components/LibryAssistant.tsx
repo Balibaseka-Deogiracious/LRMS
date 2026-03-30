@@ -34,6 +34,8 @@ const quickActionsByContext: Record<AssistantContext, QuickAction[]> = {
   ],
   user: [
     { label: 'My Borrowed Books', reply: 'Open My Borrowed Books to track due dates and quickly return currently borrowed titles.' },
+    { label: 'Citation Styles', reply: 'I can format references in APA 7, MLA 9, Harvard, or IEEE. Share your source and preferred style.' },
+    { label: 'Find Specific Theses', reply: 'Tell me the thesis title, author, or faculty and I will narrow to matching repository records.' },
     { label: 'Renew a Book', reply: 'Renewal is available from your borrowed list when no hold is active for that title.' },
     { label: 'Find Study Space', reply: 'I can suggest quiet study zones and peak hours. Late mornings are usually the least crowded.' },
   ],
@@ -55,7 +57,7 @@ function getGreeting(context: AssistantContext): string {
     return "Hello Librarian! I've noticed 33 books are currently out. Would you like me to send return reminders?"
   }
   if (context === 'user') {
-    return 'Hello! I can help you find books, manage renewals, and navigate library services quickly.'
+    return 'Hello! I can help you locate specific theses, apply citation styles, and navigate library services quickly.'
   }
   return 'Welcome to LRMS. I can help with joining, searching the catalog, and checking library information.'
 }
@@ -193,6 +195,12 @@ export default function LibryAssistant() {
   const buildAssistantReply = (prompt: string) => {
     const low = prompt.toLowerCase()
 
+    if (low.includes('citation') || low.includes('apa') || low.includes('mla') || low.includes('harvard') || low.includes('ieee')) {
+      return 'For citations, I can format your source in APA 7, MLA 9, Harvard, or IEEE. Paste the source details and I will return a ready citation.'
+    }
+    if ((low.includes('specific') && low.includes('thesis')) || low.includes('find thesis') || low.includes('theses')) {
+      return 'I can find specific theses by title, author, faculty, or issue year. Share any one of these details and I will refine the result list.'
+    }
     if (low.includes('report')) return 'Weekly report is ready to generate. I can include borrowing trends, overdue items, and active members.'
     if (low.includes('renew')) return 'To renew a book, open My Borrowed Books and choose Renew for the selected title if no reservation exists.'
     if (low.includes('hours')) return 'Library service hours are Monday to Friday 8 AM to 8 PM, and Saturday 9 AM to 5 PM.'
