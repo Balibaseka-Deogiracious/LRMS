@@ -11,25 +11,25 @@ interface Feature {
 
 const features: Feature[] = [
   {
-    icon: 'bi-search',
-    title: 'Smart Search',
-    description: 'Discover books instantly with title, author, and category filters.',
+    icon: 'bi-collection',
+    title: 'Digital Catalog',
+    description: 'Browse books and journals with searchable metadata and smart filters.',
     delay: 0,
-    imageQuery: 'library search books',
+    imageQuery: 'digital library catalog books',
   },
   {
-    icon: 'bi-journal-check',
-    title: 'Easy Borrowing',
-    description: 'Track availability, borrow with confidence, and manage returns smoothly.',
+    icon: 'bi-journal-richtext',
+    title: 'Research Repository',
+    description: 'Access theses, dissertations, and faculty research in one institutional hub.',
     delay: 0.08,
-    imageQuery: 'person borrowing books library',
+    imageQuery: 'research repository theses university',
   },
   {
-    icon: 'bi-building-gear',
-    title: 'Library Management',
-    description: 'Organize inventory and monitor the full catalog lifecycle from one place.',
+    icon: 'bi-bookmark-check',
+    title: 'Smart Borrowing',
+    description: 'Reserve resources, track due dates, and manage borrowing history seamlessly.',
     delay: 0.16,
-    imageQuery: 'library management organize books',
+    imageQuery: 'library borrowing desk books',
   },
 ]
 
@@ -44,7 +44,7 @@ export default function FeaturesSection() {
       <div className="container">
         <div className="text-center mb-5">
           <h2 className="fw-bold mb-2 display-6">Core Features</h2>
-          <p className="text-muted">Everything you need for modern library management</p>
+          <p className="text-muted">Everything you need for modern academic library workflows</p>
         </div>
 
         <div className="row g-4">
@@ -69,9 +69,9 @@ export default function FeaturesSection() {
                 <div className="card-body p-4">
                   <div
                     className="feature-icon mb-3 p-3 rounded-circle d-inline-block"
-                    style={{ background: 'rgba(13, 110, 253, 0.1)' }}
+                    style={{ background: 'rgba(37, 65, 148, 0.12)' }}
                   >
-                    <i className={`bi ${feature.icon}`} style={{ fontSize: '1.5rem', color: '#0d6efd' }} />
+                    <i className={`bi ${feature.icon}`} style={{ fontSize: '1.5rem', color: '#254194' }} />
                   </div>
                   <h5 className="card-title fw-bold">{feature.title}</h5>
                   <p className="card-text text-muted">{feature.description}</p>
