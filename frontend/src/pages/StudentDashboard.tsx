@@ -1,12 +1,16 @@
 import { useState, useEffect } from 'react'
-import { Search, BookOpen, Plus, Heart, Moon, Sun } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { Search, BookOpen, Plus, Heart, Moon, Sun, LogOut } from 'lucide-react'
 import { useTheme } from '../contexts/ThemeContext'
+import { useAuth } from '../contexts/AuthContext'
 import { getBooks } from '../services/mockStore'
 import type { Book } from '../types'
 import './student-dashboard.css'
 
 export default function StudentDashboard() {
   const { theme, toggleTheme } = useTheme()
+  const { logout } = useAuth()
+  const navigate = useNavigate()
   const [books, setBooks] = useState<Book[]>([])
   const [filteredBooks, setFilteredBooks] = useState<Book[]>([])
   const [searchQuery, setSearchQuery] = useState('')
@@ -46,6 +50,12 @@ export default function StudentDashboard() {
     setWishlist(newWishlist)
   }
 
+  const handleLogout = () => {
+    logout()
+    localStorage.removeItem('currentUserName')
+    navigate('/login')
+  }
+
   return (
     <div className="student-dashboard">
       {/* Hero Section */}
@@ -56,9 +66,15 @@ export default function StudentDashboard() {
               <h1>Welcome to Your Learning Hub</h1>
               <p>Discover thousands of books, research papers, and knowledge resources curated for your academic journey</p>
             </div>
-            <button type="button" className="theme-toggle-btn" onClick={toggleTheme} title="Toggle theme">
-              {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
-            </button>
+            <div className="hero-action-buttons">
+              <button type="button" className="student-logout-btn" onClick={handleLogout} title="Logout">
+                <LogOut size={18} />
+                <span>Logout</span>
+              </button>
+              <button type="button" className="theme-toggle-btn" onClick={toggleTheme} title="Toggle theme">
+                {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+              </button>
+            </div>
           </div>
           <div className="student-search-box">
             <Search size={20} />
