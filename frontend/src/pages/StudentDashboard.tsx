@@ -243,7 +243,7 @@ export default function StudentDashboard() {
           <div className="footer-section">
             <h4>Connect</h4>
             <ul className="social-links">
-              <li>
+              <li>l
                 <a href="#twitter">Twitter</a>
               </li>
               <li>

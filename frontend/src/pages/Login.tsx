@@ -5,9 +5,9 @@ import { toast } from 'react-toastify'
 import Swal from 'sweetalert2'
 import { useAuth } from '../contexts/AuthContext'
 
-function normalizeRole(input: unknown): 'admin' | 'user' {
+function normalizeRole(input: unknown): 'admin' | 'student' {
   if (input === 'admin' || input === 'librarian') return 'admin'
-  return 'user'
+  return 'student'
 }
 
 export default function Login() {

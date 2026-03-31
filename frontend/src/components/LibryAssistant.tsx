@@ -49,7 +49,7 @@ const quickActionsByContext: Record<AssistantContext, QuickAction[]> = {
   ],
 }
 
-function getContext(pathname: string, role: 'admin' | 'user'): AssistantContext {
+function getContext(pathname: string, role: 'admin' | 'student'): AssistantContext {
   if (pathname === '/') return 'landing'
   if (pathname.startsWith('/admin')) return 'admin'
   return role === 'admin' ? 'admin' : 'user'

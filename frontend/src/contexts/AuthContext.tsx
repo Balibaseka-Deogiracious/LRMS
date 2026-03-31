@@ -16,7 +16,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [token, setToken] = useState<string | null>(() => localStorage.getItem('token'))
   const [roleState, setRoleState] = useState<Role>(() => {
     const saved = localStorage.getItem('userRole')
-    return saved === 'admin' ? 'admin' : 'user'
+    return saved === 'admin' ? 'admin' : 'student'
   })
 
   const login = (nextToken: string, nextRole: Role = 'student') => {
