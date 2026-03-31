@@ -41,8 +41,9 @@ export default function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps)
     if (!result.isConfirmed) return
 
     logout()
+    localStorage.removeItem('currentUserName')
     toast.success('Logged out successfully.')
-    navigate('/login')
+    navigate('/')
   }
 
   return (
@@ -57,7 +58,13 @@ export default function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps)
             </span>
           )}
         </div>
-        <button type="button" className="btn btn-sm btn-outline-light" onClick={onToggle}>
+        <button
+          type="button"
+          className="btn btn-sm btn-outline-light"
+          onClick={onToggle}
+          aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+        >
           <i className={`bi ${collapsed ? 'bi-chevron-right' : 'bi-chevron-left'}`} />
         </button>
       </div>

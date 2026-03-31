@@ -102,14 +102,27 @@
   align-items: center;
   justify-content: center;
   gap: 0.6rem;
+  width: 100%;
   border: 1px solid rgba(255, 255, 255, 0.24);
   background: rgba(255, 255, 255, 0.08);
   color: #f0f4ff;
+  font-weight: 600;
 }
 
 .admin-sidebar-logout:hover {
   color: #fff;
   background: rgba(255, 255, 255, 0.18);
+}
+
+[data-bs-theme='light'] .admin-sidebar-logout {
+  border-color: rgba(255, 255, 255, 0.45);
+  background: #dc3545;
+  color: #ffffff;
+}
+
+[data-bs-theme='light'] .admin-sidebar-logout:hover {
+  background: #bb2d3b;
+  border-color: #bb2d3b;
 }
 
 .admin-main {
