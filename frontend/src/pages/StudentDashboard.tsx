@@ -276,12 +276,7 @@ export default function StudentDashboard() {
         </div>
 
         <div className="footer-bottom">
-          <p>&copy; 2026 Library Resource Management System. All rights reserved.</p>
-          <div className="footer-badges">
-            <span className="badge">🔒 Secure</span>
-            <span className="badge">⚡ Fast</span>
-            <span className="badge">📱 Mobile-Friendly</span>
-          </div>
+          <p>&copy; 2026 Library Retrieval Management System. All rights reserved.</p>
         </div>
       </footer>
     </div>
