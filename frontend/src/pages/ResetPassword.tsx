@@ -10,6 +10,8 @@ export default function ResetPassword() {
 
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [showNewPassword, setShowNewPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [validated, setValidated] = useState(false)
   const [loading, setLoading] = useState(false)
   const [completed, setCompleted] = useState(false)
@@ -80,32 +82,54 @@ export default function ResetPassword() {
           <form noValidate className={validated ? 'was-validated' : ''} onSubmit={handleSubmit}>
             <div className="mb-3">
               <label htmlFor="newPassword" className="form-label">New password</label>
-              <input
-                id="newPassword"
-                type="password"
-                className="form-control"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                minLength={6}
-                required
-                disabled={loading || completed || !token}
-              />
-              <div className="invalid-feedback">Please enter at least 6 characters.</div>
+              <div className="input-group has-validation">
+                <input
+                  id="newPassword"
+                  type={showNewPassword ? 'text' : 'password'}
+                  className="form-control"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  minLength={6}
+                  required
+                  disabled={loading || completed || !token}
+                />
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary"
+                  onClick={() => setShowNewPassword((prev) => !prev)}
+                  aria-label={showNewPassword ? 'Hide new password' : 'Show new password'}
+                  disabled={loading || completed || !token}
+                >
+                  <i className={`bi ${showNewPassword ? 'bi-eye-slash' : 'bi-eye'}`} aria-hidden="true" />
+                </button>
+                <div className="invalid-feedback">Please enter at least 6 characters.</div>
+              </div>
             </div>
 
             <div className="mb-3">
               <label htmlFor="confirmPassword" className="form-label">Confirm new password</label>
-              <input
-                id="confirmPassword"
-                type="password"
-                className="form-control"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                minLength={6}
-                required
-                disabled={loading || completed || !token}
-              />
-              <div className="invalid-feedback">Please confirm your new password.</div>
+              <div className="input-group has-validation">
+                <input
+                  id="confirmPassword"
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  className="form-control"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  minLength={6}
+                  required
+                  disabled={loading || completed || !token}
+                />
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary"
+                  onClick={() => setShowConfirmPassword((prev) => !prev)}
+                  aria-label={showConfirmPassword ? 'Hide confirm new password' : 'Show confirm new password'}
+                  disabled={loading || completed || !token}
+                >
+                  <i className={`bi ${showConfirmPassword ? 'bi-eye-slash' : 'bi-eye'}`} aria-hidden="true" />
+                </button>
+                <div className="invalid-feedback">Please confirm your new password.</div>
+              </div>
             </div>
 
             <div className="d-grid mb-3">

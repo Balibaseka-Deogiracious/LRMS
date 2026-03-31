@@ -13,6 +13,7 @@ function normalizeRole(input: unknown): 'admin' | 'student' {
 export default function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [validated, setValidated] = useState(false)
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
@@ -88,17 +89,27 @@ export default function Login() {
 
             <div className="mb-3">
               <label htmlFor="password" className="form-label">Password</label>
-              <input
-                id="password"
-                type="password"
-                className="form-control"
-                placeholder="Enter your password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                minLength={6}
-                required
-              />
-              <div className="invalid-feedback">Password must be at least 6 characters.</div>
+              <div className="input-group has-validation">
+                <input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  className="form-control"
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  minLength={6}
+                  required
+                />
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  <i className={`bi ${showPassword ? 'bi-eye-slash' : 'bi-eye'}`} aria-hidden="true" />
+                </button>
+                <div className="invalid-feedback">Password must be at least 6 characters.</div>
+              </div>
             </div>
 
             <div className="mb-3 text-end">

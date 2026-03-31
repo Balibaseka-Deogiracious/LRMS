@@ -9,6 +9,8 @@ export default function Register() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [validated, setValidated] = useState(false)
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
@@ -89,31 +91,51 @@ export default function Register() {
 
             <div className="col-12">
               <label htmlFor="password" className="form-label">Password</label>
-              <input
-                id="password"
-                type="password"
-                className="form-control"
-                placeholder="Create a strong password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                minLength={6}
-                required
-              />
-              <div className="invalid-feedback">Password must be at least 6 characters.</div>
+              <div className="input-group has-validation">
+                <input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  className="form-control"
+                  placeholder="Create a strong password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  minLength={6}
+                  required
+                />
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  <i className={`bi ${showPassword ? 'bi-eye-slash' : 'bi-eye'}`} aria-hidden="true" />
+                </button>
+                <div className="invalid-feedback">Password must be at least 6 characters.</div>
+              </div>
             </div>
 
             <div className="col-12">
               <label htmlFor="confirmPassword" className="form-label">Confirm Password</label>
-              <input
-                id="confirmPassword"
-                type="password"
-                className={`form-control ${confirmPassword && confirmPassword !== password ? 'is-invalid' : ''}`}
-                placeholder="Confirm your password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-              />
-              <div className="invalid-feedback">Passwords must match.</div>
+              <div className="input-group has-validation">
+                <input
+                  id="confirmPassword"
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  className={`form-control ${confirmPassword && confirmPassword !== password ? 'is-invalid' : ''}`}
+                  placeholder="Confirm your password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                />
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary"
+                  onClick={() => setShowConfirmPassword((prev) => !prev)}
+                  aria-label={showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'}
+                >
+                  <i className={`bi ${showConfirmPassword ? 'bi-eye-slash' : 'bi-eye'}`} aria-hidden="true" />
+                </button>
+                <div className="invalid-feedback">Passwords must match.</div>
+              </div>
             </div>
 
             <div className="col-12 d-grid">
