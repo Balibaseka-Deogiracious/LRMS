@@ -19,7 +19,7 @@ export default function AdminUsers() {
     void loadUsers()
   }, [])
 
-  const handleRoleChange = async (userId: string, role: 'admin' | 'user') => {
+  const handleRoleChange = async (userId: string, role: 'admin' | 'student') => {
     const ok = await updateUserRole(userId, role)
     if (ok) {
       toast.success('User role updated.')
@@ -106,9 +106,9 @@ export default function AdminUsers() {
                       <select
                         className="form-select form-select-sm"
                         value={user.role}
-                        onChange={(e) => handleRoleChange(user.id, e.target.value as 'admin' | 'user')}
+                        onChange={(e) => handleRoleChange(user.id, e.target.value as 'admin' | 'student')}
                       >
-                        <option value="user">User</option>
+                        <option value="student">Student</option>
                         <option value="admin">Librarian</option>
                       </select>
                     </td>

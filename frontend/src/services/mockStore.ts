@@ -105,7 +105,7 @@ export function getUsers(): LocalUser[] {
     name: String(user.name || 'Unnamed User'),
     email: String(user.email || ''),
     password: String(user.password || ''),
-    role: user.role === 'admin' ? 'admin' : 'user',
+    role: user.role === 'admin' ? 'admin' : 'student',
     active: user.active !== false,
     createdAt: user.createdAt || new Date().toISOString(),
     lastLoginAt: user.lastLoginAt,

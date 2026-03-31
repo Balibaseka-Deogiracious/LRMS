@@ -44,7 +44,7 @@ export async function registerUser(payload: { name: string; email: string; passw
     name: payload.name.trim(),
     email: payload.email.trim(),
     password: payload.password,
-    role: 'user' as Role,
+    role: 'student' as Role,
     active: true,
     createdAt: new Date().toISOString(),
     lastLoginAt: undefined,
@@ -60,7 +60,7 @@ export async function registerUser(payload: { name: string; email: string; passw
   }
 }
 
-export function storeToken(token: string, role: Role = 'user') {
+export function storeToken(token: string, role: Role = 'student') {
   localStorage.setItem('token', token)
   localStorage.setItem('userRole', role)
 }

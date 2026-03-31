@@ -1,6 +1,6 @@
 import { createContext, useContext, useMemo, useState } from 'react'
 
-export type Role = 'admin' | 'user'
+export type Role = 'admin' | 'student'
 
 interface AuthContextType {
   token: string | null
@@ -19,7 +19,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return saved === 'admin' ? 'admin' : 'user'
   })
 
-  const login = (nextToken: string, nextRole: Role = 'user') => {
+  const login = (nextToken: string, nextRole: Role = 'student') => {
     localStorage.setItem('token', nextToken)
     localStorage.setItem('userRole', nextRole)
     setToken(nextToken)
@@ -30,7 +30,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem('token')
     localStorage.removeItem('userRole')
     setToken(null)
-    setRoleState('user')
+    setRoleState('student')
   }
 
   const value = useMemo<AuthContextType>(

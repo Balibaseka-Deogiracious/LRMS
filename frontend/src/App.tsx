@@ -6,7 +6,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import LandingPage from './pages/LandingPage'
 import Dashboard from './pages/Dashboard'
-import SearchPage from './pages/SearchPage'
+import StudentDashboard from './pages/StudentDashboard'
 import BookDetails from './pages/BookDetails'
 import AddBook from './pages/InventoryPage'
 import AdminUsers from './pages/AdminUsers'
@@ -29,11 +29,11 @@ function AdminRoute({ children }: { children: ReactNode }) {
   const { role } = useAuth()
   const isDevBypass = import.meta.env.DEV && (location.pathname.startsWith('/admin') || location.pathname === '/dashboard')
   if (isDevBypass) return children
-  if (role !== 'admin') return <Navigate to="/resources" replace />
+  if (role !== 'admin') return <Navigate to="/student" replace />
   return children
 }
 
-function UserResourcesRoute({ children }: { children: ReactNode }) {
+function StudentRoute({ children }: { children: ReactNode }) {
   const { role } = useAuth()
   if (role === 'admin') return <Navigate to="/dashboard" replace />
   return children
@@ -42,7 +42,7 @@ function UserResourcesRoute({ children }: { children: ReactNode }) {
 function App() {
   const { isAuthenticated, role } = useAuth()
 
-  const authenticatedHome = role === 'admin' ? '/dashboard' : '/resources'
+  const authenticatedHome = role === 'admin' ? '/dashboard' : '/student'
 
   return (
     <Router>
@@ -51,7 +51,11 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/resources" element={<ProtectedRoute><UserResourcesRoute><SearchPage /></UserResourcesRoute></ProtectedRoute>} />
+
+          <Route
+            path="/student"
+            element={<ProtectedRoute><StudentRoute><StudentDashboard /></StudentRoute></ProtectedRoute>}
+          />
 
           <Route
             path="/admin"
@@ -70,7 +74,6 @@ function App() {
             element={<Navigate to="/admin" replace />}
           />
           <Route path="/add" element={<Navigate to="/admin/books" replace />} />
-          <Route path="/search" element={<ProtectedRoute><SearchPage /></ProtectedRoute>} />
           <Route path="/books/:id" element={<ProtectedRoute><BookDetails /></ProtectedRoute>} />
           <Route path="*" element={<Navigate to={isAuthenticated ? authenticatedHome : '/'} replace />} />
         </Routes>

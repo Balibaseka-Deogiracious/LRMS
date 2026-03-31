@@ -13,10 +13,10 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const navigate = useNavigate()
   const location = useLocation()
   const isPublicRoute = location.pathname === '/' || location.pathname === '/login' || location.pathname === '/register'
-  const shouldShowAssistant = location.pathname === '/' || location.pathname.startsWith('/admin') || location.pathname.startsWith('/resources')
+  const shouldShowAssistant = location.pathname === '/' || location.pathname.startsWith('/admin') || location.pathname.startsWith('/student')
     || location.pathname.startsWith('/search') || location.pathname.startsWith('/books/')
   const isAdminArea = location.pathname.startsWith('/admin')
-  const homePath = role === 'admin' ? '/dashboard' : '/resources'
+  const homePath = role === 'admin' ? '/dashboard' : '/student'
 
   const handleLogout = () => {
     logout()
