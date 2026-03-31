@@ -12,7 +12,11 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { logout, role, isAuthenticated } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
-  const isPublicRoute = location.pathname === '/' || location.pathname === '/login' || location.pathname === '/register'
+  const isPublicRoute = location.pathname === '/'
+    || location.pathname === '/login'
+    || location.pathname === '/register'
+    || location.pathname === '/forgot-password'
+    || location.pathname === '/reset-password'
   const shouldShowAssistant = location.pathname === '/' || location.pathname.startsWith('/admin') || location.pathname.startsWith('/student')
     || location.pathname.startsWith('/search') || location.pathname.startsWith('/books/')
   const isAdminArea = location.pathname.startsWith('/admin')

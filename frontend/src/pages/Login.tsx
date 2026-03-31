@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { login, storeToken } from '../services/authService'
 import { toast } from 'react-toastify'
 import Swal from 'sweetalert2'
@@ -99,6 +99,10 @@ export default function Login() {
                 required
               />
               <div className="invalid-feedback">Password must be at least 6 characters.</div>
+            </div>
+
+            <div className="mb-3 text-end">
+              <Link to="/forgot-password" className="small text-decoration-none">Forgot password?</Link>
             </div>
 
             <div className="d-grid">
