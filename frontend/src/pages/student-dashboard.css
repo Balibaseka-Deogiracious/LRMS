@@ -12,8 +12,8 @@
   --sd-card-shadow: rgba(0, 0, 0, 0.08);
   --sd-gradient-start: rgba(99, 102, 241, 0.1);
   --sd-gradient-end: rgba(139, 92, 246, 0.1);
-  --sd-hero-overlay-top: rgba(255, 255, 255, 0.42);
-  --sd-hero-overlay-bottom: rgba(255, 255, 255, 0.86);
+  --sd-hero-overlay-top: rgba(255, 255, 255, 0.45);
+  --sd-hero-overlay-bottom: rgba(255, 255, 255, 0.92);
 }
 
 [data-bs-theme='dark']:root, [data-bs-theme='dark'] {
@@ -28,8 +28,8 @@
   --sd-card-shadow: rgba(0, 0, 0, 0.3);
   --sd-gradient-start: rgba(99, 102, 241, 0.2);
   --sd-gradient-end: rgba(139, 92, 246, 0.2);
-  --sd-hero-overlay-top: rgba(17, 24, 39, 0.2);
-  --sd-hero-overlay-bottom: rgba(17, 24, 39, 0.72);
+  --sd-hero-overlay-top: rgba(17, 24, 39, 0.24);
+  --sd-hero-overlay-bottom: rgba(17, 24, 39, 0.82);
 }
 
 .student-dashboard {
