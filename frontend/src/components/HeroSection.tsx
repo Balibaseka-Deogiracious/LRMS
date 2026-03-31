@@ -29,7 +29,7 @@ export default function HeroSection({ onExplore, onDashboard }: HeroSectionProps
                 Streamline your library workflows with fast discovery, intuitive borrowing, and powerful administration tools.
               </p>
               <div className="d-flex flex-wrap gap-3">
-                <Link to="/login" className="btn btn-warning btn-lg fw-semibold px-4" onClick={onExplore}>
+                <Link to="/register" className="btn btn-warning btn-lg fw-semibold px-4" onClick={onExplore}>
                   <i className="bi bi-search me-2" />
                   Explore Catalog
                 </Link>
