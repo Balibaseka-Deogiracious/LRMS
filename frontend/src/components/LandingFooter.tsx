@@ -11,7 +11,7 @@ export default function LandingFooter() {
             <div className="col-12 col-md-4">
               <h6 className="fw-semibold mb-3">About</h6>
               <p className="small landing-footer-text mb-0">
-                Library Retrieval System helps teams discover, borrow, and manage books efficiently.
+                Library Retrieval Management System helps teams discover, borrow, and manage books efficiently.
               </p>
             </div>
 
@@ -53,7 +53,7 @@ export default function LandingFooter() {
 
           <hr className="my-4 landing-footer-divider" />
           <p className="text-center small landing-footer-text mb-0">
-            © {currentYear} Library Retrieval System. All rights reserved.
+            © {currentYear} Library Retrieval Management System. All rights reserved.
           </p>
         </div>
       </footer>
