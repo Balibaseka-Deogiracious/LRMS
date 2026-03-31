@@ -173,6 +173,11 @@ export default function AdminTopbar() {
         </section>
 
         <section className="admin-navbar-right">
+          <button type="button" className="btn btn-outline-primary btn-sm" onClick={() => navigate('/')}>
+            <i className="bi bi-arrow-left me-1" />
+            <span>First Page</span>
+          </button>
+
           <button type="button" className="btn btn-primary btn-sm admin-quick-action" onClick={() => navigate('/admin/books')}>
             <i className="bi bi-plus-lg me-1" />
             <span>Add Book</span>

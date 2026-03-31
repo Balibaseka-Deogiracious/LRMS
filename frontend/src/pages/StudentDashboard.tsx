@@ -53,7 +53,7 @@ export default function StudentDashboard() {
   const handleLogout = () => {
     logout()
     localStorage.removeItem('currentUserName')
-    navigate('/login')
+    navigate('/')
   }
 
   return (
