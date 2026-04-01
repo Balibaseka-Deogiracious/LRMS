@@ -59,12 +59,15 @@ export default function AdminUsers() {
 
     if (!result.isConfirmed) return
 
-    const ok = await deleteUser(user.id)
-    if (ok) {
-      toast.success('User deleted.')
-      void loadUsers()
-    } else {
-      toast.error('Unable to delete this user.')
+    try {
+      const ok = await deleteUser(user.id)
+      if (ok) {
+        toast.success('User deleted.')
+        void loadUsers()
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unable to delete this user.'
+      toast.error(message)
     }
   }
 

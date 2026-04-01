@@ -2,13 +2,17 @@ import { useState, useEffect } from 'react'
 import BookCard from '../components/BookCard'
 import { Book, DashboardStats } from '../types'
 import { searchBooks } from '../services/bookService'
-import { loadAdminDashboard } from '../services/adminDashboardService'
-import { listUsers } from '../services/userService'
+import { 
+  getBookInventoryStats, 
+  getBorrowingTrends, 
+  getBooksDistribution, 
+  getAvailabilityStats, 
+  getTotalUsers 
+} from '../services/dashboardService'
 import BorrowingTrendsChart from '../components/BorrowingTrendsChart'
 import BooksDistributionChart from '../components/BooksDistributionChart'
 import AvailabilityStatsChart from '../components/AvailabilityStatsChart'
 import { toast } from 'react-toastify'
-import Swal from 'sweetalert2'
 import { BookGridSkeleton, StatsCardsSkeleton } from '../components/LoadingSkeletons'
 import './dashboard.css'
 
@@ -26,7 +30,7 @@ export default function Dashboard() {
   const [borrowingTrends, setBorrowingTrends] = useState<any[]>([])
   const [booksDistribution, setBooksDistribution] = useState<any[]>([])
   const [availabilityStats, setAvailabilityStats] = useState<any[]>([])
-  const [welcomeMessage, setWelcomeMessage] = useState('Welcome back. Here\'s what\'s happening today.')
+  const welcomeMessage = 'Welcome back. Here\'s what\'s happening today.'
 
   const todayLabel = new Date().toLocaleDateString(undefined, {
     weekday: 'long',
@@ -59,49 +63,75 @@ export default function Dashboard() {
   ]
 
   useEffect(() => {
-    // Fetch dashboard stats and featured books in one effect on initial load.
+    // Fetch dashboard stats and featured books on initial load
     ;(async () => {
       try {
-        const [dashboard, users] = await Promise.all([loadAdminDashboard(), listUsers()])
-        setMetrics(dashboard.stats)
-        setTotalUsers(users.length)
-        setBorrowingTrends(dashboard.trends)
-        setBooksDistribution(dashboard.distribution)
-        setAvailabilityStats(dashboard.availability)
-        setWelcomeMessage(dashboard.welcomeMessage)
-      } catch {
-        toast.error('Unable to load dashboard stats. Showing defaults.')
-        setMetrics({ totalBooks: 0, borrowedBooks: 0, availableBooks: 0 })
-        setTotalUsers(0)
+        const [inventory, trends, distribution, availability, users] = await Promise.all([
+          getBookInventoryStats(),
+          getBorrowingTrends(7),
+          getBooksDistribution(),
+          getAvailabilityStats(),
+          getTotalUsers(),
+        ])
+
+        // Map inventory stats to metrics
+        setMetrics({
+          totalBooks: inventory.total_books,
+          borrowedBooks: inventory.borrowed_copies,
+          availableBooks: inventory.available_copies,
+        })
+
+        // Map users
+        setTotalUsers(users.total_students + users.total_librarians)
+
+        // Map borrowing trends data
+        const trendsData = trends.trends.map((t: any) => ({
+          date: new Date(t.date).toLocaleDateString('en-US', { weekday: 'short' }),
+          borrowed: t.borrow_count || 0,
+          returned: t.return_count || 0,
+        }))
+        setBorrowingTrends(trendsData)
+
+        // Map books distribution
+        const distributionData = distribution.map((d: any) => ({
+          name: d.category_name,
+          value: d.total_books,
+        }))
+        setBooksDistribution(distributionData)
+
+        // Map availability stats
+        const availabilityData = [
+          { status: 'Available', count: availability.available_books },
+          { status: 'Borrowed', count: availability.borrowed_books },
+          { status: 'Reserved', count: availability.reserved_books || 0 },
+        ]
+        setAvailabilityStats(availabilityData)
+      } catch (error) {
+        console.error('Failed to load dashboard:', error)
+        toast.error('Unable to load dashboard stats. Please try again.')
       } finally {
         setLoadingStats(false)
         setLoadingCharts(false)
       }
 
-      const results = await searchBooks('')
-      if (Array.isArray(results) && results.length) setBooks(results.slice(0, 8))
-      else {
-        // mock fallback
-        const mock: Book[] = [
-          { id: 1, title: 'The Great Gatsby', author: 'F. Scott Fitzgerald', publication_year: 1925, isbn: '978-0743273565', total_copies: 5, available_copies: 3, is_available: true },
-          { id: 2, title: 'To Kill a Mockingbird', author: 'Harper Lee', publication_year: 1960, isbn: '978-0061120084', total_copies: 4, available_copies: 2, is_available: true },
-          { id: 3, title: '1984', author: 'George Orwell', publication_year: 1949, isbn: '978-0451524942', total_copies: 6, available_copies: 4, is_available: true },
-          { id: 4, title: 'Pride and Prejudice', author: 'Jane Austen', publication_year: 1813, isbn: '978-0141439518', total_copies: 3, available_copies: 1, is_available: true },
-        ]
-        setBooks(mock)
+      // Fetch featured books
+      try {
+        const results = await searchBooks('')
+        if (Array.isArray(results) && results.length > 0) {
+          setBooks(results.slice(0, 8))
+        } else {
+          toast.warning('No books found in the library.')
+          setBooks([])
+        }
+      } catch (error) {
+        console.error('Failed to load books:', error)
+        toast.error('Failed to load featured books.')
+        setBooks([])
+      } finally {
+        setLoadingBooks(false)
       }
-      setLoadingBooks(false)
     })()
   }, [])
-
-  const handleQuickAlert = async () => {
-    await Swal.fire({
-      icon: 'info',
-      title: 'Librarian Insight',
-      text: 'Use this dashboard to monitor activity, then open Users to control access and roles.',
-      confirmButtonText: 'Got it',
-    })
-  }
 
   return (
     <div className="dashboard-modern">
@@ -120,7 +150,6 @@ export default function Dashboard() {
             <button className="btn btn-light btn-sm"><i className="bi bi-bell" /></button>
             <button className="btn btn-light btn-sm"><i className="bi bi-grid-3x3-gap" /></button>
             <button className="btn btn-light btn-sm"><i className="bi bi-gear" /></button>
-            <button className="btn btn-primary btn-sm" onClick={handleQuickAlert}>Quick Tip</button>
           </div>
         </div>
         <p className="dashboard-date mt-3 mb-0">{todayLabel}</p>
@@ -169,6 +198,10 @@ export default function Dashboard() {
 
               {loadingBooks ? (
                 <BookGridSkeleton />
+              ) : books.length === 0 ? (
+                <div className="alert alert-info mb-0">
+                  <p className="mb-0">No books available in the library yet.</p>
+                </div>
               ) : (
                 <div className="row g-3">
                   {books.slice(0, 4).map((b) => (

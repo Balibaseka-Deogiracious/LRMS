@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { getAvailabilityStats, getBookDistribution, getBorrowingTrends, getDashboardStats } from './dashboardService'
+import { getAvailabilityStats, getBooksDistribution, getBorrowingTrends, getDashboardStats } from './dashboardService'
 import type { DashboardStats } from '../types'
 
 export interface AdminDashboardPayload {
@@ -26,15 +26,33 @@ export async function loadAdminDashboard(): Promise<AdminDashboardPayload> {
   const [stats, trends, distribution, availability] = await Promise.all([
     getDashboardStats(),
     getBorrowingTrends(),
-    getBookDistribution(),
+    getBooksDistribution(),
     getAvailabilityStats(),
   ])
+
+  // Map the actual return types to the AdminDashboardPayload interface
+  const mappedTrends = trends.trends.map((t: any) => ({
+    date: new Date(t.date).toLocaleDateString('en-US', { weekday: 'short' }),
+    borrowed: t.borrow_count || 0,
+    returned: t.return_count || 0,
+  }))
+
+  const mappedDistribution = distribution.map((d: any) => ({
+    name: d.category_name,
+    value: d.total_books,
+  }))
+
+  const mappedAvailability = [
+    { status: 'Available', count: availability.available_books },
+    { status: 'Borrowed', count: availability.borrowed_books },
+    { status: 'Reserved', count: availability.reserved_books || 0 },
+  ]
 
   return {
     welcomeMessage: 'Welcome back, Librarian. Here is what is happening in your library today.',
     stats,
-    trends,
-    distribution,
-    availability,
+    trends: mappedTrends,
+    distribution: mappedDistribution,
+    availability: mappedAvailability,
   }
 }
