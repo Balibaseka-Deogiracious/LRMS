@@ -5,12 +5,18 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 interface LoginResponse {
   access_token: string
   token_type: string
-  user_type: 'student' | 'admin'
+  user_type: 'student' | 'librarian'
   student?: {
     id: number
     full_name: string
     email: string
     registration_number: string
+  }
+  librarian?: {
+    id: number
+    full_name: string
+    email: string
+    is_admin: boolean
   }
 }
 
@@ -28,14 +34,17 @@ export async function login(email: string, password: string) {
 
   const data: LoginResponse = await response.json()
   
+  // Determine role: 'librarian' maps to 'admin', 'student' maps to 'student'
+  const role = data.user_type === 'librarian' ? 'admin' : 'student'
+  
   return {
     token: data.access_token,
-    role: data.user_type === 'admin' ? 'admin' : 'student',
+    role: role,
     user: {
-      id: data.student?.id || 0,
-      name: data.student?.full_name || 'Student',
-      email: data.student?.email || email,
-      role: data.user_type === 'admin' ? 'admin' : 'student',
+      id: data.librarian?.id || data.student?.id || 0,
+      name: data.librarian?.full_name || data.student?.full_name || 'User',
+      email: data.librarian?.email || data.student?.email || email,
+      role: role,
     },
   }
 }
