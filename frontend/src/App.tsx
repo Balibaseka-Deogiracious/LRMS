@@ -7,6 +7,7 @@ import Register from './pages/Register'
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
 import LandingPage from './pages/LandingPage'
+import About from './pages/About'
 import Dashboard from './pages/Dashboard'
 import StudentDashboard from './pages/StudentDashboard'
 import BookDetails from './pages/BookDetails'
@@ -91,6 +92,7 @@ function App() {
           path="/" 
           element={isAuthenticated ? <Navigate to={role === 'admin' ? '/admin' : '/student'} replace /> : <LandingPage />} 
         />
+        <Route path="/about" element={<About />} />
         
         {/* Auth Routes - using PublicRoute to redirect if already authenticated */}
         <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />

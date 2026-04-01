@@ -50,8 +50,8 @@ export default function ForgotPassword() {
   }
 
   return (
-    <div className="d-flex justify-content-center align-items-center px-3" style={{ minHeight: '70vh' }}>
-      <div className="card shadow-sm" style={{ maxWidth: 480, width: '100%' }}>
+    <div className="d-flex justify-content-center align-items-center px-3 min-h-screen">
+      <div className="card shadow-sm max-w-2xl w-full">
         <div className="card-body p-4">
           <h4 className="card-title mb-2">Forgot your password?</h4>
           <p className="text-muted mb-4">Enter your account email and we will send a reset link.</p>

@@ -1,0 +1,21 @@
+.add-book-form-description {
+  resize: none;
+}
+
+.add-book-form-upload-zone {
+  cursor: pointer;
+  border-width: 2px;
+  transition: all 0.3s ease;
+}
+
+.add-book-form-upload-zone.dragging {
+  border-style: solid;
+}
+
+.add-book-form-upload-zone:not(.dragging) {
+  border-style: dashed;
+}
+
+.add-book-form-upload-label {
+  cursor: pointer;
+}

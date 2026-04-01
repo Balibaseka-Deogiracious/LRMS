@@ -1,0 +1,4 @@
+/* This file is to track that Layout.css needs borderRadius update */
+.layout-logo {
+  border-radius: 8px;
+}

@@ -68,7 +68,7 @@ export default function BookDetailsCard({ bookId }: BookDetailsCardProps) {
 
     setDownloading(true)
     try {
-      await downloadBookFile(book.id)
+      await downloadBookFile(Number(book.id))
       toast.success(`📥 Downloading "${book.title}"...`)
     } catch (error: any) {
       toast.error(error?.message || 'Failed to download book file.')

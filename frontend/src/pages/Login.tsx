@@ -67,8 +67,8 @@ export default function Login() {
   }
 
   return (
-    <div className="d-flex justify-content-center align-items-center px-3" style={{ minHeight: '70vh' }}>
-      <div className="card shadow-sm" style={{ maxWidth: 440, width: '100%' }}>
+    <div className="d-flex justify-content-center align-items-center px-3 min-h-screen">
+      <div className="card shadow-sm max-w-xs w-full">
         <div className="card-body">
           <h4 className="card-title mb-1">Sign in to LRMS</h4>
           <p className="text-muted mb-4">Enter your credentials to continue.</p>

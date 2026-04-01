@@ -2,12 +2,14 @@ import { useEffect, useState, type MouseEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { useTheme } from '../contexts/ThemeContext'
 import logo from '../assets/library-logo.svg'
+import './LandingNavbar.css'
 
 const navLinks = [
   { id: 'home', label: 'Home' },
   { id: 'features', label: 'Features' },
   { id: 'how-it-works', label: 'Process' },
   { id: 'contact', label: 'Contact' },
+  { id: 'about', label: 'About', isRoute: true },
 ]
 
 export default function LandingNavbar() {
@@ -46,7 +48,7 @@ export default function LandingNavbar() {
     <>
       <nav className={`fixed left-0 right-0 top-0 z-50 border-b backdrop-blur-md ${isDark ? 'border-slate-700/45 bg-slate-900/75' : 'border-slate-200/70 bg-white/75'}`}>
         <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-          <Link to="/" className="flex items-center gap-2 text-lg font-bold" style={{ color: '#254194' }}>
+          <Link to="/" className="flex items-center gap-2 text-lg font-bold nav-logo">
             <img src={logo} alt="LRMS logo" width="32" height="32" className="rounded" />
             <span>LRMS</span>
           </Link>
@@ -54,6 +56,23 @@ export default function LandingNavbar() {
           <div className="hidden md:flex items-center gap-2">
             {navLinks.map((link) => {
               const isActive = activeSection === link.id
+              
+              if (link.isRoute) {
+                return (
+                  <Link
+                    key={link.id}
+                    to={`/${link.id}`}
+                    className={`rounded-md px-3 py-2 text-sm font-medium transition ${
+                      isDark
+                        ? 'text-slate-300 hover:text-white'
+                        : 'text-slate-700 hover:text-slate-900'
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                )
+              }
+              
               return (
                 <a
                   key={link.id}
@@ -92,8 +111,7 @@ export default function LandingNavbar() {
             </Link>
             <Link
               to="/register"
-              className="hidden sm:inline-block rounded-full px-4 py-2 text-sm font-semibold text-white"
-              style={{ backgroundColor: '#254194' }}
+              className="hidden sm:inline-block rounded-full px-4 py-2 text-sm font-semibold text-white nav-primary-button"
             >
               Join Library
             </Link>
@@ -127,8 +145,8 @@ export default function LandingNavbar() {
           }`}
         >
           <div className="mb-5 flex items-center justify-between">
-            <span className="text-sm font-semibold" style={{ color: '#254194' }}>Navigation</span>
-            <button type="button" onClick={() => setMobileMenuOpen(false)} className="text-slate-600">
+            <span className="text-sm font-semibold nav-title">Navigation</span>
+            <button type="button" onClick={() => setMobileMenuOpen(false)} className="text-slate-600" title="Close menu" aria-label="Close menu">
               <i className="bi bi-x-lg" />
             </button>
           </div>
@@ -136,15 +154,29 @@ export default function LandingNavbar() {
           <div className="space-y-1">
             {navLinks.map((link) => {
               const isActive = activeSection === link.id
+              
+              if (link.isRoute) {
+                return (
+                  <Link
+                    key={link.id}
+                    to={`/${link.id}`}
+                    className={`block rounded-md px-3 py-2 text-sm font-medium transition ${
+                      isDark ? 'text-slate-300 hover:text-white' : 'text-slate-700 hover:text-slate-900'
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                )
+              }
+              
               return (
                 <a
                   key={link.id}
                   href={`#${link.id}`}
                   onClick={(event) => handleSmoothScroll(event, link.id)}
                   className={`block rounded-md px-3 py-2 text-sm font-medium ${
-                    isActive ? 'text-white' : 'text-slate-700'
+                    isActive ? 'nav-link-active' : 'text-slate-700'
                   }`}
-                  style={isActive ? { backgroundColor: '#254194' } : undefined}
                 >
                   {link.label}
                 </a>
@@ -158,8 +190,7 @@ export default function LandingNavbar() {
             </Link>
             <Link
               to="/register"
-              className="block rounded-full px-3 py-2 text-center text-sm font-semibold text-white"
-              style={{ backgroundColor: '#254194' }}
+              className="block rounded-full px-3 py-2 text-center text-sm font-semibold text-white nav-primary-button"
             >
               Join Library
             </Link>

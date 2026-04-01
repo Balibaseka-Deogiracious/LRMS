@@ -3,6 +3,7 @@ import Swal from 'sweetalert2'
 import { toast } from 'react-toastify'
 import { addBook, getCategories } from '../services/bookService'
 import { Book } from '../types'
+import './AddBookForm.css'
 
 interface AddBookFormProps {
   onBookAdded?: (book: Book) => void
@@ -251,34 +252,27 @@ export default function AddBookForm({ onBookAdded, onClose, isModal = false }: A
           <label htmlFor="description" className="form-label">Description</label>
           <textarea
             id="description"
-            className="form-control"
+            className="form-control add-book-form-description"
             placeholder="Enter book description (optional)"
             rows={3}
             value={form.description}
             onChange={(e) => updateField('description', e.target.value)}
-            style={{ resize: 'none' }}
           />
         </div>
 
         <div className="col-12">
           <label className="form-label">Book File (PDF or Document)</label>
           <div
-            className={`border-2 rounded p-4 text-center cursor-pointer transition ${
+            className={`add-book-form-upload-zone border-2 rounded p-4 text-center transition ${
               isDragging
-                ? 'border-primary bg-primary bg-opacity-10'
+                ? 'dragging border-primary bg-primary bg-opacity-10'
                 : form.file
                 ? 'border-success bg-success bg-opacity-5'
-                : 'border-secondary border-dashed'
+                : 'border-secondary'
             }`}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
-            style={{
-              cursor: 'pointer',
-              borderWidth: '2px',
-              borderStyle: isDragging ? 'solid' : 'dashed',
-              transition: 'all 0.3s ease'
-            }}
           >
             <input
               type="file"
@@ -287,7 +281,7 @@ export default function AddBookForm({ onBookAdded, onClose, isModal = false }: A
               accept=".pdf,.txt,.doc,.docx"
               onChange={handleFileInput}
             />
-            <label htmlFor="bookFile" className="mb-0" style={{ cursor: 'pointer' }}>
+            <label htmlFor="bookFile" className="mb-0 add-book-form-upload-label">
               {form.file ? (
                 <div>
                   <i className="bi bi-check-circle text-success fs-3 d-block mb-2" />

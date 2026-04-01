@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { Book } from '../types'
 import { downloadBookFile } from '../services/bookService'
+import './BookCard.css'
 
 interface BookCardProps {
   book: Book
@@ -21,7 +22,7 @@ export default function BookCard({ book }: BookCardProps) {
     e.stopPropagation()
     setDownloading(true)
     try {
-      await downloadBookFile(book.id)
+      await downloadBookFile(Number(book.id))
       toast.success(`📥 Downloading "${book.title}"...`)
     } catch (error: any) {
       toast.error(error?.message || 'Failed to download book file.')
@@ -32,17 +33,8 @@ export default function BookCard({ book }: BookCardProps) {
 
   return (
     <div 
-      className="card h-100 shadow-sm"
+      className="card book-card h-100 shadow-sm"
       onClick={handleCardClick}
-      style={{ cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s' }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = 'translateY(-4px)'
-        e.currentTarget.style.boxShadow = '0 8px 16px rgba(0,0,0,0.15)'
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = 'translateY(0)'
-        e.currentTarget.style.boxShadow = ''
-      }}
     >
       <div className="card-body d-flex flex-column">
         <h5 className="card-title">{book.title}</h5>
