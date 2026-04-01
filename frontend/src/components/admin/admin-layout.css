@@ -176,10 +176,14 @@
   display: flex;
   flex-direction: column;
   flex: 1;
+  max-width: calc(100% - var(--sidebar-width));
+  width: 100%;
+  overflow: hidden;
 }
 
 .admin-layout-shell.sidebar-collapsed .admin-main {
   margin-left: var(--sidebar-collapsed-width);
+  max-width: calc(100% - var(--sidebar-collapsed-width));
 }
 
 .admin-fixed-topbar {
@@ -463,6 +467,9 @@
   flex: 1;
   padding: 2rem;
   overflow-y: auto;
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
 }
 
 /* ========== MODAL IMPROVEMENTS ========== */

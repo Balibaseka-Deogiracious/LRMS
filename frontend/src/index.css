@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  box-sizing: border-box;
+}
+
+html {
+  width: 100%;
+  overflow-x: hidden;
+}
+
 :root {
   --saas-bg: #f4f8ff;
   --saas-bg-alt: #eef3ff;
@@ -27,6 +36,10 @@
 
 body {
   margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
   color: var(--saas-text);
   background: radial-gradient(circle at 10% 8%, rgba(62, 121, 255, 0.1), transparent 24%),
     radial-gradient(circle at 92% 15%, rgba(0, 186, 212, 0.08), transparent 26%),
