@@ -271,7 +271,12 @@ export default function StudentDashboard() {
           ) : (
             <div className="books-grid">
               {filteredBooks.map((book) => (
-                <article key={book.id} className="book-card-student">
+                <article 
+                  key={book.id} 
+                  className="book-card-student"
+                  onClick={() => navigate(`/books/${book.id}`)}
+                  style={{ cursor: 'pointer' }}
+                >
                   <div className="book-card-image">
                     <div className="book-placeholder">
                       <BookOpen size={32} />
@@ -279,7 +284,10 @@ export default function StudentDashboard() {
                     <button
                       type="button"
                       className={`wishlist-btn ${wishlist.has(String(book.id)) ? 'active' : ''}`}
-                      onClick={() => toggleWishlist(book.id)}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        toggleWishlist(book.id)
+                      }}
                       title="Add to wishlist"
                     >
                       <Heart size={18} />
@@ -300,7 +308,10 @@ export default function StudentDashboard() {
                         type="button"
                         className="borrow-btn"
                         disabled={!book.is_available || isBorrowed(String(book.id))}
-                        onClick={() => openBorrowForm(book)}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          openBorrowForm(book)
+                        }}
                       >
                         <Plus size={16} />
                         Borrow

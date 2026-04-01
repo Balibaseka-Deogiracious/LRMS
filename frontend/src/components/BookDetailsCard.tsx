@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import Swal from 'sweetalert2'
 import { toast } from 'react-toastify'
 import { Book } from '../types'
-import { borrowBook, getBook } from '../services/bookService'
+import { borrowBook, getBook, downloadBookFile } from '../services/bookService'
 
 interface BookDetailsCardProps {
   bookId: string
@@ -12,6 +12,7 @@ export default function BookDetailsCard({ bookId }: BookDetailsCardProps) {
   const [book, setBook] = useState<Book | null>(null)
   const [loading, setLoading] = useState(true)
   const [borrowing, setBorrowing] = useState(false)
+  const [downloading, setDownloading] = useState(false)
 
   useEffect(() => {
     const loadBook = async () => {
@@ -62,6 +63,20 @@ export default function BookDetailsCard({ bookId }: BookDetailsCardProps) {
     }
   }
 
+  const handleDownload = async () => {
+    if (!book) return
+
+    setDownloading(true)
+    try {
+      await downloadBookFile(book.id)
+      toast.success(`📥 Downloading "${book.title}"...`)
+    } catch (error: any) {
+      toast.error(error?.message || 'Failed to download book file.')
+    } finally {
+      setDownloading(false)
+    }
+  }
+
 
   if (loading) {
     return (
@@ -107,6 +122,23 @@ export default function BookDetailsCard({ bookId }: BookDetailsCardProps) {
             disabled={borrowing || !book.is_available}
           >
             {borrowing ? 'Borrowing...' : (book.is_available ? 'Borrow Book' : 'Not Available')}
+          </button>
+          <button
+            className="btn btn-info ms-2"
+            onClick={handleDownload}
+            disabled={downloading}
+          >
+            {downloading ? (
+              <>
+                <i className="bi bi-download me-1"></i>
+                Downloading...
+              </>
+            ) : (
+              <>
+                <i className="bi bi-download me-1"></i>
+                Download File
+              </>
+            )}
           </button>
         </div>
       </div>

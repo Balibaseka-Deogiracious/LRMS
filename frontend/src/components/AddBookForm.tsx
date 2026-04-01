@@ -17,6 +17,7 @@ interface FormState {
   description: string
   publication_year: string
   total_copies: string
+  file?: File
 }
 
 const initialForm: FormState = {
@@ -32,6 +33,7 @@ export default function AddBookForm({ onBookAdded, onClose, isModal = false }: A
   const [form, setForm] = useState<FormState>(initialForm)
   const [validated, setValidated] = useState(false)
   const [submitting, setSubmitting] = useState(false)
+  const [isDragging, setIsDragging] = useState(false)
 
   useEffect(() => {
     // Load categories (for future use)
@@ -40,6 +42,63 @@ export default function AddBookForm({ onBookAdded, onClose, isModal = false }: A
 
   const updateField = (field: keyof FormState, value: string) => {
     setForm(prev => ({ ...prev, [field]: value }))
+  }
+
+  const handleFileSelect = (file: File | null) => {
+    if (!file) return
+
+    const maxSize = 20 * 1024 * 1024 // 20MB
+    const allowedTypes = ['application/pdf', 'text/plain', 'application/msword', 
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
+
+    if (!allowedTypes.includes(file.type)) {
+      toast.error('Invalid file type. Allowed: PDF, TXT, DOC, DOCX')
+      return
+    }
+
+    if (file.size > maxSize) {
+      toast.error('File size must be less than 20MB')
+      return
+    }
+
+    setForm(prev => ({ ...prev, file }))
+    toast.success(`File "${file.name}" selected successfully`)
+  }
+
+  const clearFile = () => {
+    setForm(prev => ({ ...prev, file: undefined }))
+  }
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(true)
+  }
+
+  const handleDragLeave = () => {
+    setIsDragging(false)
+  }
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(false)
+    const files = e.dataTransfer.files
+    if (files.length > 0) {
+      handleFileSelect(files[0])
+    }
+  }
+
+  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      handleFileSelect(e.target.files[0])
+    }
+  }
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return '0 Bytes'
+    const k = 1024
+    const sizes = ['Bytes', 'KB', 'MB']
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i]
   }
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -56,16 +115,24 @@ export default function AddBookForm({ onBookAdded, onClose, isModal = false }: A
     setSubmitting(true)
 
     try {
-      const payload = {
-        title: form.title.trim(),
-        author: form.author.trim(),
-        isbn: form.isbn.trim(),
-        description: form.description.trim() || undefined,
-        publication_year: form.publication_year ? parseInt(form.publication_year) : undefined,
-        total_copies: parseInt(form.total_copies) || 1,
+      const formData = new FormData()
+      formData.append('title', form.title.trim())
+      formData.append('author', form.author.trim())
+      formData.append('isbn', form.isbn.trim())
+      if (form.description.trim()) {
+        formData.append('description', form.description.trim())
+      }
+      if (form.publication_year) {
+        formData.append('publication_year', form.publication_year)
+      }
+      formData.append('total_copies', form.total_copies)
+      
+      // Add file if selected
+      if (form.file) {
+        formData.append('file', form.file)
       }
 
-      const created = await addBook(payload)
+      const created = await addBook(formData)
 
       toast.success(`✅ Book "${created.title}" added successfully!`)
 
@@ -191,6 +258,61 @@ export default function AddBookForm({ onBookAdded, onClose, isModal = false }: A
             onChange={(e) => updateField('description', e.target.value)}
             style={{ resize: 'none' }}
           />
+        </div>
+
+        <div className="col-12">
+          <label className="form-label">Book File (PDF or Document)</label>
+          <div
+            className={`border-2 rounded p-4 text-center cursor-pointer transition ${
+              isDragging
+                ? 'border-primary bg-primary bg-opacity-10'
+                : form.file
+                ? 'border-success bg-success bg-opacity-5'
+                : 'border-secondary border-dashed'
+            }`}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            style={{
+              cursor: 'pointer',
+              borderWidth: '2px',
+              borderStyle: isDragging ? 'solid' : 'dashed',
+              transition: 'all 0.3s ease'
+            }}
+          >
+            <input
+              type="file"
+              id="bookFile"
+              className="d-none"
+              accept=".pdf,.txt,.doc,.docx"
+              onChange={handleFileInput}
+            />
+            <label htmlFor="bookFile" className="mb-0" style={{ cursor: 'pointer' }}>
+              {form.file ? (
+                <div>
+                  <i className="bi bi-check-circle text-success fs-3 d-block mb-2" />
+                  <strong className="d-block mb-1">{form.file.name}</strong>
+                  <small className="text-muted">{formatFileSize(form.file.size)}</small>
+                </div>
+              ) : (
+                <div>
+                  <i className="bi bi-cloud-upload text-secondary fs-3 d-block mb-2" />
+                  <strong className="d-block">Drag and drop your file here</strong>
+                  <small className="text-muted">or click to browse (PDF, TXT, DOC, DOCX - Max 20MB)</small>
+                </div>
+              )}
+            </label>
+          </div>
+          {form.file && (
+            <button
+              type="button"
+              className="btn btn-sm btn-outline-danger mt-2"
+              onClick={clearFile}
+            >
+              <i className="bi bi-x-circle me-1" />
+              Remove File
+            </button>
+          )}
         </div>
       </div>
 

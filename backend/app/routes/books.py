@@ -274,10 +274,12 @@ def download_book_file(
     media_type = media_types.get(suffix, "application/octet-stream")
     download_name = f"{book.title}{suffix}".replace("/", "-")
 
+    # Explicitly set Content-Disposition header to ensure proper filename
     return FileResponse(
         path=file_path,
         media_type=media_type,
         filename=download_name,
+        headers={"Content-Disposition": f'attachment; filename="{download_name}"'}
     )
 
 

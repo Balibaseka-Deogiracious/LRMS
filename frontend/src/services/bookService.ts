@@ -27,43 +27,71 @@ export async function getBook(id: string): Promise<Book | null> {
   }
 }
 
-export async function addBook(payload: {
-  title: string
-  author: string
-  isbn: string
-  category?: string
-  description?: string
-  total_copies?: number
-  publication_year?: number
-}) {
+export async function addBook(payload: any) {
   const token = localStorage.getItem('token')
   if (!token) {
     throw new Error('Authentication token not found')
   }
 
+  const isFormData = payload instanceof FormData
+  const file = isFormData ? payload.get('file') : null
+  
+  // Create form data without file for initial request
+  const formData = new FormData()
+  if (isFormData) {
+    for (const [key, value] of payload.entries()) {
+      if (key !== 'file') {
+        formData.append(key, value as any)
+      }
+    }
+  }
+
+  // First, create the book without file
   const response = await fetch(`${API_BASE_URL}/admin/books`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`,
     },
-    body: JSON.stringify({
-      title: payload.title.trim(),
-      author: payload.author.trim(),
-      isbn: payload.isbn.trim(),
+    body: isFormData ? formData : JSON.stringify({
+      title: payload.title?.trim(),
+      author: payload.author?.trim(),
+      isbn: payload.isbn?.trim(),
       description: payload.description?.trim() || null,
       publication_year: payload.publication_year || null,
       total_copies: payload.total_copies || 1,
-      category_id: null, // Can be extended later
     }),
   })
 
   if (!response.ok) {
     const error = await response.json()
-    throw new Error(error.detail || 'Failed to add book')
+    throw new Error(error.detail || 'Failed to create book')
   }
 
-  return await response.json()
+  const created = await response.json()
+
+  // If file exists, upload it separately
+  if (file && file instanceof File) {
+    try {
+      const fileFormData = new FormData()
+      fileFormData.append('file', file)
+
+      const fileResponse = await fetch(`${API_BASE_URL}/admin/books/${created.id}/file`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        body: fileFormData,
+      })
+
+      if (!fileResponse.ok) {
+        console.warn('File upload failed, but book was created')
+      }
+    } catch (error) {
+      console.warn('File upload failed:', error)
+    }
+  }
+
+  return created
 }
 
 export async function borrowBook(id: string): Promise<boolean> {
@@ -97,6 +125,69 @@ export async function deleteBook(id: string): Promise<boolean> {
   } catch (error) {
     console.error('Delete book error:', error)
     return false
+  }
+}
+
+export async function downloadBookFile(bookId: number): Promise<void> {
+  try {
+    const token = localStorage.getItem('token')
+    const response = await fetch(`${API_BASE_URL}/books/${bookId}/download`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error('File not found or access denied')
+    }
+
+    // Get filename from Content-Disposition header with better parsing
+    const contentDisposition = response.headers.get('content-disposition') || ''
+    let filename = 'book'
+    
+    if (contentDisposition) {
+      // Try to extract filename from different formats:
+      // format 1: filename="book.pdf"
+      // format 2: filename=book.pdf
+      // format 3: filename*=UTF-8''book.pdf
+      const filenameMatch = contentDisposition.match(/filename(?:\*=(?:UTF-8'')?)?"?([^"\n\r;]+)"?/)
+      if (filenameMatch && filenameMatch[1]) {
+        filename = filenameMatch[1].trim()
+      }
+    }
+    
+    // Ensure filename has an extension based on the content type
+    const contentType = response.headers.get('content-type') || 'application/octet-stream'
+    const hasExtension = /\.[a-zA-Z0-9]{1,5}$/.test(filename)
+    
+    if (!hasExtension) {
+      // Map MIME types to extensions
+      const mimeToExtension: { [key: string]: string } = {
+        'application/pdf': '.pdf',
+        'application/epub+zip': '.epub',
+        'text/plain': '.txt',
+        'application/msword': '.doc',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document': '.docx',
+        'text/csv': '.csv',
+      }
+      
+      const ext = mimeToExtension[contentType] || '.bin'
+      filename += ext
+    }
+
+    const blob = await response.blob()
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = filename
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    window.URL.revokeObjectURL(url)
+  } catch (error) {
+    console.error('Download book file error:', error)
+    throw new Error('Failed to download book file')
   }
 }
 

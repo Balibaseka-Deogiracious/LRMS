@@ -2,7 +2,7 @@ import csv
 from datetime import date, datetime, timezone
 from io import BytesIO, StringIO
 from pathlib import Path
-from fastapi import APIRouter, Depends, HTTPException, status, Query, UploadFile, File
+from fastapi import APIRouter, Depends, HTTPException, status, Query, UploadFile, File, Form
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
@@ -464,44 +464,44 @@ def _parse_import_file(filename: str, file_bytes: bytes) -> list[dict]:
 # ==================== BOOK MANAGEMENT ====================
 
 @router.post("/books", response_model=BookPublic, status_code=status.HTTP_201_CREATED)
-def add_book_to_catalog(
-    payload: BookCreate,
+async def add_book_to_catalog(
+    title: str = Form(...),
+    author: str = Form(...),
+    isbn: str = Form(...),
+    description: str = Form(None),
+    publication_year: int = Form(None),
+    total_copies: int = Form(1),
     current_librarian: Librarian = Depends(get_current_librarian),
     db: Session = Depends(get_db)
 ):
-    """Add a new book to the catalog."""
+    """Add a new book to the catalog (without file)."""
+    # Validate required fields
+    if not title or not author or not isbn:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="title, author, and isbn are required",
+        )
+    
     # Check if book with same ISBN already exists
-    existing_book = db.query(Book).filter(Book.isbn == payload.isbn).first()
+    existing_book = db.query(Book).filter(Book.isbn == isbn).first()
     if existing_book:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Book with this ISBN already exists",
         )
 
-    if payload.category_id is not None:
-        category = db.query(Category).filter(Category.id == payload.category_id).first()
-        if not category:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Category not found",
-            )
-
     book = Book(
-        title=payload.title,
-        author=payload.author,
-        isbn=payload.isbn,
-        description=payload.description,
-        publication_year=payload.publication_year,
-        total_copies=payload.total_copies,
-        available_copies=payload.total_copies,
+        title=title.strip(),
+        author=author.strip(),
+        isbn=isbn.strip(),
+        description=description.strip() if description else None,
+        publication_year=publication_year,
+        total_copies=total_copies or 1,
+        available_copies=total_copies or 1,
         is_available=True,
     )
     db.add(book)
-    db.flush()
-
-    if payload.category_id is not None:
-        db.add(BookCategory(book_id=book.id, category_id=payload.category_id))
-
+    
     log_audit_event(
         db,
         action="book_created",
