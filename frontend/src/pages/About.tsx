@@ -2,12 +2,25 @@ import { useTheme } from '../contexts/ThemeContext'
 import { Link } from 'react-router-dom'
 import logo from '../assets/library-logo.svg'
 import './About.css'
+import Alice from '../../public/team/Nalubiri Alice.jpg'
+import Aine from '../../public/team/Ainembabazi Alicia.jpg'
+import Rhodah from '../../public/team/Watsemba Rhodah.jpg'
+import Akao from '../../public/team/Akao Diana Hilder.jpg'
+import Arishaba from '../../public/team/Arishaba Shibella.jpg'
+import Awor from '../../public/team/Awor Winnie Apell.jpg'
+import Awori from '../../public/team/Awori Janet.jpg'
+import Ego from'../../public/team/Egoo Aaron Oyoyi.jpg'
+import kirabo from '../../public/team/Kirabo Jovia Mulumya.jpg'
+import sebina from '../../public/team/Nagawa Florence Sebina.jpg'
+import Shadia from '../../public/team/Nakanwagi Shadia.jpg'
+import fatumah from '../../public/team/Nantumbwe Fatumah.jpg'
+import Walter from '../../public/team/Okullu Walter Joseph.jpg'
+
 
 interface TeamMember {
   id: number
   name: string
   role: string
-  email: string
   registrationNumber: string
   image: string
 }
@@ -15,51 +28,94 @@ interface TeamMember {
 const teamMembers: TeamMember[] = [
   {
     id: 1,
-    name: 'Dr. Sarah Johnson',
+    name: 'Nalubiri Alice',
     role: 'Project Lead & System Architect',
-    email: 'sarah.johnson@lrms.edu',
-    registrationNumber: 'LRMS-001',
-    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop',
+    registrationNumber: '24/U/LID/15398/PD',
+    image: Alice,
   },
   {
     id: 2,
-    name: 'Alex Chen',
-    role: 'Full Stack Developer',
-    email: 'alex.chen@lrms.edu',
-    registrationNumber: 'LRMS-002',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop',
+    name: 'Watsemba Rhodah',
+    role: 'Quality Assurance Lead',
+    registrationNumber: '24/U/LID/12567/PD',
+    image: Rhodah,
   },
   {
     id: 3,
-    name: 'Maria Rodriguez',
-    role: 'UX/UI Designer',
-    email: 'maria.rodriguez@lrms.edu',
-    registrationNumber: 'LRMS-003',
-    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop',
+    name: 'Akao Diana Hilder',
+    role: 'Full Stack Developer',
+    registrationNumber: '24/U/LID/02699/PD',
+    image: Akao,
   },
   {
     id: 4,
-    name: 'James Wilson',
-    role: 'Backend Engineering Lead',
-    email: 'james.wilson@lrms.edu',
-    registrationNumber: 'LRMS-004',
-    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop',
+    name: 'Arishaba Shibella',
+    role: 'UX/UI Designer',
+    registrationNumber: '24/U/LID/03508/PD',
+    image: Arishaba,
   },
   {
     id: 5,
-    name: 'Lisa Park',
-    role: 'Database Administrator',
-    email: 'lisa.park@lrms.edu',
-    registrationNumber: 'LRMS-005',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop',
+    name: 'Awor Winnie Apella',
+    role: 'Backend Engineering Lead',
+    registrationNumber: '24/U/LID/03990/PD',
+    image: Awor,
   },
   {
     id: 6,
-    name: 'David Thompson',
+    name: 'Awori Janet',
+    role: 'Database Administrator',
+    registrationNumber: '24/U/LID/03998/PD',
+    image: Awori,
+  },
+  {
+    id: 7,
+    name: 'Ego Aaron Oyoyi',
     role: 'Quality Assurance Lead',
-    email: 'david.thompson@lrms.edu',
-    registrationNumber: 'LRMS-006',
-    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop',
+    registrationNumber: '24/U/LIE/04753/PE',
+    image: Ego,
+  },
+  {
+    id: 8,
+    name: 'Kirabo Jovia Mulumya',
+    role: 'Quality Assurance Lead',
+    registrationNumber: '24/U/LID/06187/PD',
+    image: kirabo,
+  },
+  {
+    id: 9,
+    name: 'Nagawa Florence Sebina',
+    role: 'Quality Assurance Lead',
+    registrationNumber: '24/U/LID/08471/PD',
+    image: sebina,
+  },
+  {
+    id: 10,
+    name: 'Nakanwagi Shadia',
+    role: 'Quality Assurance Lead',
+    registrationNumber: '24/U/LID/08698/PD',
+    image: Shadia,
+  },
+  {
+    id: 11,
+    name: 'Nantumbwe Fatumah',
+    role: 'Quality Assurance Lead',
+    registrationNumber: '24/U/LID/09865/PD',
+    image: fatumah,
+  },
+  {
+    id: 12,
+    name: 'Okullu Walter Joseph',
+    role: 'Quality Assurance Lead',
+    registrationNumber: '24/U/LID/11040/PD',
+    image: Walter,
+  },
+  {
+    id: 13,
+    name: 'Ainembabazi Alicia',
+    role: 'Quality Assurance Lead',
+    registrationNumber: '24/U/LID/02482/PD',
+    image: Aine,
   },
 ]
 
