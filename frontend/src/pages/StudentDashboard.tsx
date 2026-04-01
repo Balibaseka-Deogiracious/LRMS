@@ -156,6 +156,20 @@ export default function StudentDashboard() {
 
   return (
     <div className="student-dashboard">
+      {/* Top Navbar */}
+      <nav className="student-navbar">
+        <div className="student-navbar-brand">Learning Hub</div>
+        <div className="student-navbar-actions">
+          <button type="button" className="theme-toggle-btn" onClick={toggleTheme} title="Toggle theme">
+            {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+          </button>
+          <button type="button" className="student-logout-btn" onClick={handleLogout} title="Logout">
+            <LogOut size={18} />
+            <span>Logout</span>
+          </button>
+        </div>
+      </nav>
+
       {/* Hero Section */}
       <section className="student-hero">
         <div className="student-hero-content">
@@ -163,15 +177,6 @@ export default function StudentDashboard() {
             <div>
               <h1>Welcome to Your Learning Hub</h1>
               <p>Discover thousands of books, research papers, and knowledge resources curated for your academic journey</p>
-            </div>
-            <div className="hero-action-buttons">
-              <button type="button" className="student-logout-btn" onClick={handleLogout} title="Logout">
-                <LogOut size={18} />
-                <span>Logout</span>
-              </button>
-              <button type="button" className="theme-toggle-btn" onClick={toggleTheme} title="Toggle theme">
-                {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
-              </button>
             </div>
           </div>
           <div className="student-search-box">

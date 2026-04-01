@@ -41,6 +41,34 @@
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* Student Navbar */
+.student-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: var(--sd-bg-primary);
+  border-bottom: 1px solid var(--sd-border);
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 8px var(--sd-card-shadow);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.student-navbar-brand {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--sd-text-primary);
+  letter-spacing: -0.5px;
+}
+
+.student-navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 /* Hero Section */
 .student-hero {
   background-image:
@@ -144,10 +172,54 @@
 }
 
 .hero-action-buttons {
+  display: none;
+}
+
+.student-navbar .theme-toggle-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  border: 1px solid var(--sd-border);
+  background: var(--sd-bg-primary);
+  color: var(--sd-text-primary);
+  cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
+  transition: all 0.3s ease;
   flex-shrink: 0;
+  box-shadow: 0 1px 4px var(--sd-card-shadow);
+}
+
+.student-navbar .theme-toggle-btn:hover {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: white;
+  border-color: #6366f1;
+  transform: scale(1.05);
+}
+
+.student-navbar .student-logout-btn {
+  height: 36px;
+  border-radius: 6px;
+  border: 1px solid #dc3545;
+  background: #dc3545;
+  color: #ffffff;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 0 12px;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 4px var(--sd-card-shadow);
+}
+
+.student-navbar .student-logout-btn:hover {
+  background: #b02a37;
+  border-color: #b02a37;
+  transform: translateY(-1px);
 }
 
 .theme-toggle-btn {
