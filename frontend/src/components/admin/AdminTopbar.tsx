@@ -4,6 +4,7 @@ import Swal from 'sweetalert2'
 import { toast } from 'react-toastify'
 import { useTheme } from '../../contexts/ThemeContext'
 import { useAuth } from '../../contexts/AuthContext'
+import AddBookForm from '../AddBookForm'
 
 interface AdminAlert {
   id: string
@@ -12,9 +13,9 @@ interface AdminAlert {
   read: boolean
 }
 
-const titleByRoute: Record<string, string> = {
+const pageTitle: Record<string, string> = {
   '/admin': 'Dashboard',
-  '/admin/books': 'Manage Books',
+  '/admin/inventory': 'Books Management',
   '/admin/users': 'Users',
   '/admin/borrowed': 'Borrowed Books',
   '/admin/reports': 'Reports',
@@ -23,21 +24,17 @@ const titleByRoute: Record<string, string> = {
 
 function getAdminNameFromStorage() {
   const directName = localStorage.getItem('currentUserName')
-  if (directName && directName.trim()) return directName.trim()
+  if (directName?.trim()) return directName.trim()
 
   const rawCurrentUser = localStorage.getItem('currentUser')
-  if (!rawCurrentUser) return 'Librarian'
+  if (!rawCurrentUser) return 'Admin'
 
   try {
-    const parsed = JSON.parse(rawCurrentUser) as { name?: string; username?: string; email?: string }
-    if (parsed?.name && parsed.name.trim()) return parsed.name.trim()
-    if (parsed?.username && parsed.username.trim()) return parsed.username.trim()
-    if (parsed?.email && parsed.email.trim()) return parsed.email.trim()
+    const parsed = JSON.parse(rawCurrentUser) as { name?: string; email?: string }
+    return parsed?.name?.trim() || parsed?.email?.trim() || 'Admin'
   } catch {
-    return 'Librarian'
+    return 'Admin'
   }
-
-  return 'Librarian'
 }
 
 export default function AdminTopbar() {
@@ -49,39 +46,21 @@ export default function AdminTopbar() {
   const notificationsRef = useRef<HTMLDivElement | null>(null)
   const profileRef = useRef<HTMLDivElement | null>(null)
 
-  const [adminName, setAdminName] = useState('Librarian')
+  const [adminName, setAdminName] = useState('Admin')
   const [searchQuery, setSearchQuery] = useState('')
   const [showNotifications, setShowNotifications] = useState(false)
   const [showProfileMenu, setShowProfileMenu] = useState(false)
-  const [alerts, setAlerts] = useState<AdminAlert[]>([
+  const [showAddBookModal, setShowAddBookModal] = useState(false)
+  const [alerts] = useState<AdminAlert[]>([
     { id: 'a-1', text: '3 new users registered today.', time: '2m ago', read: false },
     { id: 'a-2', text: '8 books are overdue for return.', time: '15m ago', read: false },
-    { id: 'a-3', text: 'Inventory sync completed successfully.', time: '1h ago', read: true },
+    { id: 'a-3', text: 'System sync completed successfully.', time: '1h ago', read: true },
   ])
 
-  // Keep admin name in sync with local storage updates and route changes.
   useEffect(() => {
-    let mounted = true
-
-    const loadAdminName = async () => {
-      await new Promise((resolve) => setTimeout(resolve, 120))
-      if (mounted) setAdminName(getAdminNameFromStorage())
-    }
-
-    const syncFromStorage = () => {
-      if (mounted) setAdminName(getAdminNameFromStorage())
-    }
-
-    loadAdminName()
-    window.addEventListener('storage', syncFromStorage)
-
-    return () => {
-      mounted = false
-      window.removeEventListener('storage', syncFromStorage)
-    }
+    setAdminName(getAdminNameFromStorage())
   }, [location.pathname])
 
-  // Close dropdowns when user clicks outside each menu container.
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
       const targetNode = event.target as Node
@@ -102,45 +81,28 @@ export default function AdminTopbar() {
     setShowProfileMenu(false)
   }, [location.pathname])
 
-  const pageTitle = useMemo(() => {
-    if (titleByRoute[location.pathname]) return titleByRoute[location.pathname]
-    if (location.pathname.startsWith('/admin/books')) return 'Manage Books'
-    if (location.pathname.startsWith('/admin/users')) return 'Users'
-    if (location.pathname.startsWith('/admin/borrowed')) return 'Borrowed Books'
-    if (location.pathname.startsWith('/admin/reports')) return 'Reports'
-    if (location.pathname.startsWith('/admin/settings')) return 'Settings'
-    return 'Librarian Panel'
+  const currentTitle = useMemo(() => {
+    return pageTitle[location.pathname] || 'Panel'
   }, [location.pathname])
 
-  const unreadCount = useMemo(() => alerts.filter((alert) => !alert.read).length, [alerts])
+  const unreadCount = useMemo(() => alerts.filter((a) => !a.read).length, [alerts])
 
-  const handleSearchSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    const trimmedQuery = searchQuery.trim()
-    if (!trimmedQuery) return
-    navigate(`/search?q=${encodeURIComponent(trimmedQuery)}`)
-    toast.info(`Searching "${trimmedQuery}" across books, users, and records.`)
-  }
-
-  const handleToggleNotifications = () => {
-    setShowNotifications((previous) => !previous)
-    setShowProfileMenu(false)
-    setAlerts((previousAlerts) => previousAlerts.map((alert) => ({ ...alert, read: true })))
-  }
-
-  const handleToggleProfileMenu = () => {
-    setShowProfileMenu((previous) => !previous)
-    setShowNotifications(false)
+  const handleSearchSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const query = searchQuery.trim()
+    if (!query) return
+    navigate(`/search?q=${encodeURIComponent(query)}`)
+    toast.info(`Searching for "${query}"...`)
   }
 
   const handleLogout = async () => {
     const result = await Swal.fire({
       icon: 'question',
       title: 'Logout?',
-      text: 'Do you want to end your librarian session?',
+      text: 'Do you want to end your session?',
       showCancelButton: true,
       confirmButtonText: 'Logout',
-      confirmButtonColor: '#dc3545',
+      confirmButtonColor: '#ff5a5f',
     })
 
     if (!result.isConfirmed) return
@@ -152,72 +114,81 @@ export default function AdminTopbar() {
   }
 
   return (
-    <header className="admin-navbar card border-0 shadow-sm">
-      <div className="admin-navbar-body">
+    <>
+      <header className="admin-navbar">
         <section className="admin-navbar-left">
-          <p className="admin-navbar-caption mb-1">Library Information Retrieval System</p>
-          <h4 className="admin-navbar-title mb-0">{pageTitle}</h4>
+          <p className="admin-navbar-caption">Dashboard</p>
+          <h4 className="admin-navbar-title">{currentTitle}</h4>
         </section>
 
         <section className="admin-navbar-center">
           <form className="admin-global-search" onSubmit={handleSearchSubmit}>
-            <i className="bi bi-search" aria-hidden="true" />
+            <i className="bi bi-search" />
             <input
               type="search"
-              placeholder="Search books, users, and records..."
-              aria-label="Global search"
+              placeholder="Search books, users..."
               value={searchQuery}
-              onChange={(event) => setSearchQuery(event.target.value)}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
           </form>
         </section>
 
         <section className="admin-navbar-right">
-          <button type="button" className="btn btn-primary btn-sm admin-quick-action" onClick={() => navigate('/admin/books')}>
-            <i className="bi bi-plus-lg me-1" />
+          <button
+            type="button"
+            className="admin-quick-action"
+            onClick={() => setShowAddBookModal(true)}
+          >
+            <i className="bi bi-plus-lg" />
             <span>Add Book</span>
           </button>
 
-          <button type="button" className="btn btn-outline-secondary btn-sm" onClick={toggleTheme}>
-            <i className={`bi ${theme === 'dark' ? 'bi-sun-fill' : 'bi-moon-stars-fill'} me-1`} />
-            {theme === 'dark' ? 'Light' : 'Dark'}
+          <button
+            type="button"
+            className="btn btn-outline-secondary btn-sm"
+            onClick={toggleTheme}
+            title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+          >
+            <i className={`bi ${theme === 'dark' ? 'bi-sun-fill' : 'bi-moon-stars-fill'}`} />
           </button>
 
           <div className="admin-menu-wrap" ref={notificationsRef}>
             <button
               type="button"
-              className="btn btn-light admin-icon-btn"
-              onClick={handleToggleNotifications}
-              aria-label="Notifications"
-              aria-expanded={showNotifications}
+              className="admin-icon-btn"
+              onClick={() => {
+                setShowNotifications(!showNotifications)
+                setShowProfileMenu(false)
+              }}
+              title="Notifications"
             >
               <i className="bi bi-bell" />
               {unreadCount > 0 && <span className="admin-notification-badge">{unreadCount}</span>}
             </button>
 
             <div className={`admin-dropdown-menu ${showNotifications ? 'show' : ''}`}>
-              <div className="admin-dropdown-header">Recent Alerts</div>
-              {alerts.length ? (
-                alerts.map((alert) => (
-                  <button key={alert.id} type="button" className="admin-dropdown-item">
-                    <span>{alert.text}</span>
-                    <small>{alert.time}</small>
-                  </button>
-                ))
-              ) : (
-                <p className="admin-dropdown-empty mb-0">No notifications yet.</p>
-              )}
+              <div className="admin-dropdown-header">Notifications</div>
+              {alerts.map((alert) => (
+                <button key={alert.id} className="admin-dropdown-item" type="button">
+                  <span>{alert.text}</span>
+                  <small>{alert.time}</small>
+                </button>
+              ))}
             </div>
           </div>
 
           <div className="admin-menu-wrap" ref={profileRef}>
             <button
               type="button"
-              className="btn btn-light admin-profile-btn"
-              onClick={handleToggleProfileMenu}
-              aria-expanded={showProfileMenu}
+              className="admin-profile-btn"
+              onClick={() => {
+                setShowProfileMenu(!showProfileMenu)
+                setShowNotifications(false)
+              }}
             >
-              <span className="admin-profile-avatar"><i className="bi bi-person-circle" /></span>
+              <span className="admin-profile-avatar">
+                <i className="bi bi-person-circle" />
+              </span>
               <span className="admin-profile-meta">
                 <strong>{adminName}</strong>
                 <small>Librarian</small>
@@ -226,22 +197,61 @@ export default function AdminTopbar() {
             </button>
 
             <div className={`admin-dropdown-menu admin-profile-menu ${showProfileMenu ? 'show' : ''}`}>
-              <button type="button" className="admin-dropdown-item" onClick={() => navigate('/admin/settings')}>
-                <i className="bi bi-person me-2" />
+              <button
+                type="button"
+                className="admin-dropdown-item"
+                onClick={() => navigate('/admin/settings')}
+              >
+                <i className="bi bi-person" />
                 Profile
               </button>
-              <button type="button" className="admin-dropdown-item" onClick={() => navigate('/admin/settings')}>
-                <i className="bi bi-gear me-2" />
+              <button
+                type="button"
+                className="admin-dropdown-item"
+                onClick={() => navigate('/admin/settings')}
+              >
+                <i className="bi bi-sliders" />
                 Settings
               </button>
               <button type="button" className="admin-dropdown-item text-danger" onClick={handleLogout}>
-                <i className="bi bi-box-arrow-right me-2" />
+                <i className="bi bi-box-arrow-right" />
                 Logout
               </button>
             </div>
           </div>
         </section>
-      </div>
-    </header>
+      </header>
+
+      {/* Add Book Modal */}
+      {showAddBookModal && (
+        <div
+          className="modal d-block"
+          style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+          aria-modal="true"
+          role="dialog"
+        >
+          <div className="modal-dialog modal-fullscreen-custom">
+            <div className="modal-content border-0 shadow-lg">
+              <div className="modal-header border-bottom-0 pb-0">
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setShowAddBookModal(false)}
+                  aria-label="Close"
+                />
+              </div>
+              <AddBookForm
+                isModal
+                onClose={() => setShowAddBookModal(false)}
+                onBookAdded={() => {
+                  setShowAddBookModal(false)
+                  toast.success('✅ Book added to inventory!')
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   )
 }

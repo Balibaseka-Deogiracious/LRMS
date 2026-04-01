@@ -1,63 +1,124 @@
 import { Book } from '../types'
-import { getBooks, saveBooks, makeId } from './mockStore'
 
-function normalize(text?: string) {
-  return (text || '').trim().toLowerCase()
-}
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
 export async function searchBooks(query = ''): Promise<Book[]> {
-  const all = getBooks()
-  const q = normalize(query)
-  if (!q) return all
-
-  return all.filter((book) => {
-    const haystack = [book.title, book.author, book.category, book.description, book.isbn]
-      .map((item) => normalize(item))
-      .join(' ')
-    return haystack.includes(q)
-  })
+  try {
+    const response = await fetch(`${API_BASE_URL}/books?search=${encodeURIComponent(query)}`)
+    if (!response.ok) throw new Error('Failed to search books')
+    const data = await response.json()
+    
+    return Array.isArray(data) ? data : (data.books || [])
+  } catch (error) {
+    console.error('Search books error:', error)
+    return []
+  }
 }
 
 export async function getBook(id: string): Promise<Book | null> {
-  const all = getBooks()
-  return all.find((book) => book.id === id) || null
+  try {
+    const response = await fetch(`${API_BASE_URL}/books/${id}`)
+    if (!response.ok) return null
+    const data = await response.json()
+    return data || null
+  } catch (error) {
+    console.error('Get book error:', error)
+    return null
+  }
 }
 
-export async function addBook(payload: Partial<Book>) {
-  const all = getBooks()
-
-  const next: Book = {
-    id: makeId('b'),
-    title: payload.title || 'Untitled',
-    author: payload.author || 'Unknown',
-    isbn: payload.isbn,
-    category: payload.category,
-    description: payload.description,
-    publishedYear: payload.publishedYear,
-    status: payload.status || 'available',
+export async function addBook(payload: {
+  title: string
+  author: string
+  isbn: string
+  category?: string
+  description?: string
+  total_copies?: number
+  publication_year?: number
+}) {
+  const token = localStorage.getItem('token')
+  if (!token) {
+    throw new Error('Authentication token not found')
   }
 
-  saveBooks([next, ...all])
-  return next
+  const response = await fetch(`${API_BASE_URL}/admin/books`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      title: payload.title.trim(),
+      author: payload.author.trim(),
+      isbn: payload.isbn.trim(),
+      description: payload.description?.trim() || null,
+      publication_year: payload.publication_year || null,
+      total_copies: payload.total_copies || 1,
+      category_id: null, // Can be extended later
+    }),
+  })
+
+  if (!response.ok) {
+    const error = await response.json()
+    throw new Error(error.detail || 'Failed to add book')
+  }
+
+  return await response.json()
 }
 
 export async function borrowBook(id: string): Promise<boolean> {
-  const all = getBooks()
-  const index = all.findIndex((book) => book.id === id)
-  if (index < 0) return false
-
-  const current = (all[index].status || 'available').toLowerCase()
-  if (current === 'borrowed') return false
-
-  all[index] = { ...all[index], status: 'borrowed' }
-  saveBooks(all)
-  return true
+  try {
+    const token = localStorage.getItem('token')
+    const response = await fetch(`${API_BASE_URL}/books/borrow`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({ book_id: parseInt(id) }),
+    })
+    return response.ok
+  } catch (error) {
+    console.error('Borrow book error:', error)
+    return false
+  }
 }
 
 export async function deleteBook(id: string): Promise<boolean> {
-  const all = getBooks()
-  const next = all.filter((book) => book.id !== id)
-  if (next.length === all.length) return false
-  saveBooks(next)
-  return true
+  try {
+    const token = localStorage.getItem('token')
+    const response = await fetch(`${API_BASE_URL}/admin/books/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    })
+    return response.ok
+  } catch (error) {
+    console.error('Delete book error:', error)
+    return false
+  }
+}
+
+export async function getCategories() {
+  try {
+    const token = localStorage.getItem('token')
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json',
+    }
+    
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`
+    }
+    
+    const response = await fetch(`${API_BASE_URL}/admin/books/categories`, {
+      headers,
+    })
+    if (!response.ok) throw new Error('Failed to fetch categories')
+    const data = await response.json()
+    return Array.isArray(data) ? data : (data.categories || [])
+  } catch (error) {
+    console.error('Get categories error:', error)
+    return []
+  }
 }

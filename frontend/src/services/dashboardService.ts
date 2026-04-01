@@ -21,7 +21,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   const books = getBooks()
   const borrowedRecords = getBorrowedRecords()
 
-  const borrowedByStatus = books.filter((book) => (book.status || '').toLowerCase() === 'borrowed').length
+  const borrowedByStatus = books.filter((book) => !book.is_available).length
   const borrowedBooks = Math.max(borrowedByStatus, borrowedRecords.length)
   const availableBooks = Math.max(0, books.length - borrowedBooks)
 
@@ -60,7 +60,7 @@ export async function getBookDistribution() {
   const byCategory = new Map<string, number>()
 
   for (const book of books) {
-    const category = book.category || 'Uncategorized'
+    const category = book.category_name || 'Uncategorized'
     byCategory.set(category, (byCategory.get(category) || 0) + 1)
   }
 
@@ -71,7 +71,7 @@ export async function getAvailabilityStats() {
   const books = getBooks()
   const borrowedRecords = getBorrowedRecords()
 
-  const borrowedByStatus = books.filter((book) => (book.status || '').toLowerCase() === 'borrowed').length
+  const borrowedByStatus = books.filter((book) => !book.is_available).length
   const borrowed = Math.max(borrowedByStatus, borrowedRecords.length)
   const available = Math.max(0, books.length - borrowed)
 

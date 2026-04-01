@@ -2,7 +2,7 @@ import { createContext, useContext, useMemo, useState } from 'react'
 import { Book } from '../types'
 
 export interface BorrowRecord {
-  bookId: string
+  bookId: string | number
   title: string
   author: string
   borrowedAt: string

@@ -12,10 +12,15 @@ export default function BookCard({ book }: BookCardProps) {
       <div className="card-body d-flex flex-column">
         <h5 className="card-title">{book.title}</h5>
         <h6 className="card-subtitle mb-2 text-muted">{book.author}</h6>
-        <p className="card-text text-truncate">{book.description || ''}</p>
+        <p className="card-text text-truncate">{book.description || 'No description available'}</p>
         <div className="mt-auto d-flex justify-content-between align-items-center">
-          <small className="text-muted">{book.publishedYear || ''}</small>
-          <Link className="btn btn-sm btn-primary" to={`/books/${book.id}`}>View</Link>
+          <small className="text-muted">{book.publication_year || 'N/A'}</small>
+          <div>
+            <span className={`badge me-2 ${book.is_available ? 'bg-success' : 'bg-warning'}`}>
+              {book.is_available ? 'Available' : 'Borrowed'}
+            </span>
+            <Link className="btn btn-sm btn-primary" to={`/books/${book.id}`}>View</Link>
+          </div>
         </div>
       </div>
     </div>

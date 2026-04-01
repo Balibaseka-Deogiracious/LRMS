@@ -15,13 +15,13 @@ interface SidebarItem {
   end?: boolean
 }
 
-const items: SidebarItem[] = [
+const navItems: SidebarItem[] = [
   { to: '/admin', icon: 'bi-speedometer2', label: 'Dashboard', end: true },
-  { to: '/admin/books', icon: 'bi-journal-bookmark', label: 'Manage Books' },
+  { to: '/admin/inventory', icon: 'bi-journal-bookmark', label: 'Books' },
   { to: '/admin/users', icon: 'bi-people', label: 'Users' },
-  { to: '/admin/borrowed', icon: 'bi-arrow-left-right', label: 'Borrowed Books' },
-  { to: '/admin/reports', icon: 'bi-bar-chart', label: 'Reports' },
-  { to: '/admin/settings', icon: 'bi-gear', label: 'Settings' },
+  { to: '/admin/borrowed', icon: 'bi-arrow-left-right', label: 'Borrowed' },
+  { to: '/admin/reports', icon: 'bi-bar-chart-line', label: 'Reports' },
+  { to: '/admin/settings', icon: 'bi-sliders', label: 'Settings' },
 ]
 
 export default function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
@@ -32,10 +32,10 @@ export default function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps)
     const result = await Swal.fire({
       icon: 'question',
       title: 'Logout?',
-      text: 'Do you want to end the librarian session?',
+      text: 'Do you want to end your session?',
       showCancelButton: true,
       confirmButtonText: 'Logout',
-      confirmButtonColor: '#dc3545',
+      confirmButtonColor: '#ff5a5f',
     })
 
     if (!result.isConfirmed) return
@@ -49,44 +49,43 @@ export default function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps)
   return (
     <aside className={`admin-sidebar-fixed ${collapsed ? 'collapsed' : ''}`}>
       <div className="admin-sidebar-header">
-        <div className="admin-logo">
-          <span className="admin-logo-icon"><i className="bi bi-building" /></span>
-          {!collapsed && (
-            <span>
-              <strong className="d-block">LRMS</strong>
-              <small>Librarian Dashboard</small>
-            </span>
-          )}
+        <div className="admin-logo" title="LRMS Admin">
+          <span className="admin-logo-icon">
+            <i className="bi bi-building" />
+          </span>
+          <span>
+            <strong>LRMS</strong>
+            <small>Admin</small>
+          </span>
         </div>
         <button
           type="button"
-          className="btn btn-sm btn-outline-light"
+          className="btn btn-sm"
           onClick={onToggle}
-          aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-          title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          title={collapsed ? 'Expand' : 'Collapse'}
         >
           <i className={`bi ${collapsed ? 'bi-chevron-right' : 'bi-chevron-left'}`} />
         </button>
       </div>
 
       <nav className="admin-nav-links">
-        {items.map((item) => (
+        {navItems.map((item) => (
           <NavLink
             key={item.to}
             to={item.to}
             end={item.end}
             className={({ isActive }) => `admin-nav-link ${isActive ? 'admin-nav-link-active' : ''}`}
-            title={collapsed ? item.label : undefined}
+            title={collapsed ? item.label : ''}
           >
             <i className={`bi ${item.icon}`} />
-            {!collapsed && <span>{item.label}</span>}
+            <span>{item.label}</span>
           </NavLink>
         ))}
       </nav>
 
-      <button type="button" className="btn admin-sidebar-logout" onClick={handleLogout}>
+      <button type="button" className="admin-sidebar-logout" onClick={handleLogout} title="Logout">
         <i className="bi bi-box-arrow-left" />
-        {!collapsed && <span>Logout</span>}
+        <span>Logout</span>
       </button>
     </aside>
   )

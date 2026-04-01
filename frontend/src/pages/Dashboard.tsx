@@ -83,10 +83,10 @@ export default function Dashboard() {
       else {
         // mock fallback
         const mock: Book[] = [
-          { id: '1', title: 'The Great Gatsby', author: 'F. Scott Fitzgerald', publishedYear: '1925' },
-          { id: '2', title: 'To Kill a Mockingbird', author: 'Harper Lee', publishedYear: '1960' },
-          { id: '3', title: '1984', author: 'George Orwell', publishedYear: '1949' },
-          { id: '4', title: 'Pride and Prejudice', author: 'Jane Austen', publishedYear: '1813' },
+          { id: 1, title: 'The Great Gatsby', author: 'F. Scott Fitzgerald', publication_year: 1925, isbn: '978-0743273565', total_copies: 5, available_copies: 3, is_available: true },
+          { id: 2, title: 'To Kill a Mockingbird', author: 'Harper Lee', publication_year: 1960, isbn: '978-0061120084', total_copies: 4, available_copies: 2, is_available: true },
+          { id: 3, title: '1984', author: 'George Orwell', publication_year: 1949, isbn: '978-0451524942', total_copies: 6, available_copies: 4, is_available: true },
+          { id: 4, title: 'Pride and Prejudice', author: 'Jane Austen', publication_year: 1813, isbn: '978-0141439518', total_copies: 3, available_copies: 1, is_available: true },
         ]
         setBooks(mock)
       }

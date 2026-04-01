@@ -5,8 +5,7 @@ import { toast } from 'react-toastify'
 import { useTheme } from '../contexts/ThemeContext'
 import { useAuth } from '../contexts/AuthContext'
 import { useBorrow } from '../contexts/BorrowContext'
-import { borrowBook as markBookAsBorrowed } from '../services/bookService'
-import { getBooks } from '../services/mockStore'
+import { borrowBook as markBookAsBorrowed, searchBooks } from '../services/bookService'
 import type { Book } from '../types'
 import './student-dashboard.css'
 
@@ -19,6 +18,7 @@ export default function StudentDashboard() {
   const [filteredBooks, setFilteredBooks] = useState<Book[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('all')
+  const [booksLoading, setBooksLoading] = useState(true)
   const [wishlist, setWishlist] = useState<Set<string>>(new Set())
   const [showBorrowForm, setShowBorrowForm] = useState(false)
   const [selectedBook, setSelectedBook] = useState<Book | null>(null)
@@ -34,10 +34,23 @@ export default function StudentDashboard() {
     agreeToPolicy: false,
   })
 
+  // Load real books from backend on mount
   useEffect(() => {
-    const allBooks = getBooks()
-    setBooks(allBooks)
-    setFilteredBooks(allBooks)
+    const loadBooks = async () => {
+      setBooksLoading(true)
+      try {
+        const allBooks = await searchBooks('')
+        setBooks(Array.isArray(allBooks) ? allBooks : [])
+        setFilteredBooks(Array.isArray(allBooks) ? allBooks : [])
+      } catch (error) {
+        console.error('Failed to load books:', error)
+        toast.error('Failed to load books')
+      } finally {
+        setBooksLoading(false)
+      }
+    }
+
+    void loadBooks()
   }, [])
 
   useEffect(() => {
@@ -50,19 +63,20 @@ export default function StudentDashboard() {
       )
     }
     if (selectedCategory !== 'all') {
-      results = results.filter((book) => book.category === selectedCategory)
+      results = results.filter((book) => book.category_name === selectedCategory)
     }
     setFilteredBooks(results)
   }, [searchQuery, selectedCategory, books])
 
-  const categories = ['all', ...new Set(books.map((b) => b.category || 'Uncategorized'))]
+  const categories = ['all', ...new Set(books.map((b) => b.category_name || 'Uncategorized'))]
 
-  const toggleWishlist = (bookId: string) => {
+  const toggleWishlist = (bookId: string | number) => {
+    const bookIdStr = String(bookId)
     const newWishlist = new Set(wishlist)
-    if (newWishlist.has(bookId)) {
-      newWishlist.delete(bookId)
+    if (newWishlist.has(bookIdStr)) {
+      newWishlist.delete(bookIdStr)
     } else {
-      newWishlist.add(bookId)
+      newWishlist.add(bookIdStr)
     }
     setWishlist(newWishlist)
   }
@@ -110,12 +124,12 @@ export default function StudentDashboard() {
     setSubmittingBorrow(true)
 
     try {
-      if (isBorrowed(selectedBook.id)) {
+      if (isBorrowed(String(selectedBook.id))) {
         setBorrowError('You already borrowed this book.')
         return
       }
 
-      const inventoryUpdated = await markBookAsBorrowed(selectedBook.id)
+      const inventoryUpdated = await markBookAsBorrowed(String(selectedBook.id))
       if (!inventoryUpdated) {
         setBorrowError('This book is no longer available. Please choose another title.')
         return
@@ -228,7 +242,14 @@ export default function StudentDashboard() {
             </div>
           </div>
 
-          {filteredBooks.length === 0 ? (
+          {booksLoading ? (
+            <div className="loading-container" style={{ textAlign: 'center', padding: '60px 20px' }}>
+              <div className="spinner-border text-primary" role="status">
+                <span className="visually-hidden">Loading books...</span>
+              </div>
+              <p className="mt-3">Loading your book collection...</p>
+            </div>
+          ) : filteredBooks.length === 0 ? (
             <div className="no-results">
               <BookOpen size={48} />
               <p>No books found matching your search.</p>
@@ -252,7 +273,7 @@ export default function StudentDashboard() {
                     </div>
                     <button
                       type="button"
-                      className={`wishlist-btn ${wishlist.has(book.id) ? 'active' : ''}`}
+                      className={`wishlist-btn ${wishlist.has(String(book.id)) ? 'active' : ''}`}
                       onClick={() => toggleWishlist(book.id)}
                       title="Add to wishlist"
                     >
@@ -262,18 +283,18 @@ export default function StudentDashboard() {
                   <div className="book-card-content">
                     <h3>{book.title}</h3>
                     <p className="book-author">{book.author}</p>
-                    {book.category && <span className="book-category">{book.category}</span>}
+                    {book.category_name && <span className="book-category">{book.category_name}</span>}
                     <p className="book-description">{book.description || 'No description available'}</p>
                     <div className="book-card-footer">
                       <span
-                        className={`status-badge ${book.status === 'available' ? 'available' : 'unavailable'}`}
+                        className={`status-badge ${book.is_available ? 'available' : 'unavailable'}`}
                       >
-                        {book.status === 'available' ? 'Available' : 'Checked Out'}
+                        {book.is_available ? 'Available' : 'Checked Out'}
                       </span>
                       <button
                         type="button"
                         className="borrow-btn"
-                        disabled={book.status !== 'available' || isBorrowed(book.id)}
+                        disabled={!book.is_available || isBorrowed(String(book.id))}
                         onClick={() => openBorrowForm(book)}
                       >
                         <Plus size={16} />

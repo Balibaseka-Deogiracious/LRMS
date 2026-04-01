@@ -797,6 +797,16 @@ def create_book_category(
     return category
 
 
+@router.get("/books/categories", response_model=list[CategoryPublic])
+def list_book_categories(
+    current_librarian: Librarian = Depends(get_current_librarian),
+    db: Session = Depends(get_db)
+):
+    """List all book categories. Admin only."""
+    categories = db.query(Category).all()
+    return categories
+
+
 @router.put("/books/{book_id}/condition", response_model=BookConditionUpdateResponse)
 def update_book_condition(
     book_id: int,

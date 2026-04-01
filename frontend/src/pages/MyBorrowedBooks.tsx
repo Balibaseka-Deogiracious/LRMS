@@ -69,7 +69,7 @@ export default function MyBorrowedBooks() {
                       </span>
                     </td>
                     <td>
-                      <button className="btn btn-outline-primary btn-sm" onClick={() => handleReturn(record.bookId, record.title)}>
+                      <button className="btn btn-outline-primary btn-sm" onClick={() => handleReturn(String(record.bookId), record.title)}>
                         Return
                       </button>
                     </td>

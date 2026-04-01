@@ -1,10 +1,15 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { Book } from '../types'
 import useDebounce from '../hooks/useDebounce'
 import { TableSkeleton } from './LoadingSkeletons'
-import { useBorrow } from '../contexts/BorrowContext'
-import { searchBooks } from '../services/bookService'
+import { searchBooks, getCategories } from '../services/bookService'
+
+interface Category {
+  id: number
+  name: string
+  description?: string
+}
 
 export default function BookSearchTable() {
   const [title, setTitle] = useState('')
@@ -12,21 +17,31 @@ export default function BookSearchTable() {
   const [category, setCategory] = useState('')
   const [availability, setAvailability] = useState('')
   const [books, setBooks] = useState<Book[]>([])
+  const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(false)
+  const [categoriesLoading, setCategoriesLoading] = useState(true)
   const [hasSearched, setHasSearched] = useState(true)
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const pageSize = 5
-  const { isBorrowed } = useBorrow()
 
-  const categoryOptions = useMemo(() => [
-    '',
-    'Fiction',
-    'Science',
-    'History',
-    'Biography',
-    'Technology',
-  ], [])
+  // Load categories on mount
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const data = await getCategories()
+        if (Array.isArray(data)) {
+          setCategories(data as Category[])
+        }
+      } catch (error) {
+        console.error('Failed to load categories:', error)
+      } finally {
+        setCategoriesLoading(false)
+      }
+    }
+
+    void loadCategories()
+  }, [])
 
   const debouncedFilters = useDebounce({ title, author, category, availability }, 450)
 
@@ -34,17 +49,18 @@ export default function BookSearchTable() {
     setLoading(true)
 
     try {
-      const data: Book[] = await searchBooks('')
+      const data: Book[] = await searchBooks(debouncedFilters.title || '')
 
-      // Fallback client-side filtering/pagination if backend returns simple array.
+      // Client-side filtering for author, category, and availability
       const filtered = data.filter((book) => {
         const byTitle = !debouncedFilters.title || book.title.toLowerCase().includes(debouncedFilters.title.toLowerCase())
         const byAuthor = !debouncedFilters.author || book.author.toLowerCase().includes(debouncedFilters.author.toLowerCase())
-        const byCategory = !debouncedFilters.category || (book.category || '').toLowerCase() === debouncedFilters.category.toLowerCase()
-        const effectiveStatus = isBorrowed(book.id)
-          ? 'borrowed'
-          : ((book.status || 'available').toLowerCase())
+        const byCategory = !debouncedFilters.category || (book.category_name || '').toLowerCase() === debouncedFilters.category.toLowerCase()
+        
+        // Determine effective status: borrowed (if not available) or available
+        const effectiveStatus = book.is_available ? 'available' : 'borrowed'
         const byAvailability = !debouncedFilters.availability || effectiveStatus === debouncedFilters.availability.toLowerCase()
+        
         return byTitle && byAuthor && byCategory && byAvailability
       })
 
@@ -109,10 +125,12 @@ export default function BookSearchTable() {
               className="form-select"
               value={category}
               onChange={(e) => onFilterChange(setCategory, e.target.value)}
+              disabled={categoriesLoading}
             >
-              {categoryOptions.map((option) => (
-                <option key={option || 'all'} value={option}>
-                  {option || 'All Categories'}
+              <option value="">All Categories</option>
+              {categories.map((cat) => (
+                <option key={cat.id} value={cat.name}>
+                  {cat.name}
                 </option>
               ))}
             </select>
@@ -164,9 +182,13 @@ export default function BookSearchTable() {
                     <tr key={book.id}>
                       <td>{book.title}</td>
                       <td>{book.author}</td>
-                      <td>{book.category || '-'}</td>
-                      <td>{book.publishedYear || '-'}</td>
-                      <td>{isBorrowed(book.id) ? 'Borrowed' : (book.status || 'Available')}</td>
+                      <td>{book.category_name || '-'}</td>
+                      <td>{book.publication_year || '-'}</td>
+                      <td>
+                        <span className={`badge ${book.is_available ? 'bg-success' : 'bg-warning'}`}>
+                          {book.is_available ? 'Available' : 'Borrowed'}
+                        </span>
+                      </td>
                     </tr>
                   ))}
                 </tbody>

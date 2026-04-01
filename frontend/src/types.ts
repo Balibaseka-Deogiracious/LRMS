@@ -1,12 +1,15 @@
 export interface Book {
-  id: string
+  id: number | string
   title: string
   author: string
-  category?: string
-  description?: string
-  publishedYear?: string
-  isbn?: string
-  status?: string
+  isbn: string
+  description?: string | null
+  publication_year?: number | null
+  total_copies: number
+  available_copies: number
+  is_available: boolean
+  category_id?: number | null
+  category_name?: string | null
 }
 
 export interface Stats {

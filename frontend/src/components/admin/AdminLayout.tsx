@@ -9,13 +9,11 @@ export default function AdminLayout() {
 
   return (
     <div className={`admin-layout-shell ${collapsed ? 'sidebar-collapsed' : ''}`}>
-      <AdminSidebar collapsed={collapsed} onToggle={() => setCollapsed((prev) => !prev)} />
-
+      <AdminSidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
       <div className="admin-main">
         <div className="admin-fixed-topbar">
           <AdminTopbar />
         </div>
-
         <main className="admin-page-content">
           <Outlet />
         </main>
