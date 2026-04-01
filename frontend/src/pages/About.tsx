@@ -9,8 +9,7 @@ interface TeamMember {
   role: string
   email: string
   registrationNumber: string
-  initials: string
-  color: string
+  image: string
 }
 
 const teamMembers: TeamMember[] = [
@@ -20,8 +19,7 @@ const teamMembers: TeamMember[] = [
     role: 'Project Lead & System Architect',
     email: 'sarah.johnson@lrms.edu',
     registrationNumber: 'LRMS-001',
-    initials: 'SJ',
-    color: '#254194',
+    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop',
   },
   {
     id: 2,
@@ -29,8 +27,7 @@ const teamMembers: TeamMember[] = [
     role: 'Full Stack Developer',
     email: 'alex.chen@lrms.edu',
     registrationNumber: 'LRMS-002',
-    initials: 'AC',
-    color: '#3b82f6',
+    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop',
   },
   {
     id: 3,
@@ -38,8 +35,7 @@ const teamMembers: TeamMember[] = [
     role: 'UX/UI Designer',
     email: 'maria.rodriguez@lrms.edu',
     registrationNumber: 'LRMS-003',
-    initials: 'MR',
-    color: '#10b981',
+    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop',
   },
   {
     id: 4,
@@ -47,8 +43,7 @@ const teamMembers: TeamMember[] = [
     role: 'Backend Engineering Lead',
     email: 'james.wilson@lrms.edu',
     registrationNumber: 'LRMS-004',
-    initials: 'JW',
-    color: '#f59e0b',
+    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop',
   },
   {
     id: 5,
@@ -56,8 +51,7 @@ const teamMembers: TeamMember[] = [
     role: 'Database Administrator',
     email: 'lisa.park@lrms.edu',
     registrationNumber: 'LRMS-005',
-    initials: 'LP',
-    color: '#ec4899',
+    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop',
   },
   {
     id: 6,
@@ -65,8 +59,7 @@ const teamMembers: TeamMember[] = [
     role: 'Quality Assurance Lead',
     email: 'david.thompson@lrms.edu',
     registrationNumber: 'LRMS-006',
-    initials: 'DT',
-    color: '#8b5cf6',
+    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop',
   },
 ]
 
@@ -185,13 +178,12 @@ export default function About() {
                   }`}
                 >
                   {/* Avatar */}
-                  <div
-                    className="h-40 flex items-center justify-center"
-                    style={{ backgroundColor: member.color }}
-                  >
-                    <div className="text-5xl font-bold text-white">
-                      {member.initials}
-                    </div>
+                  <div className="h-40 flex items-center justify-center bg-slate-200">
+                    <img
+                      src={member.image}
+                      alt={member.name}
+                      className="h-40 w-40 object-cover team-member-image"
+                    />
                   </div>
 
                   {/* Member Details */}

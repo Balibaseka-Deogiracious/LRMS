@@ -3,7 +3,6 @@ import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { useTheme } from '../contexts/ThemeContext'
 import { useAuth } from '../contexts/AuthContext'
 import logo from '../assets/library-logo.svg'
-import LibryAssistant from './LibryAssistant'
 import LandingNavbar from './LandingNavbar'
 import './Layout.css'
 
@@ -17,8 +16,6 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     || location.pathname === '/register'
     || location.pathname === '/forgot-password'
     || location.pathname === '/reset-password'
-  const shouldShowAssistant = location.pathname === '/' || location.pathname.startsWith('/admin') || location.pathname.startsWith('/student')
-    || location.pathname.startsWith('/search') || location.pathname.startsWith('/books/')
   const isAdminArea = location.pathname.startsWith('/admin')
   const homePath = role === 'admin' ? '/dashboard' : '/student'
 
@@ -33,7 +30,6 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         <>
           <LandingNavbar />
           {children}
-          {shouldShowAssistant && <LibryAssistant />}
         </>
       )
     }
@@ -83,7 +79,6 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         </nav>
       )}
       <main className={isAdminArea ? 'app-content app-content-admin' : 'container app-content app-content-standard'}>{children}</main>
-      {shouldShowAssistant && <LibryAssistant />}
     </div>
   )
 }

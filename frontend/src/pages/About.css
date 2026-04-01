@@ -6,6 +6,12 @@
   /* Dynamic background color will be set inline */
 }
 
+.team-member-image {
+  border-radius: 50%;
+  border: 3px solid #fff;
+  object-fit: cover;
+}
+
 .about-cta-button {
   background-color: #254194;
 }
