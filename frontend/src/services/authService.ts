@@ -1,148 +1,103 @@
 import type { Role } from '../contexts/AuthContext'
-import { getUsers, saveUsers, makeId } from './mockStore'
 
-const RESET_TOKENS_KEY = 'lrms_password_reset_tokens'
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
-type ResetTokenRecord = {
-  email: string
-  expiresAt: number
-}
-
-function getResetTokens(): Record<string, ResetTokenRecord> {
-  const raw = localStorage.getItem(RESET_TOKENS_KEY)
-  if (!raw) return {}
-  try {
-    return JSON.parse(raw) as Record<string, ResetTokenRecord>
-  } catch {
-    return {}
+interface LoginResponse {
+  access_token: string
+  token_type: string
+  user_type: 'student' | 'admin'
+  student?: {
+    id: number
+    full_name: string
+    email: string
+    registration_number: string
   }
-}
-
-function saveResetTokens(tokens: Record<string, ResetTokenRecord>) {
-  localStorage.setItem(RESET_TOKENS_KEY, JSON.stringify(tokens))
 }
 
 export async function login(email: string, password: string) {
-  const users = getUsers()
-  const emailKey = email.trim().toLowerCase()
-  const user = users.find((entry) => entry.email.toLowerCase() === emailKey && entry.password === password)
+  const response = await fetch(`${API_BASE_URL}/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: email.trim(), password }),
+  })
 
-  if (!user) {
-    throw new Error('Invalid email or password')
+  if (!response.ok) {
+    const error = await response.json()
+    throw new Error(error.detail || 'Invalid email or password')
   }
 
-  if (!user.active) {
-    throw new Error('This account is disabled by the librarian.')
-  }
-
-  const nextUsers = users.map((entry) => (
-    entry.id === user.id ? { ...entry, lastLoginAt: new Date().toISOString() } : entry
-  ))
-  saveUsers(nextUsers)
-
+  const data: LoginResponse = await response.json()
+  
   return {
-    token: `local-token-${Date.now()}`,
-    role: user.role,
+    token: data.access_token,
+    role: data.user_type === 'admin' ? 'admin' : 'student',
     user: {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
+      id: data.student?.id || 0,
+      name: data.student?.full_name || 'Student',
+      email: data.student?.email || email,
+      role: data.user_type === 'admin' ? 'admin' : 'student',
     },
   }
 }
 
-export async function registerUser(payload: { name: string; email: string; password: string }) {
-  const users = getUsers()
-  const exists = users.some((entry) => entry.email.toLowerCase() === payload.email.trim().toLowerCase())
+export async function registerUser(payload: { 
+  name: string
+  email: string
+  password: string
+  registrationNumber?: string 
+}) {
+  const regNumber = payload.registrationNumber || `STU-${Date.now()}`
+  
+  const response = await fetch(`${API_BASE_URL}/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      full_name: payload.name.trim(),
+      email: payload.email.trim(),
+      registration_number: regNumber,
+      password: payload.password,
+    }),
+  })
 
-  if (exists) {
-    throw new Error('Email already exists')
+  if (!response.ok) {
+    const error = await response.json()
+    throw new Error(error.detail || 'Registration failed')
   }
 
-  const nextUser = {
-    id: makeId('u'),
-    name: payload.name.trim(),
-    email: payload.email.trim(),
-    password: payload.password,
-    role: 'student' as Role,
-    active: true,
-    createdAt: new Date().toISOString(),
-    lastLoginAt: undefined,
-  }
-
-  saveUsers([nextUser, ...users])
-
-  return {
-    id: nextUser.id,
-    name: nextUser.name,
-    email: nextUser.email,
-    role: nextUser.role,
-  }
+  return await response.json()
 }
 
 export async function requestPasswordReset(email: string) {
-  const users = getUsers()
-  const emailKey = email.trim().toLowerCase()
-  const user = users.find((entry) => entry.email.toLowerCase() === emailKey)
+  const response = await fetch(`${API_BASE_URL}/auth/forgot-password`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: email.trim() }),
+  })
 
-  if (!user) {
-    throw new Error('No account found for that email address.')
+  if (!response.ok) {
+    const error = await response.json()
+    throw new Error(error.detail || 'Could not send password reset email')
   }
 
-  if (!user.active) {
-    throw new Error('This account is disabled by the librarian.')
-  }
-
-  const tokens = getResetTokens()
-  const token = makeId('rst')
-  const expiresAt = Date.now() + 15 * 60 * 1000
-
-  tokens[token] = { email: user.email, expiresAt }
-  saveResetTokens(tokens)
-
-  return {
-    token,
-    email: user.email,
-    resetLink: `/reset-password?token=${encodeURIComponent(token)}`,
-  }
+  return await response.json()
 }
 
 export async function resetPassword(token: string, newPassword: string) {
-  const tokenKey = token.trim()
-  const tokens = getResetTokens()
-  const tokenRecord = tokens[tokenKey]
+  const response = await fetch(`${API_BASE_URL}/auth/reset-password`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ 
+      token: token.trim(),
+      new_password: newPassword,
+    }),
+  })
 
-  if (!tokenRecord) {
-    throw new Error('This reset link is invalid or already used.')
+  if (!response.ok) {
+    const error = await response.json()
+    throw new Error(error.detail || 'Password reset failed')
   }
 
-  if (Date.now() > tokenRecord.expiresAt) {
-    delete tokens[tokenKey]
-    saveResetTokens(tokens)
-    throw new Error('This reset link has expired. Please request a new one.')
-  }
-
-  const users = getUsers()
-  const emailKey = tokenRecord.email.toLowerCase()
-  const userExists = users.some((entry) => entry.email.toLowerCase() === emailKey)
-
-  if (!userExists) {
-    delete tokens[tokenKey]
-    saveResetTokens(tokens)
-    throw new Error('Unable to reset password for this account.')
-  }
-
-  const nextUsers = users.map((entry) => (
-    entry.email.toLowerCase() === emailKey
-      ? { ...entry, password: newPassword }
-      : entry
-  ))
-
-  saveUsers(nextUsers)
-
-  delete tokens[tokenKey]
-  saveResetTokens(tokens)
+  return await response.json()
 }
 
 export function storeToken(token: string, role: Role = 'student') {
@@ -150,8 +105,21 @@ export function storeToken(token: string, role: Role = 'student') {
   localStorage.setItem('userRole', role)
 }
 
-export function logout() {
+export function getStoredToken(): string | null {
+  return localStorage.getItem('token')
+}
+
+export function getStoredRole(): Role {
+  const role = localStorage.getItem('userRole')
+  return role === 'admin' ? 'admin' : 'student'
+}
+
+export async function logout() {
   localStorage.removeItem('token')
   localStorage.removeItem('userRole')
   localStorage.removeItem('currentUserName')
+}
+
+export function isAuthenticated(): boolean {
+  return !!localStorage.getItem('token')
 }

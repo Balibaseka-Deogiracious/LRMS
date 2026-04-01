@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Search, BookOpen, Plus, Heart, Moon, Sun, LogOut } from 'lucide-react'
+import { Search, BookOpen, Plus, Heart, Moon, Sun, LogOut, X } from 'lucide-react'
+import { toast } from 'react-toastify'
 import { useTheme } from '../contexts/ThemeContext'
 import { useAuth } from '../contexts/AuthContext'
+import { useBorrow } from '../contexts/BorrowContext'
+import { borrowBook as markBookAsBorrowed } from '../services/bookService'
 import { getBooks } from '../services/mockStore'
 import type { Book } from '../types'
 import './student-dashboard.css'
@@ -10,12 +13,26 @@ import './student-dashboard.css'
 export default function StudentDashboard() {
   const { theme, toggleTheme } = useTheme()
   const { logout } = useAuth()
+  const { borrowBook: addBorrowRecord, isBorrowed } = useBorrow()
   const navigate = useNavigate()
   const [books, setBooks] = useState<Book[]>([])
   const [filteredBooks, setFilteredBooks] = useState<Book[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [wishlist, setWishlist] = useState<Set<string>>(new Set())
+  const [showBorrowForm, setShowBorrowForm] = useState(false)
+  const [selectedBook, setSelectedBook] = useState<Book | null>(null)
+  const [submittingBorrow, setSubmittingBorrow] = useState(false)
+  const [borrowError, setBorrowError] = useState('')
+  const [borrowForm, setBorrowForm] = useState({
+    fullName: localStorage.getItem('currentUserName') || '',
+    studentId: '',
+    email: '',
+    program: '',
+    pickupDate: new Date().toISOString().slice(0, 10),
+    notes: '',
+    agreeToPolicy: false,
+  })
 
   useEffect(() => {
     const allBooks = getBooks()
@@ -54,6 +71,73 @@ export default function StudentDashboard() {
     logout()
     localStorage.removeItem('currentUserName')
     navigate('/')
+  }
+
+  const openBorrowForm = (book: Book) => {
+    setSelectedBook(book)
+    setBorrowError('')
+    setBorrowForm((prev) => ({
+      ...prev,
+      pickupDate: new Date().toISOString().slice(0, 10),
+      notes: '',
+      agreeToPolicy: false,
+    }))
+    setShowBorrowForm(true)
+  }
+
+  const closeBorrowForm = () => {
+    if (submittingBorrow) return
+    setShowBorrowForm(false)
+    setSelectedBook(null)
+    setBorrowError('')
+  }
+
+  const submitBorrowRequest = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    if (!selectedBook) return
+
+    if (!borrowForm.fullName.trim() || !borrowForm.studentId.trim() || !borrowForm.email.trim() || !borrowForm.program.trim()) {
+      setBorrowError('Please complete all required fields before submitting.')
+      return
+    }
+
+    if (!borrowForm.agreeToPolicy) {
+      setBorrowError('You must agree to the borrowing policy to continue.')
+      return
+    }
+
+    setBorrowError('')
+    setSubmittingBorrow(true)
+
+    try {
+      if (isBorrowed(selectedBook.id)) {
+        setBorrowError('You already borrowed this book.')
+        return
+      }
+
+      const inventoryUpdated = await markBookAsBorrowed(selectedBook.id)
+      if (!inventoryUpdated) {
+        setBorrowError('This book is no longer available. Please choose another title.')
+        return
+      }
+
+      const recordResult = addBorrowRecord(selectedBook)
+      if (!recordResult.ok) {
+        setBorrowError(recordResult.message)
+        return
+      }
+
+      setBooks((previousBooks) => previousBooks.map((book) => (
+        book.id === selectedBook.id ? { ...book, status: 'borrowed' } : book
+      )))
+
+      toast.success(`Borrow request submitted for "${selectedBook.title}".`)
+      closeBorrowForm()
+    } catch {
+      setBorrowError('Unable to process your borrow request right now. Please try again.')
+    } finally {
+      setSubmittingBorrow(false)
+    }
   }
 
   return (
@@ -186,7 +270,12 @@ export default function StudentDashboard() {
                       >
                         {book.status === 'available' ? 'Available' : 'Checked Out'}
                       </span>
-                      <button type="button" className="borrow-btn" disabled={book.status !== 'available'}>
+                      <button
+                        type="button"
+                        className="borrow-btn"
+                        disabled={book.status !== 'available' || isBorrowed(book.id)}
+                        onClick={() => openBorrowForm(book)}
+                      >
                         <Plus size={16} />
                         Borrow
                       </button>
@@ -198,6 +287,116 @@ export default function StudentDashboard() {
           )}
         </main>
       </div>
+
+      {showBorrowForm && selectedBook && (
+        <div
+          className="borrow-modal-overlay"
+          role="presentation"
+          onClick={(event) => {
+            if (event.target === event.currentTarget) closeBorrowForm()
+          }}
+        >
+          <div className="borrow-modal-panel" role="dialog" aria-modal="true" aria-labelledby="borrow-form-title">
+            <div className="borrow-modal-header">
+              <div>
+                <h3 id="borrow-form-title" className="mb-1">Borrow Request</h3>
+                <p className="mb-0">Complete this quick form to reserve your selected title.</p>
+              </div>
+              <button type="button" className="borrow-close-btn" onClick={closeBorrowForm} aria-label="Close borrow form">
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className="borrow-book-summary">
+              <strong>{selectedBook.title}</strong>
+              <span>{selectedBook.author}</span>
+            </div>
+
+            <form className="borrow-form-grid" onSubmit={submitBorrowRequest}>
+              <label>
+                Full Name
+                <input
+                  type="text"
+                  value={borrowForm.fullName}
+                  onChange={(event) => setBorrowForm((prev) => ({ ...prev, fullName: event.target.value }))}
+                  required
+                />
+              </label>
+
+              <label>
+                Student ID
+                <input
+                  type="text"
+                  value={borrowForm.studentId}
+                  onChange={(event) => setBorrowForm((prev) => ({ ...prev, studentId: event.target.value }))}
+                  required
+                />
+              </label>
+
+              <label>
+                School Email
+                <input
+                  type="email"
+                  value={borrowForm.email}
+                  onChange={(event) => setBorrowForm((prev) => ({ ...prev, email: event.target.value }))}
+                  required
+                />
+              </label>
+
+              <label>
+                Program / Department
+                <input
+                  type="text"
+                  value={borrowForm.program}
+                  onChange={(event) => setBorrowForm((prev) => ({ ...prev, program: event.target.value }))}
+                  required
+                />
+              </label>
+
+              <label className="borrow-form-full">
+                Pickup Date
+                <input
+                  type="date"
+                  min={new Date().toISOString().slice(0, 10)}
+                  value={borrowForm.pickupDate}
+                  onChange={(event) => setBorrowForm((prev) => ({ ...prev, pickupDate: event.target.value }))}
+                  required
+                />
+              </label>
+
+              <label className="borrow-form-full">
+                Notes (Optional)
+                <textarea
+                  rows={3}
+                  value={borrowForm.notes}
+                  onChange={(event) => setBorrowForm((prev) => ({ ...prev, notes: event.target.value }))}
+                  placeholder="Add any pickup preferences or notes for the librarian..."
+                />
+              </label>
+
+              <label className="borrow-policy-check borrow-form-full">
+                <input
+                  type="checkbox"
+                  checked={borrowForm.agreeToPolicy}
+                  onChange={(event) => setBorrowForm((prev) => ({ ...prev, agreeToPolicy: event.target.checked }))}
+                />
+                <span>I agree to return this book on time and follow borrowing policies.</span>
+              </label>
+
+              {borrowError && <p className="borrow-form-error borrow-form-full mb-0">{borrowError}</p>}
+
+              <div className="borrow-modal-actions borrow-form-full">
+                <button type="button" className="btn btn-outline-secondary" onClick={closeBorrowForm} disabled={submittingBorrow}>
+                  Cancel
+                </button>
+                <button type="submit" className="btn btn-primary" disabled={submittingBorrow}>
+                  {submittingBorrow ? 'Submitting...' : 'Confirm Borrow'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* SaaS Footer */}
       <footer className="student-footer">

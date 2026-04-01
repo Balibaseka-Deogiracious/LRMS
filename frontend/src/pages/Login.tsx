@@ -38,10 +38,11 @@ export default function Login() {
         const serverRole = res?.role ?? res?.user?.role
         const effectiveRole = normalizeRole(serverRole)
         storeToken(res.token, effectiveRole)
-        localStorage.setItem('currentUserName', res?.user?.name || 'Librarian')
+        localStorage.setItem('currentUserName', res?.user?.name || 'Student')
         auth.login(res.token, effectiveRole)
         toast.success('Login successful. Redirecting...')
-        navigate(effectiveRole === 'admin' ? '/admin' : '/resources')
+        // Route to dashboard based on role
+        navigate(effectiveRole === 'admin' ? '/admin' : '/student')
       } else {
         toast.error('Invalid login response from server.')
         await Swal.fire({
@@ -52,7 +53,7 @@ export default function Login() {
         })
       }
     } catch (err: any) {
-      const apiMessage = err?.message || err?.response?.data?.message || 'Invalid email or password. Please try again.'
+      const apiMessage = err?.message || err?.response?.data?.detail || 'Invalid email or password. Please try again.'
       toast.error(apiMessage)
       await Swal.fire({
         icon: 'error',

@@ -6,6 +6,7 @@ import { registerUser } from '../services/authService'
 
 export default function Register() {
   const [name, setName] = useState('')
+  const [registrationNumber, setRegistrationNumber] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -38,11 +39,16 @@ export default function Register() {
     setLoading(true)
 
     try {
-      await registerUser({ name: name.trim(), email: email.trim(), password })
+      await registerUser({ 
+        name: name.trim(), 
+        email: email.trim(), 
+        password,
+        registrationNumber: registrationNumber.trim(),
+      })
       toast.success('Registration successful. Redirecting to login...')
       navigate('/login')
     } catch (error: any) {
-      const message = error?.message || error?.response?.data?.message || 'Registration failed. Please try again.'
+      const message = error?.message || error?.response?.data?.detail || 'Registration failed. Please try again.'
       await Swal.fire({
         icon: 'error',
         title: 'Registration Failed',
@@ -63,7 +69,7 @@ export default function Register() {
 
           <form noValidate className={`row g-3 ${validated ? 'was-validated' : ''}`} onSubmit={handleSubmit}>
             <div className="col-12">
-              <label htmlFor="name" className="form-label">Name</label>
+              <label htmlFor="name" className="form-label">Full Name</label>
               <input
                 id="name"
                 className="form-control"
@@ -73,6 +79,19 @@ export default function Register() {
                 required
               />
               <div className="invalid-feedback">Name is required.</div>
+            </div>
+
+            <div className="col-12">
+              <label htmlFor="registrationNumber" className="form-label">Registration Number</label>
+              <input
+                id="registrationNumber"
+                className="form-control"
+                placeholder="e.g., STU-2024-001"
+                value={registrationNumber}
+                onChange={(e) => setRegistrationNumber(e.target.value)}
+                required
+              />
+              <div className="invalid-feedback">Registration number is required.</div>
             </div>
 
             <div className="col-12">
