@@ -34,8 +34,6 @@ export async function addBook(payload: any) {
   }
 
   const isFormData = payload instanceof FormData
-  const file = isFormData ? payload.get('file') : null
-  const cover = isFormData ? payload.get('cover') : null
   
   // Create FormData with all fields including file and cover
   const formData = new FormData()
