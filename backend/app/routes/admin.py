@@ -4,7 +4,7 @@ from io import BytesIO, StringIO
 from pathlib import Path
 from fastapi import APIRouter, Depends, HTTPException, status, Query, UploadFile, File, Form
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from fastapi.responses import StreamingResponse
+from fastapi.responses import StreamingResponse, FileResponse
 from sqlalchemy.orm import Session
 from sqlalchemy import and_, func
 from pydantic import ValidationError
@@ -74,6 +74,7 @@ def _book_to_public(book: Book, db: Session) -> dict:
         "is_available": book.is_available,
         "category_id": category_id,
         "category_name": category_name,
+        "cover_filename": book.cover_filename,
     }
 
 
@@ -308,6 +309,68 @@ def _build_pdf_bytes(rows: list[dict], report_type: str, start_date: datetime, e
     return buffer.getvalue()
 
 
+def _build_docx_bytes(rows: list[dict], report_type: str, start_date: datetime, end_date: datetime) -> bytes:
+    try:
+        from docx import Document
+        from docx.shared import Inches, Pt
+        from docx.enum.text import WD_ALIGN_PARAGRAPH
+    except Exception as exc:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="python-docx is required for word export",
+        ) from exc
+
+    doc = Document()
+    
+    # Add title
+    title = doc.add_heading(f"LMS Monthly {report_type.capitalize()} Report", level=1)
+    title.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    
+    # Add metadata
+    doc.add_paragraph(f"Report Date Range: {start_date.date()} to {end_date.date()}")
+    doc.add_paragraph(f"Total Records: {len(rows)}")
+    doc.add_paragraph("")  # Add spacing
+    
+    if not rows:
+        doc.add_paragraph("No data available for this report.")
+    else:
+        headers = list(rows[0].keys())
+        
+        # Create table with headers + rows
+        table = doc.add_table(rows=1, cols=len(headers))
+        table.style = 'Light Grid Accent 1'
+        
+        # Add header row
+        header_cells = table.rows[0].cells
+        for i, header in enumerate(headers):
+            header_cells[i].text = str(header)
+        
+        # Add data rows
+        for row_data in rows:
+            row_cells = table.add_row().cells
+            for i, header in enumerate(headers):
+                row_cells[i].text = str(row_data.get(header, ""))
+    
+    buffer = BytesIO()
+    doc.save(buffer)
+    return buffer.getvalue()
+
+
+def _build_csv_bytes(rows: list[dict], report_type: str) -> bytes:
+    """Build CSV content from report rows."""
+    buffer = StringIO()
+    
+    if not rows:
+        buffer.write("No data\n")
+    else:
+        headers = list(rows[0].keys())
+        writer = csv.DictWriter(buffer, fieldnames=headers)
+        writer.writeheader()
+        writer.writerows(rows)
+    
+    return buffer.getvalue().encode('utf-8')
+
+
 def _normalize_header(header: str) -> str:
     return header.strip().lower().replace(" ", "_")
 
@@ -471,10 +534,12 @@ async def add_book_to_catalog(
     description: str = Form(None),
     publication_year: int = Form(None),
     total_copies: int = Form(1),
+    file: UploadFile = File(None),
+    cover: UploadFile = File(None),
     current_librarian: Librarian = Depends(get_current_librarian),
     db: Session = Depends(get_db)
 ):
-    """Add a new book to the catalog (without file)."""
+    """Add a new book to the catalog with optional book file and cover image."""
     # Validate required fields
     if not title or not author or not isbn:
         raise HTTPException(
@@ -501,6 +566,73 @@ async def add_book_to_catalog(
         is_available=True,
     )
     db.add(book)
+    db.commit()
+    db.refresh(book)
+
+    # Handle book file upload if provided
+    if file and file.filename:
+        # Validate file type (PDF, DOC, DOCX, TXT)
+        allowed_extensions = {'.pdf', '.doc', '.docx', '.txt'}
+        file_ext = Path(file.filename).suffix.lower()
+        if file_ext not in allowed_extensions:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Invalid book file format. Allowed: PDF, DOC, DOCX, TXT",
+            )
+        
+        # Read and validate file size (max 50MB)
+        file_bytes = await file.read()
+        if len(file_bytes) > 50 * 1024 * 1024:  # 50MB
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Book file size must not exceed 50MB",
+            )
+        
+        # Create storage directory if it doesn't exist
+        BOOK_FILES_DIR.mkdir(parents=True, exist_ok=True)
+        
+        # Save book file with book ID
+        book_filename = f"{book.id}{file_ext}"
+        book_path = BOOK_FILES_DIR / book_filename
+        
+        with open(book_path, 'wb') as f:
+            f.write(file_bytes)
+
+    # Handle cover image upload if provided
+    cover_filename = None
+    if cover and cover.filename:
+        # Validate file type
+        allowed_extensions = {'.jpg', '.jpeg', '.png', '.gif', '.webp'}
+        file_ext = Path(cover.filename).suffix.lower()
+        if file_ext not in allowed_extensions:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Invalid cover image format. Allowed: JPEG, PNG, GIF, WebP",
+            )
+        
+        # Read and validate file size (max 10MB)
+        cover_bytes = await cover.read()
+        if len(cover_bytes) > 10 * 1024 * 1024:  # 10MB
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Cover image file size must not exceed 10MB",
+            )
+        
+        # Create storage directory if it doesn't exist
+        BOOK_FILES_DIR.mkdir(parents=True, exist_ok=True)
+        
+        # Save cover image with book ID
+        cover_filename = f"{book.id}_cover{file_ext}"
+        cover_path = BOOK_FILES_DIR / cover_filename
+        
+        with open(cover_path, 'wb') as f:
+            f.write(cover_bytes)
+        
+        # Update book with cover filename
+        book.cover_filename = cover_filename
+        db.add(book)
+        db.commit()
+        db.refresh(book)
     
     log_audit_event(
         db,
@@ -509,11 +641,8 @@ async def add_book_to_catalog(
         user_id=current_librarian.id,
         resource="book",
         resource_id=book.id,
-        details=f"Created book '{book.title}' (ISBN: {book.isbn})",
+        details=f"Created book '{book.title}' (ISBN: {book.isbn})" + (f" with cover image" if cover_filename else ""),
     )
-
-    db.commit()
-    db.refresh(book)
 
     return _book_to_public(book, db)
 
@@ -774,6 +903,48 @@ def remove_book_from_catalog(
     db.commit()
 
     return {"message": "Book removed from catalog"}
+
+
+@router.get("/books/{book_id}/cover")
+async def get_book_cover(
+    book_id: int,
+    db: Session = Depends(get_db)
+):
+    """Get book cover image by book ID."""
+    book = db.query(Book).filter(Book.id == book_id).first()
+    
+    if not book:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Book not found",
+        )
+    
+    if not book.cover_filename:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Book cover not found",
+        )
+    
+    cover_path = BOOK_FILES_DIR / book.cover_filename
+    
+    if not cover_path.exists():
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Book cover file not found",
+        )
+    
+    # Determine MIME type based on file extension
+    ext = cover_path.suffix.lower()
+    mime_types = {
+        '.jpg': 'image/jpeg',
+        '.jpeg': 'image/jpeg',
+        '.png': 'image/png',
+        '.gif': 'image/gif',
+        '.webp': 'image/webp',
+    }
+    media_type = mime_types.get(ext, 'application/octet-stream')
+    
+    return FileResponse(path=cover_path, media_type=media_type)
 
 
 @router.post("/books/categories", response_model=CategoryPublic, status_code=status.HTTP_201_CREATED)
@@ -1278,7 +1449,7 @@ def generate_borrowing_report(
 
 @router.get("/reports/export")
 def export_monthly_report(
-    format: str = Query(..., pattern="^(pdf|excel)$"),
+    format: str = Query(..., pattern="^(pdf|excel|csv|word)$"),
     type: str = Query(..., pattern="^(students|books|borrowed_books|returned_books|unreturned_books)$"),
     year: int | None = Query(None, ge=2000, le=2100),
     month: int | None = Query(None, ge=1, le=12),
@@ -1300,13 +1471,27 @@ def export_monthly_report(
             media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             headers={"Content-Disposition": f"attachment; filename={filename_base}.xlsx"},
         )
-
-    content = _build_pdf_bytes(rows, type, start_date, end_date)
-    return StreamingResponse(
-        BytesIO(content),
-        media_type="application/pdf",
-        headers={"Content-Disposition": f"attachment; filename={filename_base}.pdf"},
-    )
+    elif format == "csv":
+        content = _build_csv_bytes(rows, type)
+        return StreamingResponse(
+            BytesIO(content),
+            media_type="text/csv",
+            headers={"Content-Disposition": f"attachment; filename={filename_base}.csv"},
+        )
+    elif format == "word":
+        content = _build_docx_bytes(rows, type, start_date, end_date)
+        return StreamingResponse(
+            BytesIO(content),
+            media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            headers={"Content-Disposition": f"attachment; filename={filename_base}.docx"},
+        )
+    else:  # pdf
+        content = _build_pdf_bytes(rows, type, start_date, end_date)
+        return StreamingResponse(
+            BytesIO(content),
+            media_type="application/pdf",
+            headers={"Content-Disposition": f"attachment; filename={filename_base}.pdf"},
+        )
 
 
 @router.get("/reports/custom")

@@ -72,6 +72,7 @@ class BookPublic(BaseModel):
     is_available: bool
     category_id: int | None = None
     category_name: str | None = None
+    cover_filename: str | None = None
 
     model_config = {"from_attributes": True}
 

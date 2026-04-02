@@ -68,6 +68,8 @@ class Book(Base):
 
     is_available: Mapped[bool] = mapped_column(Boolean, default=True)
 
+    cover_filename: Mapped[str] = mapped_column(String(255), nullable=True)
+
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False
     )
