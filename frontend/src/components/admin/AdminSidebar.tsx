@@ -19,7 +19,7 @@ const navItems: SidebarItem[] = [
   { to: '/admin', icon: 'bi-speedometer2', label: 'Dashboard', end: true },
   { to: '/admin/inventory', icon: 'bi-journal-bookmark', label: 'Books' },
   { to: '/admin/users', icon: 'bi-people', label: 'Users' },
-  { to: '/admin/borrowed', icon: 'bi-arrow-left-right', label: 'Borrowed' },
+  { to: '/admin/borrow-requests', icon: 'bi-hand-index', label: 'Borrow Requests' },
   { to: '/admin/reports', icon: 'bi-bar-chart-line', label: 'Reports' },
   { to: '/admin/settings', icon: 'bi-sliders', label: 'Settings' },
 ]

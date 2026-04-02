@@ -91,51 +91,78 @@ export default function BookDetailsCard({ bookId }: BookDetailsCardProps) {
   return (
     <div className="card shadow-sm">
       <div className="card-body">
-        <h3 className="card-title mb-1">{book.title}</h3>
-        <h6 className="text-muted mb-4">{book.author}</h6>
-
-        <div className="row g-3">
-          <div className="col-12 col-md-6">
-            <div className="border rounded p-3 h-100">
-              <p className="mb-2"><strong>ISBN:</strong> {book.isbn || '-'}</p>
-              <p className="mb-2"><strong>Category:</strong> {book.category_name || '-'}</p>
-              <p className="mb-0"><strong>Available Copies:</strong> {book.available_copies} / {book.total_copies}</p>
-            </div>
+        <div className="row g-4">
+          {/* Book Cover */}
+          <div className="col-12 col-md-4">
+            {book.cover_filename ? (
+              <img
+                src={`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/admin/books/${book.id}/cover`}
+                alt={`${book.title} cover`}
+                className="img-fluid rounded shadow-sm"
+                style={{ maxHeight: '350px', objectFit: 'cover' }}
+              />
+            ) : (
+              <div
+                className="bg-light rounded d-flex align-items-center justify-content-center shadow-sm"
+                style={{ height: '350px' }}
+              >
+                <div className="text-center text-muted">
+                  <i className="bi bi-book" style={{ fontSize: '3rem' }}></i>
+                  <p className="mt-2 mb-0">No cover available</p>
+                </div>
+              </div>
+            )}
           </div>
 
-          <div className="col-12 col-md-6">
-            <div className="border rounded p-3 h-100">
-              <p className="mb-2"><strong>Published Year:</strong> {book.publication_year || '-'}</p>
-              <p className="mb-0"><strong>Description:</strong> {book.description || 'No description available.'}</p>
-            </div>
-          </div>
-        </div>
+          {/* Book Details */}
+          <div className="col-12 col-md-8">
+            <h3 className="card-title mb-1">{book.title}</h3>
+            <h6 className="text-muted mb-4">{book.author}</h6>
 
-        <div className="mt-4">
-          <button
-            className="btn btn-success"
-            onClick={handleBorrow}
-            disabled={borrowing || !book.is_available}
-          >
-            {borrowing ? 'Borrowing...' : (book.is_available ? 'Borrow Book' : 'Not Available')}
+            <div className="row g-3">
+              <div className="col-12">
+                <div className="border rounded p-3">
+                  <p className="mb-2"><strong>ISBN:</strong> {book.isbn || '-'}</p>
+                  <p className="mb-2"><strong>Category:</strong> {book.category_name || '-'}</p>
+                  <p className="mb-0"><strong>Available Copies:</strong> {book.available_copies} / {book.total_copies}</p>
+                </div>
+              </div>
+
+              <div className="col-12">
+                <div className="border rounded p-3">
+                  <p className="mb-2"><strong>Published Year:</strong> {book.publication_year || '-'}</p>
+                  <p className="mb-0"><strong>Description:</strong> {book.description || 'No description available.'}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-4">
+              <button
+                className="btn btn-success"
+                onClick={handleBorrow}
+                disabled={borrowing || !book.is_available}
+              >
+                {borrowing ? 'Borrowing...' : (book.is_available ? 'Borrow Book' : 'Not Available')}
           </button>
           <button
             className="btn btn-info ms-2"
             onClick={handleDownload}
             disabled={downloading}
           >
-            {downloading ? (
-              <>
-                <i className="bi bi-download me-1"></i>
-                Downloading...
-              </>
-            ) : (
-              <>
-                <i className="bi bi-download me-1"></i>
-                Download File
-              </>
-            )}
-          </button>
+              {downloading ? (
+                <>
+                  <i className="bi bi-download me-1"></i>
+                  Downloading...
+                </>
+              ) : (
+                <>
+                  <i className="bi bi-download me-1"></i>
+                  Download File
+                </>
+              )}
+            </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

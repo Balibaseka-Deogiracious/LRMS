@@ -33,9 +33,28 @@ export default function BookCard({ book }: BookCardProps) {
 
   return (
     <div 
-      className="card book-card h-100 shadow-sm"
+      className="card book-card h-100 shadow-sm overflow-hidden"
       onClick={handleCardClick}
     >
+      {/* Cover Image */}
+      <div style={{ position: 'relative', height: '200px', overflow: 'hidden', backgroundColor: '#f0f0f0' }}>
+        {book.cover_filename ? (
+          <img
+            src={`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/admin/books/${book.id}/cover`}
+            alt={`${book.title} cover`}
+            style={{ 
+              width: '100%', 
+              height: '100%', 
+              objectFit: 'cover'
+            }}
+          />
+        ) : (
+          <div className="d-flex align-items-center justify-content-center" style={{ width: '100%', height: '100%' }}>
+            <i className="bi bi-book text-muted" style={{ fontSize: '3rem' }}></i>
+          </div>
+        )}
+      </div>
+
       <div className="card-body d-flex flex-column">
         <h5 className="card-title">{book.title}</h5>
         <h6 className="card-subtitle mb-2 text-muted">{book.author}</h6>

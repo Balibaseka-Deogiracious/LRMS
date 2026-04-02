@@ -10,6 +10,7 @@ export interface Book {
   is_available: boolean
   category_id?: number | null
   category_name?: string | null
+  cover_filename?: string | null
 }
 
 export interface Stats {

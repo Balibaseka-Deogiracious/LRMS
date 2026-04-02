@@ -35,31 +35,30 @@ export async function addBook(payload: any) {
 
   const isFormData = payload instanceof FormData
   const file = isFormData ? payload.get('file') : null
+  const cover = isFormData ? payload.get('cover') : null
   
-  // Create form data without file for initial request
+  // Create FormData with all fields including file and cover
   const formData = new FormData()
   if (isFormData) {
     for (const [key, value] of payload.entries()) {
-      if (key !== 'file') {
-        formData.append(key, value as any)
-      }
+      formData.append(key, value as any)
     }
+  } else {
+    formData.append('title', payload.title?.trim() || '')
+    formData.append('author', payload.author?.trim() || '')
+    formData.append('isbn', payload.isbn?.trim() || '')
+    formData.append('description', payload.description?.trim() || '')
+    formData.append('publication_year', payload.publication_year || '')
+    formData.append('total_copies', payload.total_copies || '1')
   }
 
-  // First, create the book without file
+  // Send all data at once (file, cover, and book metadata)
   const response = await fetch(`${API_BASE_URL}/admin/books`, {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${token}`,
     },
-    body: isFormData ? formData : JSON.stringify({
-      title: payload.title?.trim(),
-      author: payload.author?.trim(),
-      isbn: payload.isbn?.trim(),
-      description: payload.description?.trim() || null,
-      publication_year: payload.publication_year || null,
-      total_copies: payload.total_copies || 1,
-    }),
+    body: formData,
   })
 
   if (!response.ok) {
@@ -68,29 +67,6 @@ export async function addBook(payload: any) {
   }
 
   const created = await response.json()
-
-  // If file exists, upload it separately
-  if (file && file instanceof File) {
-    try {
-      const fileFormData = new FormData()
-      fileFormData.append('file', file)
-
-      const fileResponse = await fetch(`${API_BASE_URL}/admin/books/${created.id}/file`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-        body: fileFormData,
-      })
-
-      if (!fileResponse.ok) {
-        console.warn('File upload failed, but book was created')
-      }
-    } catch (error) {
-      console.warn('File upload failed:', error)
-    }
-  }
-
   return created
 }
 

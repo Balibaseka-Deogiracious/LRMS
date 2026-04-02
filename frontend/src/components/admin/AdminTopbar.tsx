@@ -17,7 +17,7 @@ const pageTitle: Record<string, string> = {
   '/admin': 'Dashboard',
   '/admin/inventory': 'Books Management',
   '/admin/users': 'Users',
-  '/admin/borrowed': 'Borrowed Books',
+  '/admin/borrow-requests': 'Borrow Requests',
   '/admin/reports': 'Reports',
   '/admin/settings': 'Settings',
 }

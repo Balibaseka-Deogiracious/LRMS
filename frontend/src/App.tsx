@@ -16,6 +16,7 @@ import AdminUsers from './pages/AdminUsers'
 import MyBorrowedBooks from './pages/MyBorrowedBooks'
 import AdminReports from './pages/admin/AdminReports'
 import AdminSettings from './pages/admin/AdminSettings'
+import AdminBorrowRequests from './pages/admin/AdminBorrowRequests'
 import { useAuth } from './contexts/AuthContext'
 
 /**
@@ -151,6 +152,7 @@ function App() {
           <Route index element={<Dashboard />} />
           <Route path="users" element={<AdminUsers />} />
           <Route path="inventory" element={<AddBook />} />
+          <Route path="borrow-requests" element={<AdminBorrowRequests />} />
           <Route path="reports" element={<AdminReports />} />
           <Route path="settings" element={<AdminSettings />} />
         </Route>

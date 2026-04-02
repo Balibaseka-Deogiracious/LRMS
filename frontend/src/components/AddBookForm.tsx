@@ -19,6 +19,7 @@ interface FormState {
   publication_year: string
   total_copies: string
   file?: File
+  coverImage?: File
 }
 
 const initialForm: FormState = {
@@ -35,6 +36,8 @@ export default function AddBookForm({ onBookAdded, onClose, isModal = false }: A
   const [validated, setValidated] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
+  const [isCoverDragging, setIsCoverDragging] = useState(false)
+  const [coverPreview, setCoverPreview] = useState<string | null>(null)
 
   useEffect(() => {
     // Load categories (for future use)
@@ -66,8 +69,64 @@ export default function AddBookForm({ onBookAdded, onClose, isModal = false }: A
     toast.success(`File "${file.name}" selected successfully`)
   }
 
+  const handleCoverImageSelect = (file: File | null) => {
+    if (!file) return
+
+    const maxSize = 10 * 1024 * 1024 // 10MB
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
+
+    if (!allowedTypes.includes(file.type)) {
+      toast.error('Invalid image type. Allowed: JPEG, PNG, GIF, WebP')
+      return
+    }
+
+    if (file.size > maxSize) {
+      toast.error('Image size must be less than 10MB')
+      return
+    }
+
+    // Create preview
+    const reader = new FileReader()
+    reader.onload = () => {
+      setCoverPreview(reader.result as string)
+    }
+    reader.readAsDataURL(file)
+
+    setForm(prev => ({ ...prev, coverImage: file }))
+    toast.success(`Cover image "${file.name}" selected successfully`)
+  }
+
   const clearFile = () => {
     setForm(prev => ({ ...prev, file: undefined }))
+  }
+
+  const clearCoverImage = () => {
+    setForm(prev => ({ ...prev, coverImage: undefined }))
+    setCoverPreview(null)
+  }
+
+  const handleCoverDragOver = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsCoverDragging(true)
+  }
+
+  const handleCoverDragLeave = () => {
+    setIsCoverDragging(false)
+  }
+
+  const handleCoverDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsCoverDragging(false)
+    const files = e.dataTransfer.files
+    if (files.length > 0) {
+      handleCoverImageSelect(files[0])
+    }
+  }
+
+  const handleCoverImageInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      handleCoverImageSelect(e.target.files[0])
+    }
   }
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -127,6 +186,11 @@ export default function AddBookForm({ onBookAdded, onClose, isModal = false }: A
         formData.append('publication_year', form.publication_year)
       }
       formData.append('total_copies', form.total_copies)
+      
+      // Add cover image if selected
+      if (form.coverImage) {
+        formData.append('cover', form.coverImage)
+      }
       
       // Add file if selected
       if (form.file) {
@@ -189,6 +253,55 @@ export default function AddBookForm({ onBookAdded, onClose, isModal = false }: A
             required
           />
           <div className="invalid-feedback">Title is required.</div>
+        </div>
+
+        <div className="col-12">
+          <label className="form-label">Book Cover Image (Optional)</label>
+          <div
+            className={`add-book-form-upload-zone border-2 rounded p-4 text-center transition ${
+              isCoverDragging
+                ? 'dragging border-primary bg-primary bg-opacity-10'
+                : form.coverImage
+                ? 'border-success bg-success bg-opacity-5'
+                : 'border-secondary'
+            }`}
+            onDragOver={handleCoverDragOver}
+            onDragLeave={handleCoverDragLeave}
+            onDrop={handleCoverDrop}
+          >
+            <input
+              type="file"
+              id="coverImage"
+              className="d-none"
+              accept="image/jpeg,image/png,image/gif,image/webp"
+              onChange={handleCoverImageInput}
+            />
+            <label htmlFor="coverImage" className="mb-0 add-book-form-upload-label">
+              {coverPreview ? (
+                <div>
+                  <img src={coverPreview} alt="Cover preview" className="img-fluid" style={{ maxHeight: '150px', marginBottom: '10px' }} />
+                  <strong className="d-block mb-1">{form.coverImage?.name}</strong>
+                  <small className="text-muted">Click or drag to change</small>
+                </div>
+              ) : (
+                <div>
+                  <i className="bi bi-image text-secondary fs-3 d-block mb-2" />
+                  <strong className="d-block">Add Book Cover</strong>
+                  <small className="text-muted">Drag and drop or click to browse (JPEG, PNG, GIF, WebP - Max 10MB)</small>
+                </div>
+              )}
+            </label>
+          </div>
+          {form.coverImage && (
+            <button
+              type="button"
+              className="btn btn-sm btn-outline-danger mt-2"
+              onClick={clearCoverImage}
+            >
+              <i className="bi bi-x-circle me-1" />
+              Remove Cover
+            </button>
+          )}
         </div>
 
         <div className="col-12 col-md-6">

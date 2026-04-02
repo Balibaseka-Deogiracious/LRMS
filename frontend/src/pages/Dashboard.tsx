@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import BookCard from '../components/BookCard'
 import { Book, DashboardStats } from '../types'
 import { searchBooks } from '../services/bookService'
@@ -16,6 +17,21 @@ import { toast } from 'react-toastify'
 import { BookGridSkeleton, StatsCardsSkeleton } from '../components/LoadingSkeletons'
 import './dashboard.css'
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+
+interface BorrowRequest {
+  id: number
+  student_id: number
+  student?: {
+    full_name: string
+  }
+  book?: {
+    title: string
+  }
+  requested_at: string
+  status: string
+}
+
 export default function Dashboard() {
   const [metrics, setMetrics] = useState<DashboardStats>({
     totalBooks: 0,
@@ -25,11 +41,14 @@ export default function Dashboard() {
   const [loadingStats, setLoadingStats] = useState(true)
   const [loadingBooks, setLoadingBooks] = useState(true)
   const [loadingCharts, setLoadingCharts] = useState(true)
+  const [loadingBorrowRequests, setLoadingBorrowRequests] = useState(true)
   const [totalUsers, setTotalUsers] = useState(0)
   const [books, setBooks] = useState<Book[]>([])
   const [borrowingTrends, setBorrowingTrends] = useState<any[]>([])
   const [booksDistribution, setBooksDistribution] = useState<any[]>([])
   const [availabilityStats, setAvailabilityStats] = useState<any[]>([])
+  const [pendingRequests, setPendingRequests] = useState<BorrowRequest[]>([])
+  const [pendingCount, setPendingCount] = useState(0)
   const welcomeMessage = 'Welcome back. Here\'s what\'s happening today.'
 
   const todayLabel = new Date().toLocaleDateString(undefined, {
@@ -59,6 +78,11 @@ export default function Dashboard() {
       title: 'Available Books',
       value: metrics.availableBooks,
       meta: 'Ready to borrow',
+    },
+    {
+      title: 'Pending Requests',
+      value: pendingCount,
+      meta: 'Awaiting approval',
     },
   ]
 
@@ -130,6 +154,31 @@ export default function Dashboard() {
       } finally {
         setLoadingBooks(false)
       }
+
+      // Fetch pending borrow requests
+      try {
+        const token = localStorage.getItem('token')
+        const response = await fetch(
+          `${API_BASE_URL}/admin/borrow-requests?status_filter=pending`,
+          {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+
+        if (response.ok) {
+          const data = await response.json()
+          setPendingRequests(data.slice(0, 5) || [])
+          setPendingCount(data.length || 0)
+        }
+      } catch (error) {
+        console.error('Failed to load borrow requests:', error)
+      } finally {
+        setLoadingBorrowRequests(false)
+      }
     })()
   }, [])
 
@@ -191,6 +240,53 @@ export default function Dashboard() {
             <div className="card-body">
               <div className="d-flex justify-content-between align-items-center mb-3">
                 <div>
+                  <h5 className="mb-0">
+                    <i className="bi bi-hand-index me-2"></i>
+                    Pending Borrow Requests
+                  </h5>
+                  <small className="text-muted">{pendingCount} request(s) waiting for approval</small>
+                </div>
+                <Link to="/admin/borrow-requests" className="btn btn-sm btn-primary">
+                  View All
+                </Link>
+              </div>
+
+              {loadingBorrowRequests ? (
+                <div className="text-center py-3">
+                  <div className="spinner-border spinner-border-sm text-primary" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                  </div>
+                </div>
+              ) : pendingRequests.length === 0 ? (
+                <div className="alert alert-info mb-0">
+                  <p className="mb-0">No pending borrow requests at the moment.</p>
+                </div>
+              ) : (
+                <div className="list-group list-group-flush">
+                  {pendingRequests.map((request) => (
+                    <div key={request.id} className="list-group-item px-0 py-2">
+                      <div className="d-flex justify-content-between align-items-start">
+                        <div className="flex-grow-1">
+                          <strong className="d-block">{request.student?.full_name || 'Unknown'}</strong>
+                          <small className="text-muted">{request.book?.title || 'Unknown Book'}</small>
+                        </div>
+                        <span className="badge bg-warning text-dark ms-2">Pending</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="row g-3 mb-4">
+        <div className="col-12 col-xl-12">
+          <div className="card border-0 shadow-sm h-100">
+            <div className="card-body">
+              <div className="d-flex justify-content-between align-items-center mb-3">
+                <div>
                   <h5 className="mb-0">Featured Books</h5>
                   <small className="text-muted">Popular titles in the library</small>
                 </div>
@@ -205,7 +301,7 @@ export default function Dashboard() {
               ) : (
                 <div className="row g-3">
                   {books.slice(0, 4).map((b) => (
-                    <div key={b.id} className="col-12 col-sm-6">
+                    <div key={b.id} className="col-12 col-sm-6 col-md-4 col-lg-3">
                       <BookCard book={b} />
                     </div>
                   ))}
