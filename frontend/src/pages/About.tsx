@@ -159,7 +159,7 @@ export default function About() {
               About LRMS
             </h1>
             <p className={`text-lg ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
-              Library Resource Management System
+              Library Retrieval Management System
             </p>
           </section>
 
@@ -170,7 +170,7 @@ export default function About() {
             </h2>
             <div className={`space-y-4 ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
               <p>
-                The Library Resource Management System (LRMS) is a comprehensive digital solution designed to streamline and enhance library operations. Our system enables librarians and students to efficiently manage book inventories, track borrowing patterns, and foster a vibrant reading community.
+                The Library Retrieval Management System (LRMS) is a comprehensive digital solution designed to streamline and enhance library operations. Our system enables librarians and students to efficiently manage book inventories, track borrowing patterns, and foster a vibrant reading community.
               </p>
               <p>
                 LRMS combines modern web technologies with intuitive user interfaces to provide a seamless experience for both administrators and library users. From real-time inventory management to personalized book recommendations, our platform simplifies library administration and enriches the student learning experience.
@@ -261,20 +261,6 @@ export default function About() {
                     <div className="space-y-3">
                       <div>
                         <p className={`text-xs font-semibold uppercase ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>
-                          Email
-                        </p>
-                        <a
-                          href={`mailto:${member.email}`}
-                          className={`text-sm break-all transition hover:text-[#254194] ${
-                            isDark ? 'text-slate-300' : 'text-slate-600'
-                          }`}
-                        >
-                          {member.email}
-                        </a>
-                      </div>
-
-                      <div>
-                        <p className={`text-xs font-semibold uppercase ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>
                           Registration Number
                         </p>
                         <p className={`text-sm font-mono ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
@@ -294,7 +280,7 @@ export default function About() {
               Ready to Explore?
             </h2>
             <p className={`mb-8 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
-              Join our library community today and discover thousands of resources at your fingertips.
+              Join our library community today and discover thousands of retrievals at your fingertips.
             </p>
             <Link
               to="/register"
