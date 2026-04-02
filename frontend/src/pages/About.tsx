@@ -120,7 +120,7 @@ const teamMembers: TeamMember[] = [
 ]
 
 export default function About() {
-  const { theme } = useTheme()
+  const { theme, toggleTheme } = useTheme()
   const isDark = theme === 'dark'
 
   return (
@@ -133,6 +133,13 @@ export default function About() {
             <span>LRMS</span>
           </Link>
           <div className="flex items-center gap-2">
+            <button
+              onClick={toggleTheme}
+              className={`rounded-md px-3 py-2 text-sm font-medium transition ${isDark ? 'text-slate-300 hover:text-white hover:bg-slate-800' : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'}`}
+              aria-label="Toggle theme"
+            >
+              {isDark ? '☀️ Light' : '🌙 Dark'}
+            </button>
             <Link
               to="/"
               className={`rounded-md px-3 py-2 text-sm font-medium transition ${isDark ? 'text-slate-300 hover:text-white' : 'text-slate-700 hover:text-slate-900'}`}
@@ -303,7 +310,7 @@ export default function About() {
       <footer className={`mt-20 border-t ${isDark ? 'border-slate-800 bg-slate-900' : 'border-slate-200 bg-slate-50'}`}>
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-12 text-center">
           <p className={isDark ? 'text-slate-400' : 'text-slate-600'}>
-            © 2026 Library Resource Management System. All rights reserved.
+            © 2026 Library Retrieval Management System. All rights reserved.
           </p>
         </div>
       </footer>
