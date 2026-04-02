@@ -274,9 +274,17 @@ export default function StudentDashboard() {
                   style={{ cursor: 'pointer' }}
                 >
                   <div className="book-card-image">
-                    <div className="book-placeholder">
-                      <BookOpen size={32} />
-                    </div>
+                    {book.cover_filename ? (
+                      <img
+                        src={`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/admin/books/${book.id}/cover`}
+                        alt={`${book.title} cover`}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      />
+                    ) : (
+                      <div className="book-placeholder">
+                        <BookOpen size={32} />
+                      </div>
+                    )}
                     <button
                       type="button"
                       className={`wishlist-btn ${wishlist.has(String(book.id)) ? 'active' : ''}`}
