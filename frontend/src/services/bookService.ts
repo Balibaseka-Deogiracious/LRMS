@@ -97,6 +97,10 @@ export async function addBook(payload: any) {
 export async function borrowBook(id: string): Promise<boolean> {
   try {
     const token = localStorage.getItem('token')
+    if (!token) {
+      throw new Error('Authentication token not found. Please login again.')
+    }
+
     const response = await fetch(`${API_BASE_URL}/books/borrow`, {
       method: 'POST',
       headers: {
@@ -105,10 +109,17 @@ export async function borrowBook(id: string): Promise<boolean> {
       },
       body: JSON.stringify({ book_id: parseInt(id) }),
     })
-    return response.ok
-  } catch (error) {
+
+    if (!response.ok) {
+      const errorData = await response.json()
+      const errorMessage = errorData?.detail || 'Failed to borrow book'
+      throw new Error(errorMessage)
+    }
+
+    return true
+  } catch (error: any) {
     console.error('Borrow book error:', error)
-    return false
+    throw new Error(error?.message || 'Failed to borrow book. Please try again.')
   }
 }
 

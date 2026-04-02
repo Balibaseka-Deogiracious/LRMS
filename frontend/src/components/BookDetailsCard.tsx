@@ -47,15 +47,11 @@ export default function BookDetailsCard({ bookId }: BookDetailsCardProps) {
 
     setBorrowing(true)
     try {
-      const success = await borrowBook(String(book.id))
-      if (success) {
-        toast.success(`📚 Book "${book.title}" borrowed successfully!`)
-        // Refresh book details
-        const updated = await getBook(bookId)
-        if (updated) setBook(updated)
-      } else {
-        toast.error('Failed to borrow book.')
-      }
+      await borrowBook(String(book.id))
+      toast.success(`📚 Book "${book.title}" borrowed successfully!`)
+      // Refresh book details
+      const updated = await getBook(bookId)
+      if (updated) setBook(updated)
     } catch (error: any) {
       toast.error(error?.message || 'Failed to borrow book.')
     } finally {

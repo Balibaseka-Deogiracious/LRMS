@@ -129,11 +129,7 @@ export default function StudentDashboard() {
         return
       }
 
-      const inventoryUpdated = await markBookAsBorrowed(String(selectedBook.id))
-      if (!inventoryUpdated) {
-        setBorrowError('This book is no longer available. Please choose another title.')
-        return
-      }
+      await markBookAsBorrowed(String(selectedBook.id))
 
       const recordResult = addBorrowRecord(selectedBook)
       if (!recordResult.ok) {
@@ -147,8 +143,8 @@ export default function StudentDashboard() {
 
       toast.success(`Borrow request submitted for "${selectedBook.title}".`)
       closeBorrowForm()
-    } catch {
-      setBorrowError('Unable to process your borrow request right now. Please try again.')
+    } catch (error: any) {
+      setBorrowError(error?.message || 'Unable to process your borrow request right now. Please try again.')
     } finally {
       setSubmittingBorrow(false)
     }
