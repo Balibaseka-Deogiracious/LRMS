@@ -1,0 +1,31 @@
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.display-4.fw-bold.mb-3 {
+  animation: fadeInUp 0.8s ease-out;
+}
+
+/* Alternative bounce animation */
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Can apply to hero section heading specifically */
+.landing-hero .display-4.fw-bold {
+  animation: slideInLeft 0.8s ease-out;
+}

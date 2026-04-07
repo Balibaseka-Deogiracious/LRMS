@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import LibraryImage from './LibraryImage'
+import './HeroSection.css'
 
 interface HeroSectionProps {
   onExplore?: () => void
