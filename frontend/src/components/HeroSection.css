@@ -1,23 +1,7 @@
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.display-4.fw-bold.mb-3 {
-  animation: fadeInUp 0.8s ease-out;
-}
-
-/* Alternative bounce animation */
 @keyframes slideInLeft {
   from {
     opacity: 0;
-    transform: translateX(-50px);
+    transform: translateX(-100px);
   }
   to {
     opacity: 1;
@@ -25,7 +9,33 @@
   }
 }
 
-/* Can apply to hero section heading specifically */
-.landing-hero .display-4.fw-bold {
-  animation: slideInLeft 0.8s ease-out;
+@keyframes slideInLeftStagger {
+  from {
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Hero section heading */
+.landing-hero .display-4.fw-bold.mb-3 {
+  animation: slideInLeft 0.9s ease-out;
+}
+
+/* Badge animation */
+.landing-hero .badge {
+  animation: slideInLeft 0.7s ease-out 0.2s both;
+}
+
+/* Text paragraph animation */
+.landing-hero .lead {
+  animation: slideInLeft 0.8s ease-out 0.3s both;
+}
+
+/* Buttons animation */
+.landing-hero .d-flex.gap-3 {
+  animation: slideInLeft 0.9s ease-out 0.4s both;
 }
