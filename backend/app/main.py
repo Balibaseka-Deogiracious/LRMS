@@ -14,10 +14,10 @@ load_dotenv()
 
 app = FastAPI(title="Library Management System API", version="1.0.0")
 
-# Configure CORS to allow frontend requests
+# Configure CORS to allow all origins
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://lrms-two.vercel.app"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
