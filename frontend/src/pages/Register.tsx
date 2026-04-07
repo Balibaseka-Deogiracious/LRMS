@@ -100,12 +100,12 @@ export default function Register() {
                 id="email"
                 type="email"
                 className="form-control"
-                placeholder="name@example.com"
+                placeholder="name@gmail.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
-              <div className="invalid-feedback">A valid email is required.</div>
+              <div className="invalid-feedback">Please use a valid @gmail.com email address.</div>
             </div>
 
             <div className="col-12">
@@ -118,7 +118,7 @@ export default function Register() {
                   placeholder="Create a strong password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  minLength={6}
+                  minLength={8}
                   required
                 />
                 <button
@@ -129,7 +129,7 @@ export default function Register() {
                 >
                   <i className={`bi ${showPassword ? 'bi-eye-slash' : 'bi-eye'}`} aria-hidden="true" />
                 </button>
-                <div className="invalid-feedback">Password must be at least 6 characters.</div>
+                <div className="invalid-feedback">Password must be at least 8 characters.</div>
               </div>
             </div>
 
