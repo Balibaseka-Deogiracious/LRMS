@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import Typewriter from 'typewriter-effect'
 import LibraryImage from './LibraryImage'
 import './HeroSection.css'
 
@@ -23,8 +24,24 @@ export default function HeroSection({ onExplore, onDashboard }: HeroSectionProps
               <span className="badge bg-info-subtle text-info mb-3" style={{ fontSize: '0.9rem' }}>
                 <i className="bi bi-sparkles me-1" /> Welcome to LRMS
               </span>
-              <h1 className="display-4 fw-bold mb-3">
-                Find, borrow, and manage books in one elegant system.
+              <h1 className="display-4 fw-bold mb-3 hero-headline">
+                Find, borrow, and&nbsp;
+                <span className="typewriter-wrapper">
+                  <Typewriter
+                    options={{
+                      strings: [
+                        'manage books',
+                        'explore journals',
+                        'access research',
+                        'track resources',
+                      ],
+                      autoStart: true,
+                      loop: true,
+                      deleteSpeed: 80,
+                      delay: 100,
+                    }}
+                  />
+                </span>
               </h1>
               <p className="lead text-white-75 mb-4">
                 Streamline your library workflows with fast discovery, intuitive borrowing, and powerful administration tools.

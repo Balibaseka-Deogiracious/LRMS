@@ -39,3 +39,36 @@
 .landing-hero .d-flex.gap-3 {
   animation: slideInLeft 0.9s ease-out 0.4s both;
 }
+
+/* Typewriter wrapper styling */
+.typewriter-wrapper {
+  display: inline-block;
+  width: 320px;
+  text-align: left;
+  color: #ffc107;
+  font-weight: 700;
+  min-height: 1.2em;
+}
+
+/* Typewriter cursor styling */
+.typewriter-wrapper .Typewriter__cursor {
+  color: #ffc107;
+  font-weight: 700;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 49% {
+    opacity: 1;
+  }
+  50%, 100% {
+    opacity: 0;
+  }
+}
+
+/* Typewriter character styling */
+.typewriter-wrapper .Typewriter__wrapper {
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+}
