@@ -49,8 +49,8 @@ export default function LandingNavbar() {
       <nav className={`fixed left-0 right-0 top-0 z-50 border-b backdrop-blur-md ${isDark ? 'border-slate-700/45 bg-slate-900/75' : 'border-slate-200/70 bg-white/75'}`}>
         <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <Link to="/" className="flex items-center gap-2 text-lg font-bold nav-logo">
-            <img src={logo} alt="LRMS logo" width="32" height="32" className="rounded" />
-            <span>LRMS</span>
+            <img src={logo} alt="Libris logo" width="32" height="32" className="rounded" />
+            <span>Libris</span>
           </Link>
 
           <div className="hidden md:flex items-center gap-2">

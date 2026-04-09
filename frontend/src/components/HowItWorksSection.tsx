@@ -11,7 +11,7 @@ const steps: Step[] = [
   {
     number: 1,
     title: 'Register',
-    description: 'Create your LRMS account and sign in securely.',
+    description: 'Create your Libris account and sign in securely.',
     icon: 'bi-person-plus',
   },
   {

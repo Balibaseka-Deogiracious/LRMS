@@ -85,9 +85,9 @@ export default function SearchPage() {
           <Library size={20} />
           <div className="repo-search-wrap" role="search">
             <Search size={17} />
-            <input type="search" placeholder="Search across LRMS repositories..." aria-label="Search all LRMS records" />
+            <input type="search" placeholder="Search across Libris repositories..." aria-label="Search all Libris records" />
             <select aria-label="Search scope">
-              <option>All of LRMS</option>
+              <option>All of Libris</option>
               <option>Communities & Collections</option>
               <option>Authors</option>
             </select>
@@ -101,7 +101,7 @@ export default function SearchPage() {
           <div className="repo-sidebar-brand">
             <GraduationCap size={20} />
             <div>
-              <strong>LRMS Repository</strong>
+              <strong>Libris Repository</strong>
               <small>Student Knowledge Space</small>
             </div>
           </div>
@@ -116,7 +116,7 @@ export default function SearchPage() {
             <div>
               <p className="repo-hero-kicker">Institutional Knowledge Hub</p>
               <h1>Search Research & Theses</h1>
-              <p>Explore university research outputs, archived theses, and peer-reviewed submissions from one connected LRMS space.</p>
+              <p>Explore university research outputs, archived theses, and peer-reviewed submissions from one connected Libris space.</p>
             </div>
             <button type="button" className="repo-submit-btn">
               <FileText size={16} />

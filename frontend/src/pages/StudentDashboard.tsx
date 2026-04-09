@@ -443,7 +443,7 @@ export default function StudentDashboard() {
       <footer className="student-footer">
         <div className="footer-content">
           <div className="footer-section">
-            <h4>About LRMS</h4>
+            <h4>About Libris</h4>
             <ul>
               <li>
                 <a href="#about">About Us</a>

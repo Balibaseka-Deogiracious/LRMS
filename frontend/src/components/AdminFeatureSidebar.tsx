@@ -20,7 +20,7 @@ export default function AdminFeatureSidebar({ onLogout }: AdminFeatureSidebarPro
   const fileInputRef = useRef<HTMLInputElement | null>(null)
 
   useEffect(() => {
-    const saved = localStorage.getItem('lrms_admin_sidebar_photo')
+    const saved = localStorage.getItem('libris_admin_sidebar_photo')
     if (saved) setPhotoSrc(saved)
   }, [])
 
@@ -36,7 +36,7 @@ export default function AdminFeatureSidebar({ onLogout }: AdminFeatureSidebarPro
     reader.onload = () => {
       const next = String(reader.result || '')
       setPhotoSrc(next)
-      localStorage.setItem('lrms_admin_sidebar_photo', next)
+      localStorage.setItem('libris_admin_sidebar_photo', next)
     }
     reader.readAsDataURL(file)
   }
@@ -49,7 +49,7 @@ export default function AdminFeatureSidebar({ onLogout }: AdminFeatureSidebarPro
             <i className="bi bi-boxes" />
           </div>
           <div>
-            <strong className="d-block">LRMS</strong>
+            <strong className="d-block">Libris</strong>
             <small>Librarian Dashboard</small>
           </div>
         </div>

@@ -46,8 +46,8 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         <nav className={`navbar navbar-expand-lg app-topbar ${theme === 'dark' ? 'navbar-dark app-topbar-dark' : 'navbar-light app-topbar-light'}`}>
           <div className="container-fluid">
             <Link className="navbar-brand d-flex align-items-center gap-2" to={isAuthenticated ? homePath : '/'}>
-              <img src={logo} alt="LRMS logo" width="28" height="28" className="rounded-lg" />
-              <span className="fw-semibold">LRMS</span>
+              <img src={logo} alt="Libris logo" width="28" height="28" className="rounded-lg" />
+              <span className="fw-semibold">Libris</span>
             </Link>
             <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-controls="nav" aria-expanded="false" aria-label="Toggle navigation">
               <span className="navbar-toggler-icon" />

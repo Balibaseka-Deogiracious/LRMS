@@ -31,7 +31,7 @@ const ASSISTANT_NAME = 'Aiden'
 
 const quickActionsByContext: Record<AssistantContext, QuickAction[]> = {
   landing: [
-    { label: 'How to join?', reply: 'To join LRMS, select Register, create your account, and verify your email to access catalog features.' },
+    { label: 'How to join?', reply: 'To join Libris, select Register, create your account, and verify your email to access catalog features.' },
     { label: 'Search Catalog', reply: 'Use the Search Books page to filter by title, author, category, and availability in seconds.' },
     { label: 'Library Hours', reply: 'Library service hours are Mon-Fri 8:00 AM to 8:00 PM and Sat 9:00 AM to 5:00 PM.' },
   ],
@@ -62,7 +62,7 @@ function getGreeting(context: AssistantContext): string {
   if (context === 'user') {
     return 'Hello! I can help you locate specific theses, apply citation styles, and navigate library services quickly.'
   }
-  return 'Welcome to LRMS. I can help with joining, searching the catalog, and checking library information.'
+  return 'Welcome to Libris. I can help with joining, searching the catalog, and checking library information.'
 }
 
 export default function LibryAssistant() {
@@ -362,7 +362,7 @@ export default function LibryAssistant() {
     setInput('')
 
     queueAssistantReply(
-      'Thanks for your message. I am checking LRMS context and will guide you with the best next step.',
+      'Thanks for your message. I am checking Libris context and will guide you with the best next step.',
       420
     )
   }

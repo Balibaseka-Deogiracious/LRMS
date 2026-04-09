@@ -22,7 +22,7 @@ export default function HeroSection({ onExplore, onDashboard }: HeroSectionProps
           <div className="row align-items-center g-4">
             <div className="col-12 col-lg-7 text-white">
               <span className="badge bg-info-subtle text-info mb-3" style={{ fontSize: '0.9rem' }}>
-                <i className="bi bi-sparkles me-1" /> Welcome to LRMS
+                <i className="bi bi-sparkles me-1" /> Welcome to Libris
               </span>
               <h1 className="display-4 fw-bold mb-3 hero-headline">
                 Find, borrow, and&nbsp;

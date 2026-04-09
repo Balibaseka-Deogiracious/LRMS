@@ -12,8 +12,8 @@ interface LocalUser {
   lastLoginAt?: string
 }
 
-const BOOKS_KEY = 'lrms_books'
-const USERS_KEY = 'lrms_users'
+const BOOKS_KEY = 'libris_books'
+const USERS_KEY = 'libris_users'
 
 const seededBooks: Book[] = [
   {
@@ -70,7 +70,7 @@ const seededUsers: LocalUser[] = [
   {
     id: 'u-admin',
     name: 'System Librarian',
-    email: 'admin@lrms.local',
+    email: 'admin@libris.local',
     password: 'admin123',
     role: 'admin',
     active: true,

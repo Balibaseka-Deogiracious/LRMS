@@ -70,7 +70,7 @@ export default function Login() {
     <div className="d-flex justify-content-center align-items-center px-3 min-h-screen">
       <div className="card shadow-sm max-w-xs w-full">
         <div className="card-body">
-          <h4 className="card-title mb-1">Sign in to LRMS</h4>
+          <h4 className="card-title mb-1">Sign in to Libris</h4>
           <p className="text-muted mb-4">Enter your credentials to continue.</p>
 
           <form noValidate className={validated ? 'was-validated' : ''} onSubmit={submit}>

@@ -49,12 +49,12 @@ export default function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps)
   return (
     <aside className={`admin-sidebar-fixed ${collapsed ? 'collapsed' : ''}`}>
       <div className="admin-sidebar-header">
-        <div className="admin-logo" title="LRMS Admin">
+        <div className="admin-logo" title="Libris Admin">
           <span className="admin-logo-icon">
             <i className="bi bi-building" />
           </span>
           <span>
-            <strong>LRMS</strong>
+            <strong>Libris</strong>
             <small>Admin</small>
           </span>
         </div>

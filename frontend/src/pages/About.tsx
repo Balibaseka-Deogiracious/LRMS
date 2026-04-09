@@ -129,8 +129,8 @@ export default function About() {
       <nav className={`fixed left-0 right-0 top-0 z-50 border-b backdrop-blur-md ${isDark ? 'border-slate-700/45 bg-slate-900/75' : 'border-slate-200/70 bg-white/75'}`}>
         <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <Link to="/" className="flex items-center gap-2 text-lg font-bold about-logo">
-            <img src={logo} alt="LRMS logo" width="32" height="32" className="rounded" />
-            <span>LRMS</span>
+            <img src={logo} alt="Libris logo" width="32" height="32" className="rounded" />
+            <span>Libris</span>
           </Link>
           <div className="flex items-center gap-2">
             <button
@@ -156,7 +156,7 @@ export default function About() {
           {/* Header Section */}
           <section className="mb-16 text-center">
             <h1 className={`text-4xl sm:text-5xl font-bold mb-4 ${isDark ? 'text-white' : 'text-slate-900'}`}>
-              About LRMS
+              About Libris
             </h1>
             <p className={`text-lg ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
               Library Retrieval Management System
@@ -170,10 +170,10 @@ export default function About() {
             </h2>
             <div className={`space-y-4 ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
               <p>
-                The Library Retrieval Management System (LRMS) is a comprehensive digital solution designed to streamline and enhance library operations. Our system enables librarians and students to efficiently manage book inventories, track borrowing patterns, and foster a vibrant reading community.
+                The Library Retrieval Management System (Libris) is a comprehensive digital solution designed to streamline and enhance library operations. Our system enables librarians and students to efficiently manage book inventories, track borrowing patterns, and foster a vibrant reading community.
               </p>
               <p>
-                LRMS combines modern web technologies with intuitive user interfaces to provide a seamless experience for both administrators and library users. From real-time inventory management to personalized book recommendations, our platform simplifies library administration and enriches the student learning experience.
+                Libris combines modern web technologies with intuitive user interfaces to provide a seamless experience for both administrators and library users. From real-time inventory management to personalized book recommendations, our platform simplifies library administration and enriches the student learning experience.
               </p>
               <div className={`mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4`}>
                 <div className={`p-4 rounded-md ${isDark ? 'bg-slate-800' : 'bg-white'}`}>
