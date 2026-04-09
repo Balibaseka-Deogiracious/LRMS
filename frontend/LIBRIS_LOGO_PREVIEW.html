@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LIBRIS Logo Showcase</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      color: #254194;
+      margin-bottom: 50px;
+      font-size: 2.5rem;
+      letter-spacing: 2px;
+    }
+
+    .showcase-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      margin-bottom: 50px;
+    }
+
+    .showcase-card {
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .showcase-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(37, 65, 148, 0.2);
+    }
+
+    .showcase-card h2 {
+      color: #254194;
+      margin-bottom: 20px;
+      font-size: 1.3rem;
+    }
+
+    .logo-display {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 20px 0;
+      min-height: 150px;
+    }
+
+    .logo-display svg {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .size-comparison {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      gap: 20px;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+
+    .size-item {
+      text-align: center;
+    }
+
+    .size-item svg {
+      display: block;
+      margin: 10px auto;
+    }
+
+    .size-label {
+      font-size: 0.85rem;
+      color: #666;
+      margin-top: 10px;
+    }
+
+    .color-section {
+      margin: 30px 0;
+      padding: 20px;
+      background: #f9f9f9;
+      border-radius: 8px;
+    }
+
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .color-swatch {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .color-box {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .color-info {
+      text-align: left;
+    }
+
+    .color-name {
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 4px;
+    }
+
+    .color-code {
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    .dark-mode-showcase {
+      background: linear-gradient(135deg, #1a2d6e 0%, #254194 100%);
+      color: white;
+    }
+
+    .dark-mode-showcase h2 {
+      color: #ffc107;
+    }
+
+    .logo-text {
+      font-size: 24px;
+      font-weight: 700;
+      color: #254194;
+      margin-top: 15px;
+      letter-spacing: 1px;
+    }
+
+    .usage-code {
+      background: #f5f5f5;
+      border-left: 4px solid #ffc107;
+      padding: 15px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      overflow-x: auto;
+      margin: 15px 0;
+      color: #333;
+    }
+
+    .specs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    .spec-item {
+      background: #f9f9f9;
+      padding: 15px;
+      border-radius: 8px;
+      border-left: 4px solid #254194;
+    }
+
+    .spec-label {
+      font-weight: 600;
+      color: #254194;
+      font-size: 0.9rem;
+      margin-bottom: 5px;
+    }
+
+    .spec-value {
+      color: #666;
+      font-size: 0.95rem;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 50px;
+      padding-top: 30px;
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+      color: #666;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎨 LIBRIS Logo System</h1>
+
+    <!-- Size Variations -->
+    <div class="showcase-grid">
+      <div class="showcase-card">
+        <h2>📏 Size Variations</h2>
+        <div class="size-comparison">
+          <div class="size-item">
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="32" height="32">
+              <defs>
+                <linearGradient id="bluGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#2a4fa0;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#254194;stop-opacity:1" />
+                </linearGradient>
+                <linearGradient id="goldGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#ffda47;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#ffc107;stop-opacity:1" />
+                </linearGradient>
+              </defs>
+              <rect x="20" y="20" width="160" height="160" rx="24" ry="24" fill="url(#bluGradient1)" />
+              <rect x="62" y="50" width="14" height="100" rx="4" ry="4" fill="url(#goldGradient1)" />
+              <rect x="62" y="136" width="76" height="14" rx="4" ry="4" fill="url(#goldGradient1)" />
+            </svg>
+            <div class="size-label">Small (32px)</div>
+          </div>
+          <div class="size-item">
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="64" height="64">
+              <defs>
+                <linearGradient id="bluGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#2a4fa0;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#254194;stop-opacity:1" />
+                </linearGradient>
+                <linearGradient id="goldGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#ffda47;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#ffc107;stop-opacity:1" />
+                </linearGradient>
+              </defs>
+              <rect x="20" y="20" width="160" height="160" rx="24" ry="24" fill="url(#bluGradient2)" />
+              <rect x="62" y="50" width="14" height="100" rx="4" ry="4" fill="url(#goldGradient2)" />
+              <rect x="62" y="136" width="76" height="14" rx="4" ry="4" fill="url(#goldGradient2)" />
+            </svg>
+            <div class="size-label">Medium (64px)</div>
+          </div>
+          <div class="size-item">
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="96" height="96">
+              <defs>
+                <linearGradient id="bluGradient3" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#2a4fa0;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#254194;stop-opacity:1" />
+                </linearGradient>
+                <linearGradient id="goldGradient3" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#ffda47;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#ffc107;stop-opacity:1" />
+                </linearGradient>
+              </defs>
+              <rect x="20" y="20" width="160" height="160" rx="24" ry="24" fill="url(#bluGradient3)" />
+              <rect x="62" y="50" width="14" height="100" rx="4" ry="4" fill="url(#goldGradient3)" />
+              <rect x="62" y="136" width="76" height="14" rx="4" ry="4" fill="url(#goldGradient3)" />
+            </svg>
+            <div class="size-label">Large (96px)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Full Logo -->
+      <div class="showcase-card">
+        <h2>🏆 Full Logo</h2>
+        <div class="logo-display">
+          <div style="display: flex; flex-direction: column; align-items: center;">
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="120" height="120">
+              <defs>
+                <linearGradient id="bluGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#2a4fa0;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#254194;stop-opacity:1" />
+                </linearGradient>
+                <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#ffda47;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#ffc107;stop-opacity:1" />
+                </linearGradient>
+              </defs>
+              <rect x="20" y="20" width="160" height="160" rx="24" ry="24" fill="url(#bluGradient)" />
+              <rect x="62" y="50" width="14" height="100" rx="4" ry="4" fill="url(#goldGradient)" />
+              <rect x="62" y="136" width="76" height="14" rx="4" ry="4" fill="url(#goldGradient)" />
+              <polygon points="62,50 62,42 69,42 76,50" fill="url(#goldGradient)" />
+            </svg>
+            <div class="logo-text">LIBRIS</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dark Mode -->
+      <div class="showcase-card dark-mode-showcase">
+        <h2>🌙 Dark Mode</h2>
+        <div class="logo-display">
+          <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="100" height="100">
+            <defs>
+              <linearGradient id="bluGradientDark" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#ffda47;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#ffc107;stop-opacity:1" />
+              </linearGradient>
+              <linearGradient id="goldGradientDark" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#2a4fa0;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#254194;stop-opacity:1" />
+              </linearGradient>
+            </defs>
+            <rect x="20" y="20" width="160" height="160" rx="24" ry="24" fill="url(#bluGradientDark)" />
+            <rect x="62" y="50" width="14" height="100" rx="4" ry="4" fill="url(#goldGradientDark)" />
+            <rect x="62" y="136" width="76" height="14" rx="4" ry="4" fill="url(#goldGradientDark)" />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Color Palette -->
+    <div class="showcase-card">
+      <h2>🎨 Color Palette</h2>
+      <div class="color-grid">
+        <div class="color-swatch">
+          <div class="color-box" style="background: #254194;"></div>
+          <div class="color-info">
+            <div class="color-name">Primary Blue</div>
+            <div class="color-code">#254194</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-box" style="background: #ffc107;"></div>
+          <div class="color-info">
+            <div class="color-name">Gold/Yellow</div>
+            <div class="color-code">#ffc107</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-box" style="background: #2a4fa0;"></div>
+          <div class="color-info">
+            <div class="color-name">Blue Light</div>
+            <div class="color-code">#2a4fa0</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-box" style="background: #ffda47;"></div>
+          <div class="color-info">
+            <div class="color-name">Gold Light</div>
+            <div class="color-code">#ffda47</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Specifications -->
+    <div class="showcase-card">
+      <h2>📋 Design Specifications</h2>
+      <div class="specs">
+        <div class="spec-item">
+          <div class="spec-label">Shape</div>
+          <div class="spec-value">Rounded Square (24px radius)</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Primary Glyph</div>
+          <div class="spec-value">Geometric Capital 'L'</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Accent Element</div>
+          <div class="spec-value">Bookmark/Progress Bar</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Design Style</div>
+          <div class="spec-value">Flat/Semi-flat Minimalist</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Format</div>
+          <div class="spec-value">SVG (Scalable)</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Min Size</div>
+          <div class="spec-value">32px</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Usage -->
+    <div class="showcase-card">
+      <h2>💻 React Usage</h2>
+      <div class="usage-code">
+        import LibrisLogo from './components/LibrisLogo'<br><br>
+        &lt;LibrisLogo size="md" showText={true} /&gt;
+      </div>
+      <p style="color: #666; margin-top: 15px;">
+        ✓ Available in sm, md, lg, xl sizes<br>
+        ✓ Customizable with className prop<br>
+        ✓ TypeScript support included<br>
+        ✓ Dark mode compatible
+      </p>
+    </div>
+
+    <footer>
+      <p>LIBRIS - University Library Management System | Logo System v1.0</p>
+      <p>Professional Design © 2026 | Deep Blue (#254194) + Premium Gold (#ffc107)</p>
+    </footer>
+  </div>
+</body>
+</html>

@@ -37,8 +37,8 @@ export default function HeroSection({ onExplore, onDashboard }: HeroSectionProps
                       ],
                       autoStart: true,
                       loop: true,
-                      deleteSpeed: 80,
-                      delay: 100,
+                      deleteSpeed: 150,
+                      delay: 300,
                     }}
                   />
                 </span>
