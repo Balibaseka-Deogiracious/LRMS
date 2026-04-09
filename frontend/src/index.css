@@ -148,6 +148,16 @@ h6 {
   font-weight: 600;
 }
 
+a {
+  text-decoration: none;
+}
+
+a:hover,
+a:focus,
+a:active {
+  text-decoration: none;
+}
+
 .saas-page {
   display: grid;
   gap: 1rem;
