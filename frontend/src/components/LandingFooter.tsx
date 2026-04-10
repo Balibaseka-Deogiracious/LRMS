@@ -5,13 +5,13 @@ export default function LandingFooter() {
 
   return (
     <section id="contact">
-      <footer className="landing-footer py-5 border-top">
+      <footer className="landing-footer py-5" style={{ borderTop: '1px solid rgba(240, 240, 240, 0.1)' }}>
         <div className="container">
           <div className="row g-4 mb-4">
             <div className="col-12 col-md-4">
               <h6 className="fw-semibold mb-3">About</h6>
               <p className="small landing-footer-text mb-0">
-                Library Retrieval Management System helps teams discover, borrow, and manage books efficiently.
+                Libris helps teams discover, borrow, and manage books efficiently.
               </p>
             </div>
 
@@ -53,7 +53,7 @@ export default function LandingFooter() {
 
           <hr className="my-4 landing-footer-divider" />
           <p className="text-center small landing-footer-text mb-0">
-            © {currentYear} Library Retrieval Management System. All rights reserved.
+            © {currentYear} Libris. All rights reserved.
           </p>
         </div>
       </footer>

@@ -1,74 +1,12 @@
-@keyframes slideInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-100px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+/* Hero section wrapper */
+.hero-wrapper {
+  position: relative;
 }
 
-@keyframes slideInLeftStagger {
-  from {
-    opacity: 0;
-    transform: translateX(-100px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+/* Landing hero */
+.landing-hero {
+  background-color: #f5f5f5;
+  position: relative;
+  overflow: hidden;
 }
 
-/* Hero section heading */
-.landing-hero .display-4.fw-bold.mb-3 {
-  animation: slideInLeft 0.9s ease-out;
-}
-
-/* Badge animation */
-.landing-hero .badge {
-  animation: slideInLeft 0.7s ease-out 0.2s both;
-}
-
-/* Text paragraph animation */
-.landing-hero .lead {
-  animation: slideInLeft 0.8s ease-out 0.3s both;
-}
-
-/* Buttons animation */
-.landing-hero .d-flex.gap-3 {
-  animation: slideInLeft 0.9s ease-out 0.4s both;
-}
-
-/* Typewriter wrapper styling */
-.typewriter-wrapper {
-  display: inline-block;
-  width: 320px;
-  text-align: left;
-  color: #ffc107;
-  font-weight: 700;
-  min-height: 1.2em;
-}
-
-/* Typewriter cursor styling */
-.typewriter-wrapper .Typewriter__cursor {
-  color: #ffc107;
-  font-weight: 700;
-  animation: blink 1s infinite;
-}
-
-@keyframes blink {
-  0%, 49% {
-    opacity: 1;
-  }
-  50%, 100% {
-    opacity: 0;
-  }
-}
-
-/* Typewriter character styling */
-.typewriter-wrapper .Typewriter__wrapper {
-  font-size: inherit;
-  font-weight: inherit;
-  color: inherit;
-}

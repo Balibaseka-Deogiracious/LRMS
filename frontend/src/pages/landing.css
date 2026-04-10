@@ -172,27 +172,27 @@
 
 /* Footer */
 .landing-footer {
-  background: #0e2853;
-  color: #dbe8ff;
+  background: #1a1a1a;
+  color: #f0f0f0;
 }
 
 .landing-footer-text {
-  color: #d6e6ff;
+  color: #e0e0e0;
 }
 
 .landing-footer-link {
-  color: #d6e6ff;
+  color: #e0e0e0;
   text-decoration: none;
   transition: all 0.2s ease;
 }
 
 .landing-footer-link:hover {
-  color: #ffffff;
+  color: #ffc107;
   text-decoration: underline;
 }
 
 .landing-footer-divider {
-  border-color: rgba(214, 230, 255, 0.28);
+  border-color: rgba(240, 240, 240, 0.15);
 }
 
 /* Theme Transition */
@@ -263,20 +263,20 @@
 }
 
 [data-bs-theme='dark'] .landing-footer {
-  background: #07142b;
-  color: #bcd2f6;
+  background: #0f0f0f;
+  color: #e8e8e8;
 }
 
 [data-bs-theme='dark'] .landing-footer-text {
-  color: #c7dbff;
+  color: #d8d8d8;
 }
 
 [data-bs-theme='dark'] .landing-footer-link {
-  color: #c7dbff;
+  color: #d8d8d8;
 }
 
 [data-bs-theme='dark'] .landing-footer-divider {
-  border-color: rgba(199, 219, 255, 0.3);
+  border-color: rgba(232, 232, 232, 0.15);
 }
 
 [data-bs-theme='dark'] .how-it-works {

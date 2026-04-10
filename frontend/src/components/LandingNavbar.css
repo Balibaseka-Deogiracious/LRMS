@@ -16,5 +16,6 @@
 }
 
 .nav-primary-button {
-  background-color: var(--primary-color);
+  background-color: #ffc107;
+  color: #000 !important;
 }
