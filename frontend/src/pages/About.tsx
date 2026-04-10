@@ -130,21 +130,21 @@ export default function About() {
         <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <Link to="/" className="flex items-center gap-2 text-lg font-bold about-logo">
             <img src={logo} alt="Libris logo" width="48" height="48" className="rounded" />
-            <span>Libris</span>
+            <span className="hidden sm:inline">Libris</span>
           </Link>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3 sm:gap-4">
             <button
               onClick={toggleTheme}
-              className={`rounded-md px-3 py-2 text-sm font-medium transition ${isDark ? 'text-slate-300 hover:text-white hover:bg-slate-800' : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'}`}
+              className={`about-nav-toggle rounded-md px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-medium transition ${isDark ? 'text-slate-300 hover:text-white hover:bg-slate-800' : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'}`}
               aria-label="Toggle theme"
             >
               {isDark ? '☀️ Light' : '🌙 Dark'}
             </button>
             <Link
               to="/"
-              className={`rounded-md px-3 py-2 text-sm font-medium transition ${isDark ? 'text-slate-300 hover:text-white' : 'text-slate-700 hover:text-slate-900'}`}
+              className={`rounded-md px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-medium transition ${isDark ? 'text-slate-300 hover:text-white' : 'text-slate-700 hover:text-slate-900'}`}
             >
-              Back to Home
+              Back
             </Link>
           </div>
         </div>

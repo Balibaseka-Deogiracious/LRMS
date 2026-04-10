@@ -16,3 +16,12 @@
   background-color: #ffc107;
   color: #000 !important;
 }
+
+/* Responsive navbar toggle button */
+@media (max-width: 640px) {
+  .about-nav-toggle {
+    font-size: 0.6rem !important;
+    padding: 0.25rem 0.5rem !important;
+    white-space: nowrap;
+  }
+}
