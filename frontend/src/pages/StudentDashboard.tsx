@@ -6,6 +6,7 @@ import { useTheme } from '../contexts/ThemeContext'
 import { useAuth } from '../contexts/AuthContext'
 import { useBorrow } from '../contexts/BorrowContext'
 import { borrowBook as markBookAsBorrowed, searchBooks } from '../services/bookService'
+import logo from '../assets/library-logo.svg'
 import type { Book } from '../types'
 import './student-dashboard.css'
 
@@ -154,7 +155,10 @@ export default function StudentDashboard() {
     <div className="student-dashboard">
       {/* Top Navbar */}
       <nav className="student-navbar">
-        <div className="student-navbar-brand">Learning Hub</div>
+        <div className="student-navbar-brand">
+          <img src={logo} alt="Libris logo" width="32" height="32" style={{ marginRight: '8px' }} />
+          <span style={{ color: '#ffc107' }}>Libris</span>
+        </div>
         <div className="student-navbar-actions">
           <button type="button" className="theme-toggle-btn" onClick={toggleTheme} title="Toggle theme">
             {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}

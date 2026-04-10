@@ -59,8 +59,10 @@
 .student-navbar-brand {
   font-size: 1.3rem;
   font-weight: 700;
-  color: var(--sd-text-primary);
+  color: #ffc107;
   letter-spacing: -0.5px;
+  display: flex;
+  align-items: center;
 }
 
 .student-navbar-actions {
