@@ -296,7 +296,7 @@ export default function About() {
       <footer className={`mt-20 border-t ${isDark ? 'border-slate-800 bg-slate-900' : 'border-slate-200 bg-slate-50'}`}>
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-12 text-center">
           <p className={isDark ? 'text-slate-400' : 'text-slate-600'}>
-            © 2026 Library Retrieval Management System. All rights reserved.
+            © 2026 Libris. All rights reserved.
           </p>
         </div>
       </footer>

@@ -516,7 +516,7 @@ export default function StudentDashboard() {
         </div>
 
         <div className="footer-bottom">
-          <p>&copy; 2026 Library Retrieval Management System. All rights reserved.</p>
+          <p>&copy; 2026 Libris. All rights reserved.</p>
         </div>
       </footer>
     </div>
