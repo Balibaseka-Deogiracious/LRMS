@@ -9,5 +9,5 @@
   <rect x="145" y="30" width="40" height="110" rx="4" fill="#1e3a5f"/>
   
   <!-- LIBRIS Text -->
-  <text x="110" y="170" font-family="Arial, sans-serif" font-size="28" font-weight="bold" text-anchor="middle" fill="#1e3a5f">LIBRIS</text>
+  <text x="110" y="170" font-family="Arial, sans-serif" font-size="28" font-weight="bold" text-anchor="middle" fill="#ffc107">LIBRIS</text>
 </svg>
