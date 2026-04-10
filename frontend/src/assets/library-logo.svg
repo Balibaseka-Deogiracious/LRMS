@@ -1,21 +1,13 @@
 <svg width="220" height="220" viewBox="0 0 220 220" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="bookGrad" x1="26" y1="18" x2="192" y2="206" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#2B6ED2" />
-      <stop offset="1" stop-color="#0E2F64" />
-    </linearGradient>
-    <linearGradient id="sunGrad" x1="58" y1="42" x2="98" y2="88" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#FFC44A" />
-      <stop offset="1" stop-color="#F39A08" />
-    </linearGradient>
-  </defs>
-
-  <rect x="20" y="20" width="180" height="180" rx="44" fill="url(#bookGrad)"/>
-  <path d="M60 62C60 54.268 66.268 48 74 48H144C151.732 48 158 54.268 158 62V147C158 154.732 151.732 161 144 161H76C69.373 161 64 166.373 64 173V174H58C52.477 174 48 169.523 48 164V74C48 67.373 53.373 62 60 62Z" fill="white" fill-opacity="0.95"/>
-  <path d="M72 74C72 70.686 74.686 68 78 68H142V146H82C76.477 146 72 150.477 72 156V74Z" fill="#E7F0FF"/>
-  <path d="M84 88H130" stroke="#2B6ED2" stroke-width="8" stroke-linecap="round"/>
-  <path d="M84 108H136" stroke="#2B6ED2" stroke-width="8" stroke-linecap="round"/>
-  <path d="M84 128H122" stroke="#2B6ED2" stroke-width="8" stroke-linecap="round"/>
-  <circle cx="78" cy="64" r="16" fill="url(#sunGrad)"/>
-  <path d="M156 150C163.732 150 170 143.732 170 136V88" stroke="#9FC0F4" stroke-width="10" stroke-linecap="round"/>
+  <!-- Left Book Spine - Navy -->
+  <rect x="35" y="30" width="40" height="110" rx="4" fill="#1e3a5f"/>
+  
+  <!-- Center Book Spine - Yellow/Gold -->
+  <rect x="90" y="20" width="40" height="130" rx="4" fill="#ffc107"/>
+  
+  <!-- Right Book Spine - Navy -->
+  <rect x="145" y="30" width="40" height="110" rx="4" fill="#1e3a5f"/>
+  
+  <!-- LIBRIS Text -->
+  <text x="110" y="170" font-family="Arial, sans-serif" font-size="28" font-weight="bold" text-anchor="middle" fill="#1e3a5f">LIBRIS</text>
 </svg>
