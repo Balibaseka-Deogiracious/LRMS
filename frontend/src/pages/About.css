@@ -1,5 +1,5 @@
 .about-logo {
-  color: #254194;
+  color: #ffc107;
 }
 
 .team-member-avatar {
@@ -13,5 +13,6 @@
 }
 
 .about-cta-button {
-  background-color: #254194;
+  background-color: #ffc107;
+  color: #000 !important;
 }

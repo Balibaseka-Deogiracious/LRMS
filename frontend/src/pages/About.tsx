@@ -241,7 +241,7 @@ export default function About() {
                   }`}
                 >
                   {/* Avatar */}
-                  <div className="h-40 flex items-center justify-center bg-slate-200">
+                  <div className={`h-40 flex items-center justify-center ${isDark ? 'bg-slate-800' : 'bg-slate-200'}`}>
                     <img
                       src={member.image}
                       alt={member.name}
