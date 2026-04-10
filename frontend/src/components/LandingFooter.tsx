@@ -5,7 +5,7 @@ export default function LandingFooter() {
 
   return (
     <section id="contact">
-      <footer className="landing-footer py-5" style={{ borderTop: '1px solid rgba(240, 240, 240, 0.1)' }}>
+      <footer className="landing-footer py-5 border-top">
         <div className="container">
           <div className="row g-4 mb-4">
             <div className="col-12 col-md-4">
