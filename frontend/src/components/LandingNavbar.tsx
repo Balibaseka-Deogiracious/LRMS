@@ -95,7 +95,7 @@ export default function LandingNavbar() {
           <div className="flex items-center gap-2">
             <button
               type="button"
-              className={`hidden sm:inline-flex h-10 w-10 items-center justify-center rounded-md transition ${isDark ? 'text-slate-200 hover:bg-slate-800 hover:text-white' : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900'}`}
+              className={`inline-flex h-10 w-10 items-center justify-center rounded-md transition ${isDark ? 'text-slate-200 hover:bg-slate-800 hover:text-white' : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900'}`}
               onClick={toggleTheme}
               title="Toggle dark/light mode"
               aria-label="Toggle dark/light mode"
