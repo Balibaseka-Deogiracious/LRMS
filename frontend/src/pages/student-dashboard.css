@@ -331,13 +331,38 @@
   padding: 0 20px;
   width: 100%;
   flex: 1;
+  position: relative;
 }
 
 /* Sidebar */
 .student-sidebar {
-  position: sticky;
-  top: 20px;
-  height: fit-content;
+  position: fixed;
+  top: 80px;
+  left: 20px;
+  width: 220px;
+  height: calc(100vh - 100px);
+  overflow-y: auto;
+  padding: 20px 10px;
+  z-index: 100;
+  background: var(--sd-bg-primary);
+  border-right: 1px solid var(--sd-border);
+}
+
+.student-sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.student-sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.student-sidebar::-webkit-scrollbar-thumb {
+  background: var(--sd-border);
+  border-radius: 3px;
+}
+
+.student-sidebar::-webkit-scrollbar-thumb:hover {
+  background: var(--sd-text-tertiary);
 }
 
 .filter-section {
@@ -883,6 +908,11 @@
     gap: 20px;
   }
 
+  .student-sidebar {
+    width: 180px;
+    left: 0;
+  }
+
   .books-grid {
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   }
@@ -919,6 +949,11 @@
 
   .student-sidebar {
     position: static;
+    width: 100%;
+    height: auto;
+    overflow-y: visible;
+    top: auto;
+    left: auto;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
