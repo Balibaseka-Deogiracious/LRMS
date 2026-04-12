@@ -13,6 +13,7 @@ import StudentDashboard from './pages/StudentDashboard'
 import BookDetails from './pages/BookDetails'
 import AddBook from './pages/InventoryPage'
 import AdminUsers from './pages/AdminUsers'
+import AdminStudents from './pages/AdminStudents'
 import MyBorrowedBooks from './pages/MyBorrowedBooks'
 import AdminReports from './pages/admin/AdminReports'
 import AdminSettings from './pages/admin/AdminSettings'
@@ -151,6 +152,7 @@ function App() {
         >
           <Route index element={<Dashboard />} />
           <Route path="users" element={<AdminUsers />} />
+          <Route path="students" element={<AdminStudents />} />
           <Route path="inventory" element={<AddBook />} />
           <Route path="borrow-requests" element={<AdminBorrowRequests />} />
           <Route path="reports" element={<AdminReports />} />

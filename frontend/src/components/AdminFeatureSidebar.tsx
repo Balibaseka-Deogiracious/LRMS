@@ -5,8 +5,9 @@ import './AdminFeatureSidebar.css'
 
 const links = [
   { to: '/admin', icon: 'bi-grid-1x2', label: 'Summary' },
-  { to: '/admin/users', icon: 'bi-people', label: 'Users' },
-  { to: '/add', icon: 'bi-journal-plus', label: 'Inventory' },
+  { to: '/admin/users', icon: 'bi-shield-check', label: 'System Users' },
+  { to: '/admin/students', icon: 'bi-people', label: 'Students' },
+  { to: '/admin/inventory', icon: 'bi-journal-plus', label: 'Inventory' },
   { to: '/search', icon: 'bi-search', label: 'Resources' },
 ]
 
