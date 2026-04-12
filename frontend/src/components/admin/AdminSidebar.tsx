@@ -18,7 +18,8 @@ interface SidebarItem {
 const navItems: SidebarItem[] = [
   { to: '/admin', icon: 'bi-speedometer2', label: 'Dashboard', end: true },
   { to: '/admin/inventory', icon: 'bi-journal-bookmark', label: 'Books' },
-  { to: '/admin/users', icon: 'bi-people', label: 'Users' },
+  { to: '/admin/users', icon: 'bi-shield-check', label: 'System Users' },
+  { to: '/admin/students', icon: 'bi-people', label: 'Students' },
   { to: '/admin/borrow-requests', icon: 'bi-hand-index', label: 'Borrow Requests' },
   { to: '/admin/reports', icon: 'bi-bar-chart-line', label: 'Reports' },
   { to: '/admin/settings', icon: 'bi-sliders', label: 'Settings' },
@@ -76,6 +77,7 @@ export default function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps)
             end={item.end}
             className={({ isActive }) => `admin-nav-link ${isActive ? 'admin-nav-link-active' : ''}`}
             title={collapsed ? item.label : ''}
+            onClick={onToggle}
           >
             <i className={`bi ${item.icon}`} />
             <span>{item.label}</span>

@@ -16,7 +16,8 @@ interface AdminAlert {
 const pageTitle: Record<string, string> = {
   '/admin': 'Dashboard',
   '/admin/inventory': 'Books Management',
-  '/admin/users': 'Users',
+  '/admin/users': 'System Users',
+  '/admin/students': 'Students',
   '/admin/borrow-requests': 'Borrow Requests',
   '/admin/reports': 'Reports',
   '/admin/settings': 'Settings',
@@ -37,7 +38,7 @@ function getAdminNameFromStorage() {
   }
 }
 
-export default function AdminTopbar() {
+export default function AdminTopbar({ onMenuToggle, sidebarOpen }: { onMenuToggle: () => void; sidebarOpen: boolean }) {
   const location = useLocation()
   const navigate = useNavigate()
   const { theme, toggleTheme } = useTheme()
@@ -116,6 +117,15 @@ export default function AdminTopbar() {
   return (
     <>
       <header className="admin-navbar">
+        <button
+          type="button"
+          className="admin-menu-toggle"
+          onClick={onMenuToggle}
+          title="Toggle sidebar"
+        >
+          <i className={`bi ${sidebarOpen ? 'bi-x-lg' : 'bi-list'}`} />
+        </button>
+
         <section className="admin-navbar-left">
           <p className="admin-navbar-caption">Dashboard</p>
           <h4 className="admin-navbar-title">{currentTitle}</h4>

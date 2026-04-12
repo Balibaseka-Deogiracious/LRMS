@@ -5,14 +5,23 @@ import AdminTopbar from './AdminTopbar'
 import './admin-layout.css'
 
 export default function AdminLayout() {
-  const [collapsed, setCollapsed] = useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+
+  const handleSidebarToggle = () => {
+    setSidebarOpen(!sidebarOpen)
+  }
+
+  const closeSidebar = () => {
+    setSidebarOpen(false)
+  }
 
   return (
-    <div className={`admin-layout-shell ${collapsed ? 'sidebar-collapsed' : ''}`}>
-      <AdminSidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
+    <div className={`admin-layout-shell ${sidebarOpen ? 'sidebar-open' : ''}`}>
+      <AdminSidebar collapsed={false} onToggle={closeSidebar} />
+      {sidebarOpen && <div className="admin-sidebar-overlay" onClick={closeSidebar} />}
       <div className="admin-main">
         <div className="admin-fixed-topbar">
-          <AdminTopbar />
+          <AdminTopbar onMenuToggle={handleSidebarToggle} sidebarOpen={sidebarOpen} />
         </div>
         <main className="admin-page-content">
           <Outlet />

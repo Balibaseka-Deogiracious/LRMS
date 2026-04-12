@@ -1,8 +1,8 @@
-# 🔐 LRMS Authentication System Setup & Testing Guide
+# 🔐 Libris Authentication System Setup & Testing Guide
 
 ## Overview
 
-The LRMS (Library Retrieval Management System) now has a fully integrated authentication system connecting React frontend with FastAPI backend.
+The Libris (Library Retrieval Management System) now has a fully integrated authentication system connecting React frontend with FastAPI backend.
 
 **Key Features:**
 - ✅ User registration with validation
@@ -101,7 +101,7 @@ npm run build  # Creates dist/ folder
 - Fill in the form:
   - Email: `john@gmail.com`
   - Password: `SecurePassword123`
-- Click **Sign in to LRMS**
+- Click **Sign in to Libris**
 
 **Expected Result:**
 - ✅ "Login successful" toast appears
