@@ -66,6 +66,7 @@ def _book_to_public(book: Book, category_map: dict[int, tuple[int | None, str | 
         "is_available": book.is_available,
         "category_id": category_id,
         "category_name": category_name,
+        "cover_filename": book.cover_filename,
     }
 
 
