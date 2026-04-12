@@ -73,34 +73,33 @@ def get_current_student(
     credentials: HTTPAuthorizationCredentials | None = Depends(security),
     db: Session = Depends(get_db),
 ) -> Student:
-    """Authentication checks are bypassed for student endpoints."""
-    # try:
-    #     token_payload = decode_token(credentials.credentials)
-    # except ValueError:
-    #     raise HTTPException(
-    #         status_code=status.HTTP_401_UNAUTHORIZED,
-    #         detail="Invalid token",
-    #     )
-    #
-    # student_id = token_payload.get("sub")
-    # if not student_id:
-    #     raise HTTPException(
-    #         status_code=status.HTTP_401_UNAUTHORIZED,
-    #         detail="Invalid token",
-    #     )
-    #
-    # student = db.query(Student).filter(Student.id == int(student_id)).first()
-    # if not student:
-    #     raise HTTPException(
-    #         status_code=status.HTTP_404_NOT_FOUND,
-    #         detail="Student not found",
-    #     )
+    """Get authenticated student from JWT token."""
+    if not credentials or not credentials.credentials:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Authentication credentials required",
+        )
+    
+    try:
+        token_payload = decode_token(credentials.credentials)
+    except ValueError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid or expired token",
+        )
 
-    student = db.query(Student).first()
+    student_id = token_payload.get("sub")
+    if not student_id:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token: missing user ID",
+        )
+
+    student = db.query(Student).filter(Student.id == int(student_id)).first()
     if not student:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Student not found",
+            detail="Student account not found",
         )
     return student
 

@@ -82,43 +82,41 @@ def get_current_librarian(
     credentials: HTTPAuthorizationCredentials | None = Depends(security),
     db: Session = Depends(get_db),
 ) -> Librarian:
-    """Authentication checks are bypassed for admin endpoints."""
-    # try:
-    #     token_payload = decode_token(credentials.credentials)
-    # except ValueError:
-    #     raise HTTPException(
-    #         status_code=status.HTTP_401_UNAUTHORIZED,
-    #         detail="Invalid token",
-    #     )
-    #
-    # librarian_id = token_payload.get("sub")
-    # if not librarian_id:
-    #     raise HTTPException(
-    #         status_code=status.HTTP_401_UNAUTHORIZED,
-    #         detail="Invalid token",
-    #     )
-    #
-    # librarian = db.query(Librarian).filter(Librarian.id == int(librarian_id)).first()
-    # if not librarian:
-    #     raise HTTPException(
-    #         status_code=status.HTTP_404_NOT_FOUND,
-    #         detail="Librarian not found",
-    #     )
-    #
-    # if not librarian.is_admin:
-    #     raise HTTPException(
-    #         status_code=status.HTTP_403_FORBIDDEN,
-    #         detail="Only administrators can access this endpoint",
-    #     )
+    """Verify admin authentication and authorization."""
+    if not credentials:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Missing authentication credentials",
+        )
+    
+    try:
+        token_payload = decode_token(credentials.credentials)
+    except ValueError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token",
+        )
 
-    librarian = db.query(Librarian).filter(Librarian.is_admin == True).first()
-    if not librarian:
-        librarian = db.query(Librarian).first()
+    librarian_id = token_payload.get("sub")
+    if not librarian_id:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token",
+        )
+
+    librarian = db.query(Librarian).filter(Librarian.id == int(librarian_id)).first()
     if not librarian:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Librarian not found",
         )
+
+    if not librarian.is_admin:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only administrators can access this endpoint",
+        )
+    
     return librarian
 
 
@@ -566,10 +564,14 @@ async def add_book_to_catalog(
         is_available=True,
     )
     db.add(book)
-    db.commit()
-    db.refresh(book)
-
-    # Handle book file upload if provided
+    
+    # Pre-validate files before committing book to database
+    file_bytes = None
+    file_ext = None
+    cover_bytes = None
+    cover_ext = None
+    
+    # Validate and read book file if provided
     if file and file.filename:
         # Validate file type (PDF, DOC, DOCX, TXT)
         allowed_extensions = {'.pdf', '.doc', '.docx', '.txt'}
@@ -587,24 +589,13 @@ async def add_book_to_catalog(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Book file size must not exceed 50MB",
             )
-        
-        # Create storage directory if it doesn't exist
-        BOOK_FILES_DIR.mkdir(parents=True, exist_ok=True)
-        
-        # Save book file with book ID
-        book_filename = f"{book.id}{file_ext}"
-        book_path = BOOK_FILES_DIR / book_filename
-        
-        with open(book_path, 'wb') as f:
-            f.write(file_bytes)
 
-    # Handle cover image upload if provided
-    cover_filename = None
+    # Validate and read cover image if provided
     if cover and cover.filename:
         # Validate file type
         allowed_extensions = {'.jpg', '.jpeg', '.png', '.gif', '.webp'}
-        file_ext = Path(cover.filename).suffix.lower()
-        if file_ext not in allowed_extensions:
+        cover_ext = Path(cover.filename).suffix.lower()
+        if cover_ext not in allowed_extensions:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"Invalid cover image format. Allowed: JPEG, PNG, GIF, WebP",
@@ -617,34 +608,80 @@ async def add_book_to_catalog(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Cover image file size must not exceed 10MB",
             )
-        
-        # Create storage directory if it doesn't exist
-        BOOK_FILES_DIR.mkdir(parents=True, exist_ok=True)
-        
-        # Save cover image with book ID
-        cover_filename = f"{book.id}_cover{file_ext}"
-        cover_path = BOOK_FILES_DIR / cover_filename
-        
-        with open(cover_path, 'wb') as f:
-            f.write(cover_bytes)
-        
-        # Update book with cover filename
-        book.cover_filename = cover_filename
-        db.add(book)
-        db.commit()
-        db.refresh(book)
     
-    log_audit_event(
-        db,
-        action="book_created",
-        actor_type="librarian",
-        user_id=current_librarian.id,
-        resource="book",
-        resource_id=book.id,
-        details=f"Created book '{book.title}' (ISBN: {book.isbn})" + (f" with cover image" if cover_filename else ""),
-    )
+    # Now commit the book to database (after all validations pass)
+    db.commit()
+    db.refresh(book)
+    
+    # Generate filenames after book.id is assigned
+    cover_filename = None
+    if file_bytes:
+        book_filename = f"{book.id}{file_ext}"
+        try:
+            # Create storage directory if it doesn't exist
+            BOOK_FILES_DIR.mkdir(parents=True, exist_ok=True)
+            
+            # Save book file with book ID
+            book_path = BOOK_FILES_DIR / book_filename
+            with open(book_path, 'wb') as f:
+                f.write(file_bytes)
+        except Exception as e:
+            print(f"Warning: Failed to save book file: {e}")
 
-    return _book_to_public(book, db)
+    # Save cover image if provided
+    if cover_bytes:
+        cover_filename = f"{book.id}_cover{cover_ext}"
+        try:
+            # Create storage directory if it doesn't exist
+            BOOK_FILES_DIR.mkdir(parents=True, exist_ok=True)
+            
+            # Save cover image with book ID
+            cover_path = BOOK_FILES_DIR / cover_filename
+            with open(cover_path, 'wb') as f:
+                f.write(cover_bytes)
+            
+            # Update book with cover filename
+            book.cover_filename = cover_filename
+            db.add(book)
+            db.commit()
+            db.refresh(book)
+        except Exception as e:
+            print(f"Warning: Failed to save cover image: {e}")
+    
+    # Log audit event (non-critical, don't fail if it errors)
+    try:
+        log_audit_event(
+            db,
+            action="book_created",
+            actor_type="librarian",
+            user_id=current_librarian.id,
+            resource="book",
+            resource_id=book.id,
+            details=f"Created book '{book.title}' (ISBN: {book.isbn})" + (f" with cover image" if cover_filename else ""),
+        )
+    except Exception as e:
+        print(f"Warning: Failed to log audit event: {e}")
+    
+    # Build and return response
+    try:
+        return _book_to_public(book, db)
+    except Exception as e:
+        # If response building fails, return a basic response
+        print(f"Warning: Failed to build response: {e}")
+        return {
+            "id": book.id,
+            "title": book.title,
+            "author": book.author,
+            "isbn": book.isbn,
+            "description": book.description,
+            "publication_year": book.publication_year,
+            "total_copies": book.total_copies,
+            "available_copies": book.available_copies,
+            "is_available": book.is_available,
+            "category_id": None,
+            "category_name": None,
+            "cover_filename": book.cover_filename,
+        }
 
 
 @router.post("/books/import", response_model=BookImportResponse, status_code=status.HTTP_201_CREATED)

@@ -137,17 +137,24 @@ def login_users(payload: StudentLoginRequest, db: Session = Depends(get_db)):
         return TokenResponse(access_token=token, user_type="student", student=student)
 
     librarian = db.query(Librarian).filter(Librarian.email == payload.email).first()
-    if not librarian or not verify_password(payload.password, librarian.hashed_password):
+    
+    if not librarian:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid email or password",
+        )
+    
+    if not verify_password(payload.password, librarian.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid email or password",
         )
 
-    # if not librarian.is_active:
-    #     raise HTTPException(
-    #         status_code=status.HTTP_403_FORBIDDEN,
-    #         detail="Librarian account is inactive",
-    #     )
+    if not librarian.is_active:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Librarian account is inactive",
+        )
 
     token = create_access_token(subject=str(librarian.id))
     return TokenResponse(access_token=token, user_type="librarian", librarian=librarian)
