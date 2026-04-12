@@ -96,7 +96,7 @@ export async function borrowBook(id: string): Promise<boolean> {
       throw new Error(errorMessage)
     }
 
-    const data = await response.json()
+    await response.json()
     return true
   } catch (error: any) {
     const message = error?.message || 'Failed to borrow book. Please try again.'
