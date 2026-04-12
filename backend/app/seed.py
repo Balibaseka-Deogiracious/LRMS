@@ -21,7 +21,7 @@ def generate_book_cover(title: str, author: str, book_id: int, color: tuple = (1
         return None
     
     try:
-        storage_dir = Path(__file__).resolve().parents[2] / "storage" / "book_files"
+        storage_dir = Path(__file__).resolve().parents[1] / "storage" / "book_files"
         storage_dir.mkdir(parents=True, exist_ok=True)
         
         # Create image with dimensions typical of book covers (300x450)
