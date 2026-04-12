@@ -85,15 +85,23 @@ export async function borrowBook(id: string): Promise<boolean> {
     })
 
     if (!response.ok) {
-      const errorData = await response.json()
-      const errorMessage = errorData?.detail || 'Failed to borrow book'
+      let errorMessage = 'Failed to borrow book'
+      try {
+        const errorData = await response.json()
+        errorMessage = errorData?.detail || errorMessage
+      } catch (parseError) {
+        // If response body is not JSON, use status text
+        errorMessage = response.statusText || `Error ${response.status}`
+      }
       throw new Error(errorMessage)
     }
 
+    const data = await response.json()
     return true
   } catch (error: any) {
-    console.error('Borrow book error:', error)
-    throw new Error(error?.message || 'Failed to borrow book. Please try again.')
+    const message = error?.message || 'Failed to borrow book. Please try again.'
+    console.error('Borrow book error:', error, 'Message:', message)
+    throw new Error(message)
   }
 }
 
