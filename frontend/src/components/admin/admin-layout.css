@@ -482,6 +482,18 @@
   max-width: 100%;
 }
 
+@media (max-width: 768px) {
+  .admin-page-content {
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .admin-page-content {
+    padding: 0.75rem;
+  }
+}
+
 /* ========== MODAL IMPROVEMENTS ========== */
 .modal.d-block {
   padding: 0;
@@ -797,7 +809,20 @@ textarea.form-control {
 
   .admin-profile-btn {
     padding: 0.4rem 0.6rem;
+    border: none;
+    font-size: 1rem;
   }
+
+  .admin-profile-meta {
+    display: none;
+  }
+
+  .admin-icon-btn {
+    width: 36px;
+    height: 36px;
+  }
+}
+}
 
   .admin-profile-meta strong {
     font-size: 0.8rem;
