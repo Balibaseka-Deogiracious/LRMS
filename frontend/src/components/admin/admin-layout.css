@@ -822,17 +822,3 @@ textarea.form-control {
     height: 36px;
   }
 }
-
-  .admin-profile-meta small {
-    font-size: 0.65rem;
-  }
-
-  .admin-page-content {
-    padding: 1rem;
-  }
-
-  .admin-icon-btn {
-    width: 36px;
-    height: 36px;
-  }
-}
