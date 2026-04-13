@@ -491,6 +491,9 @@
 @media (max-width: 576px) {
   .admin-page-content {
     padding: 0.75rem;
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
   }
 }
 
@@ -662,6 +665,8 @@ textarea.form-control {
   .admin-main {
     margin-left: 0;
     max-width: 100%;
+    width: 100%;
+    overflow-x: hidden;
   }
 
   .admin-menu-toggle {
