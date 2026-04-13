@@ -742,6 +742,11 @@ textarea.form-control {
 @media (max-width: 576px) {
   :root {
     --sidebar-width: 240px;
+    --topbar-height: 50px;
+  }
+
+  html, body {
+    overflow-x: hidden;
   }
 
   .admin-navbar {
@@ -767,6 +772,7 @@ textarea.form-control {
     font-size: 0.95rem;
     white-space: normal;
     word-break: break-word;
+    max-width: 200px;
   }
 
   .admin-navbar-caption {
@@ -820,5 +826,44 @@ textarea.form-control {
   .admin-icon-btn {
     width: 36px;
     height: 36px;
+    font-size: 0.9rem;
+  }
+
+  .admin-icon-btn i {
+    font-size: 0.9rem;
+  }
+
+  .admin-page-content {
+    padding: 0.75rem;
+    overflow-x: hidden;
+  }
+
+  .admin-sidebar-fixed {
+    width: 240px;
+  }
+
+  .admin-sidebar-header {
+    padding: 0.75rem;
+  }
+
+  .admin-logo {
+    gap: 0.5rem;
+    font-size: 1.1rem;
+  }
+
+  .admin-logo-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
+
+  .admin-nav-link {
+    padding: 0.65rem 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  .admin-nav-link i {
+    font-size: 1rem;
+    width: 20px;
   }
 }
