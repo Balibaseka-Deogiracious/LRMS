@@ -127,18 +127,14 @@ export default function StudentDashboard() {
     try {
       if (isBorrowed(String(selectedBook.id))) {
         setBorrowError('You already borrowed this book.')
-        setSubmittingBorrow(false)
         return
       }
 
-      console.log('Submitting borrow request for book ID:', selectedBook.id)
       await markBookAsBorrowed(String(selectedBook.id))
-      console.log('Borrow request submitted successfully')
 
       const recordResult = addBorrowRecord(selectedBook)
       if (!recordResult.ok) {
         setBorrowError(recordResult.message)
-        setSubmittingBorrow(false)
         return
       }
 
@@ -149,9 +145,7 @@ export default function StudentDashboard() {
       toast.success(`Borrow request submitted for "${selectedBook.title}".`)
       closeBorrowForm()
     } catch (error: any) {
-      const errorMessage = error?.message || 'Unable to process your borrow request right now. Please try again.'
-      console.error('Error submitting borrow request:', errorMessage, error)
-      setBorrowError(errorMessage)
+      setBorrowError(error?.message || 'Unable to process your borrow request right now. Please try again.')
     } finally {
       setSubmittingBorrow(false)
     }
@@ -311,7 +305,6 @@ export default function StudentDashboard() {
                     <h3>{book.title}</h3>
                     <p className="book-author">{book.author}</p>
                     {book.category_name && <span className="book-category">{book.category_name}</span>}
-                    <p className="book-description">{book.description || 'No description available'}</p>
                     <div className="book-card-footer">
                       <span
                         className={`status-badge ${book.is_available ? 'available' : 'unavailable'}`}

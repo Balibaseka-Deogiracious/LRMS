@@ -474,7 +474,7 @@
 .book-card-image {
   position: relative;
   width: 100%;
-  padding-top: 160%;
+  aspect-ratio: 2 / 3;
   background: linear-gradient(135deg, var(--sd-bg-secondary) 0%, var(--sd-border) 100%);
   overflow: hidden;
 }
@@ -522,17 +522,17 @@
 }
 
 .book-card-content {
-  padding: 12px;
+  padding: 10px;
   display: flex;
   flex-direction: column;
   flex: 1;
 }
 
 .book-card-content h3 {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: var(--sd-text-primary);
-  margin: 0 0 4px 0;
+  margin: 0 0 3px 0;
   line-height: 1.2;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -542,33 +542,25 @@
 }
 
 .book-author {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: var(--sd-text-secondary);
-  margin: 0 0 4px 0;
+  margin: 0 0 3px 0;
 }
 
 .book-category {
   display: inline-block;
-  padding: 4px 8px;
+  padding: 3px 7px;
   background: rgba(99, 102, 241, 0.1);
   color: #6366f1;
   border-radius: 4px;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 600;
-  margin-bottom: 8px;
+  margin-bottom: 5px;
   width: fit-content;
 }
 
 .book-description {
-  font-size: 0.8rem;
-  color: var(--sd-text-tertiary);
-  margin: 0 0 8px 0;
-  flex: 1;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  display: none;
 }
 
 .book-card-footer {
@@ -577,6 +569,8 @@
   align-items: center;
   gap: 8px;
   margin-top: auto;
+  padding-top: 5px;
+  border-top: 1px solid var(--sd-border);
 }
 
 .status-badge {
