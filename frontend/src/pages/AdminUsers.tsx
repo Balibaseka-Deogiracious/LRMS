@@ -3,6 +3,7 @@ import { toast } from 'react-toastify'
 import Swal from 'sweetalert2'
 import { deleteUser, listUsers, toggleUserActive, updateUserRole } from '../services/userService'
 import type { LocalUser } from '../services/mockStore'
+import './AdminUsers.css'
 
 export default function AdminUsers() {
   const [users, setUsers] = useState<LocalUser[]>([])

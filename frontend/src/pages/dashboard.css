@@ -251,7 +251,7 @@
 @media (max-width: 576px) {
   .dashboard-modern {
     padding-bottom: 0.75rem;
-    gap: 0.5rem;
+    gap: 0.75rem;
     width: 100% !important;
     max-width: 100% !important;
     margin: 0 !important;
@@ -260,16 +260,16 @@
   .row {
     width: 100%;
     margin: 0;
-    gap: 0.5rem;
+    gap: 0.75rem;
   }
 
   .row.g-3 {
-    gap: 0.5rem !important;
+    gap: 0.75rem !important;
   }
 
   .dashboard-hero {
     padding: 0.75rem;
-    gap: 0.5rem !important;
+    gap: 0.75rem !important;
     width: 100% !important;
     max-width: 100% !important;
     border-radius: 0.75rem;
@@ -277,17 +277,20 @@
   }
 
   .dashboard-title {
-    font-size: 1.25rem;
+    font-size: 1.3rem;
     word-break: break-word;
+    margin-bottom: 0.4rem;
   }
 
   .dashboard-subtitle {
     font-size: 0.9rem;
     word-break: break-word;
+    margin-bottom: 0.5rem;
   }
 
   .dashboard-date {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
   }
 
   .dashboard-toolbar {
@@ -299,17 +302,22 @@
   .dashboard-search {
     width: 100%;
     min-width: 100%;
-    height: 34px;
+    height: 36px;
     flex: 1 1 auto;
   }
 
+  .dashboard-search input {
+    font-size: 0.9rem;
+  }
+
   .dashboard-toolbar .btn {
-    width: 34px;
-    height: 34px;
-    font-size: 0.85rem;
+    width: 36px;
+    height: 36px;
+    font-size: 0.9rem;
     flex-shrink: 0;
   }
 
+  /* KPI Cards - arrange in 2 columns on mobile */
   .dashboard-kpi {
     border-radius: 0.75rem;
     padding: 0.75rem;
@@ -317,10 +325,12 @@
 
   .dashboard-kpi-title {
     font-size: 0.75rem;
+    margin-bottom: 0.4rem;
   }
 
   .dashboard-kpi-value {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
+    margin-bottom: 0.3rem;
   }
 
   .dashboard-kpi-meta {
@@ -330,11 +340,21 @@
   .dashboard-modern .card {
     border-radius: 0.75rem;
     overflow: hidden;
+    margin-bottom: 0.75rem;
   }
 
   .dashboard-modern .card .card-body {
     padding: 0.75rem !important;
     overflow-x: hidden;
+  }
+
+  .dashboard-modern .card .card-title {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .dashboard-modern .card .card-text {
+    font-size: 0.85rem;
   }
 }
 
@@ -342,30 +362,32 @@
 @media (max-width: 375px) {
   .dashboard-modern {
     padding-bottom: 0.5rem;
-    gap: 0.35rem;
+    gap: 0.5rem;
   }
 
   .row {
-    gap: 0.35rem !important;
+    gap: 0.5rem !important;
   }
 
   .dashboard-hero {
     padding: 0.5rem;
     border-radius: 0.6rem;
+    gap: 0.5rem;
   }
 
   .dashboard-title {
     font-size: 1.1rem;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.25rem !important;
   }
 
   .dashboard-subtitle {
     font-size: 0.8rem;
+    line-height: 1.3;
   }
 
   .dashboard-date {
     font-size: 0.7rem;
-    margin-top: 0.3rem;
+    margin-top: 0.25rem;
   }
 
   .dashboard-toolbar {
@@ -388,27 +410,42 @@
   }
 
   .dashboard-kpi {
-    padding: 0.6rem;
+    padding: 0.55rem;
     border-radius: 0.6rem;
   }
 
   .dashboard-kpi-title {
-    font-size: 0.7rem;
-    margin-bottom: 0.2rem;
+    font-size: 0.65rem;
+    margin-bottom: 0.15rem;
   }
 
   .dashboard-kpi-value {
     font-size: 1.35rem;
-    line-height: 1;
+    line-height: 1.1;
+    margin-bottom: 0.2rem;
   }
 
   .dashboard-kpi-meta {
-    font-size: 0.7rem;
-    margin-top: 0.2rem;
+    font-size: 0.65rem;
+    margin-top: 0.1rem;
+  }
+
+  .dashboard-modern .card {
+    border-radius: 0.6rem;
+    margin-bottom: 0.5rem;
   }
 
   .dashboard-modern .card .card-body {
-    padding: 0.6rem !important;
+    padding: 0.5rem !important;
+  }
+
+  .dashboard-modern .card .card-title {
+    font-size: 0.95rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .dashboard-modern .card .card-text {
+    font-size: 0.8rem;
   }
 }
 
