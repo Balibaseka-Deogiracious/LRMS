@@ -1,18 +1,33 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import { toast } from 'react-toastify'
 import { Book } from '../types'
-import { borrowBook, getBook, downloadBookFile } from '../services/bookService'
+import { borrowBook, getBook, downloadBookFile, getMyBorrowedBooks, returnBook } from '../services/bookService'
 
 interface BookDetailsCardProps {
   bookId: string
 }
 
+interface BorrowRecord {
+  id: number
+  book_id: number
+  borrowed_at: string
+  due_date: string
+  returned_at?: string
+  is_returned: boolean
+  book?: Book
+}
+
 export default function BookDetailsCard({ bookId }: BookDetailsCardProps) {
+  const navigate = useNavigate()
   const [book, setBook] = useState<Book | null>(null)
   const [loading, setLoading] = useState(true)
   const [borrowing, setBorrowing] = useState(false)
   const [downloading, setDownloading] = useState(false)
+  const [returning, setReturning] = useState(false)
+  const [borrowedBooks, setBorrowedBooks] = useState<BorrowRecord[]>([])
+  const [borrowRecordId, setBorrowRecordId] = useState<number | null>(null)
 
   useEffect(() => {
     const loadBook = async () => {
@@ -24,6 +39,28 @@ export default function BookDetailsCard({ bookId }: BookDetailsCardProps) {
     }
 
     void loadBook()
+  }, [bookId])
+
+  // Load borrowed books on mount to check if this book is already borrowed
+  useEffect(() => {
+    const loadBorrowedBooks = async () => {
+      try {
+        const borrowed = await getMyBorrowedBooks()
+        setBorrowedBooks(borrowed)
+        
+        // Check if current book is in borrowed books
+        const isBorrowed = borrowed.find(record => String(record.book_id) === bookId)
+        if (isBorrowed) {
+          setBorrowRecordId(isBorrowed.id)
+        } else {
+          setBorrowRecordId(null)
+        }
+      } catch (error) {
+        console.error('Failed to load borrowed books:', error)
+      }
+    }
+
+    void loadBorrowedBooks()
   }, [bookId])
 
   const handleBorrow = async () => {
@@ -52,10 +89,50 @@ export default function BookDetailsCard({ bookId }: BookDetailsCardProps) {
       // Refresh book details
       const updated = await getBook(bookId)
       if (updated) setBook(updated)
+      // Reload borrowed books
+      const borrowed = await getMyBorrowedBooks()
+      setBorrowedBooks(borrowed)
+      const isBorrowed = borrowed.find(record => String(record.book_id) === bookId)
+      if (isBorrowed) {
+        setBorrowRecordId(isBorrowed.id)
+      }
     } catch (error: any) {
       toast.error(error?.message || 'Failed to borrow book.')
     } finally {
       setBorrowing(false)
+    }
+  }
+
+  const handleReturn = async () => {
+    if (!borrowRecordId) return
+
+    const confirmation = await Swal.fire({
+      title: 'Return this book?',
+      text: `Are you sure you want to return "${book?.title}"?`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Return',
+      cancelButtonText: 'Cancel',
+      confirmButtonColor: '#ffc107',
+    })
+
+    if (!confirmation.isConfirmed) return
+
+    setReturning(true)
+    try {
+      await returnBook(borrowRecordId)
+      toast.success(`📚 Book "${book?.title}" returned successfully! Thank you!`)
+      // Refresh book details
+      const updated = await getBook(bookId)
+      if (updated) setBook(updated)
+      // Reload borrowed books
+      const borrowed = await getMyBorrowedBooks()
+      setBorrowedBooks(borrowed)
+      setBorrowRecordId(null)
+    } catch (error: any) {
+      toast.error(error?.message || 'Failed to return book.')
+    } finally {
+      setReturning(false)
     }
   }
 
@@ -90,6 +167,26 @@ export default function BookDetailsCard({ bookId }: BookDetailsCardProps) {
 
   return (
     <div className="card shadow-sm">
+      {/* Back Button Header */}
+      <div className="card-header bg-light border-bottom py-3 px-4" style={{ backgroundColor: '#f8f9fa' }}>
+        <button
+          className="btn btn-sm btn-outline-secondary"
+          onClick={() => navigate(-1)}
+          title="Go back to student dashboard"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            padding: '0.5rem 0.75rem',
+            fontSize: '0.9rem',
+            fontWeight: '500',
+          }}
+        >
+          <i className="bi bi-arrow-left"></i>
+          Back to Books
+        </button>
+      </div>
+      
       <div className="card-body">
         <div className="row g-4">
           {/* Book Cover */}
@@ -137,30 +234,51 @@ export default function BookDetailsCard({ bookId }: BookDetailsCardProps) {
             </div>
 
             <div className="mt-4">
-              <button
-                className="btn btn-success"
-                onClick={handleBorrow}
-                disabled={borrowing || !book.is_available}
-              >
-                {borrowing ? 'Borrowing...' : (book.is_available ? 'Borrow Book' : 'Not Available')}
-          </button>
-          <button
-            className="btn btn-info ms-2"
-            onClick={handleDownload}
-            disabled={downloading}
-          >
-              {downloading ? (
-                <>
-                  <i className="bi bi-download me-1"></i>
-                  Downloading...
-                </>
+              {borrowRecordId ? (
+                <button
+                  className="btn btn-warning"
+                  onClick={handleReturn}
+                  disabled={returning}
+                  title="Return this borrowed book"
+                >
+                  {returning ? (
+                    <>
+                      <i className="bi bi-hourglass-split me-1"></i>
+                      Returning...
+                    </>
+                  ) : (
+                    <>
+                      <i className="bi bi-arrow-counterclockwise me-1"></i>
+                      Return Book
+                    </>
+                  )}
+                </button>
               ) : (
-                <>
-                  <i className="bi bi-download me-1"></i>
-                  Download File
-                </>
+                <button
+                  className="btn btn-success"
+                  onClick={handleBorrow}
+                  disabled={borrowing || !book.is_available}
+                >
+                  {borrowing ? 'Borrowing...' : (book.is_available ? 'Borrow Book' : 'Not Available')}
+                </button>
               )}
-            </button>
+              <button
+                className="btn btn-info ms-2"
+                onClick={handleDownload}
+                disabled={downloading}
+              >
+                {downloading ? (
+                  <>
+                    <i className="bi bi-download me-1"></i>
+                    Downloading...
+                  </>
+                ) : (
+                  <>
+                    <i className="bi bi-download me-1"></i>
+                    Download File
+                  </>
+                )}
+              </button>
             </div>
           </div>
         </div>

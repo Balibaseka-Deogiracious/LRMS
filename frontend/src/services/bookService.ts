@@ -206,3 +206,62 @@ export async function getCategories() {
     return []
   }
 }
+
+export async function getMyBorrowedBooks(): Promise<any[]> {
+  try {
+    const token = localStorage.getItem('token')
+    if (!token) {
+      throw new Error('Authentication token not found')
+    }
+
+    const response = await fetch(`${API_BASE_URL}/books/my-borrowed-books`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+    })
+
+    if (!response.ok) throw new Error('Failed to fetch borrowed books')
+    const data = await response.json()
+    return Array.isArray(data) ? data : []
+  } catch (error) {
+    console.error('Get borrowed books error:', error)
+    return []
+  }
+}
+
+export async function returnBook(borrowRecordId: number): Promise<boolean> {
+  try {
+    const token = localStorage.getItem('token')
+    if (!token) {
+      throw new Error('Authentication token not found. Please login again.')
+    }
+
+    const response = await fetch(`${API_BASE_URL}/books/return`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({ borrow_record_id: borrowRecordId }),
+    })
+
+    if (!response.ok) {
+      let errorMessage = 'Failed to return book'
+      try {
+        const errorData = await response.json()
+        errorMessage = errorData?.detail || errorMessage
+      } catch (parseError) {
+        errorMessage = response.statusText || `Error ${response.status}`
+      }
+      throw new Error(errorMessage)
+    }
+
+    await response.json()
+    return true
+  } catch (error: any) {
+    const message = error?.message || 'Failed to return book. Please try again.'
+    console.error('Return book error:', error)
+    throw new Error(message)
+  }
+}
