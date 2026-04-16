@@ -9,16 +9,6 @@ interface BookDetailsCardProps {
   bookId: string
 }
 
-interface BorrowRecord {
-  id: number
-  book_id: number
-  borrowed_at: string
-  due_date: string
-  returned_at?: string
-  is_returned: boolean
-  book?: Book
-}
-
 export default function BookDetailsCard({ bookId }: BookDetailsCardProps) {
   const navigate = useNavigate()
   const [book, setBook] = useState<Book | null>(null)
