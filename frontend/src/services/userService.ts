@@ -1,7 +1,7 @@
 import type { Role } from '../contexts/AuthContext'
 import { getUsers, saveUsers, type LocalUser } from './mockStore'
 
-const API_BASE_URL = 'http://localhost:8000'
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
 function getAuthHeaders() {
   const token = localStorage.getItem('token')
