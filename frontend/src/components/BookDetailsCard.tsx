@@ -26,7 +26,6 @@ export default function BookDetailsCard({ bookId }: BookDetailsCardProps) {
   const [borrowing, setBorrowing] = useState(false)
   const [downloading, setDownloading] = useState(false)
   const [returning, setReturning] = useState(false)
-  const [borrowedBooks, setBorrowedBooks] = useState<BorrowRecord[]>([])
   const [borrowRecordId, setBorrowRecordId] = useState<number | null>(null)
 
   useEffect(() => {
@@ -46,7 +45,6 @@ export default function BookDetailsCard({ bookId }: BookDetailsCardProps) {
     const loadBorrowedBooks = async () => {
       try {
         const borrowed = await getMyBorrowedBooks()
-        setBorrowedBooks(borrowed)
         
         // Check if current book is in borrowed books
         const isBorrowed = borrowed.find(record => String(record.book_id) === bookId)
@@ -91,7 +89,6 @@ export default function BookDetailsCard({ bookId }: BookDetailsCardProps) {
       if (updated) setBook(updated)
       // Reload borrowed books
       const borrowed = await getMyBorrowedBooks()
-      setBorrowedBooks(borrowed)
       const isBorrowed = borrowed.find(record => String(record.book_id) === bookId)
       if (isBorrowed) {
         setBorrowRecordId(isBorrowed.id)
@@ -125,9 +122,7 @@ export default function BookDetailsCard({ bookId }: BookDetailsCardProps) {
       // Refresh book details
       const updated = await getBook(bookId)
       if (updated) setBook(updated)
-      // Reload borrowed books
-      const borrowed = await getMyBorrowedBooks()
-      setBorrowedBooks(borrowed)
+      // Reset borrow record
       setBorrowRecordId(null)
     } catch (error: any) {
       toast.error(error?.message || 'Failed to return book.')
